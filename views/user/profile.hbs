@@ -1,0 +1,168 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile</title> -->
+  <!-- Bootstrap CSS -->
+  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+  <!-- Font Awesome -->
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"> -->
+  <!-- Custom CSS -->
+  <!-- <style>
+    /* Custom Styles */
+    .profile-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .profile-header {
+      background-color: #f8f9fa;
+      padding: 20px;
+      text-align: center;
+    }
+    .profile-picture {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 20px;
+    }
+    .options {
+      margin-top: 20px;
+    }
+    .options a {
+      display: block;
+      padding: 10px 0;
+      color: #212529;
+      text-decoration: none;
+    }
+    .options a:hover {
+      background-color: #74b8fb;
+    }
+  </style> -->
+<!-- </head>
+<body>
+
+<div class="container profile-container">
+  <div class="profile-header">
+    <img src="profile-picture.jpg" alt="Profile Picture" class="profile-picture">
+    <h2>John Doe</h2>
+    <p>Email: johndoe@example.com</p>
+    <p>Location: New York, USA</p>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3>Personal Information</h3>
+      <p><strong>Full Name:</strong> John Doe</p>
+      <p><strong>Email:</strong> johndoe@example.com</p>
+      <p><strong>Phone:</strong> +1 123-456-7890</p>
+      <p><strong>Address:</strong> 123 Main St, New York, USA</p>
+    </div>
+    <div class="col-md-6">
+      <h3>Options</h3>
+      <div class="options">
+        <a href="#"><i class="fas fa-heart"></i> Wishlist</a>
+        <a href="#"><i class="fas fa-user-edit"></i> Edit Details</a>
+        <a href="#"><i class="fas fa-lock"></i> Change Password</a>
+        <a href="/logOut"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<!-- Bootstrap JS Bundle (Popper.js + Bootstrap JS) -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script> -->
+<!-- Font Awesome -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html> -->
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <style>
+    /* Custom Styles */
+    body {
+      background-color: #fdfdfd;
+      font-family: Arial, sans-serif;
+    }
+    .profile-container {
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #cfcdcd;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+    .profile-header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #3a454f;
+      margin-bottom: 20px;
+    }
+    .profile-picture {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 20px;
+    }
+    .profile-header h2 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .profile-header p {
+      color: #666;
+    }
+    .options {
+      margin-top: 20px;
+    }
+    .options a {
+      display: block;
+      padding: 10px 0;
+      color: #333;
+      text-decoration: none;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .options a:last-child {
+      border-bottom: none;
+    }
+    .options a:hover {
+      background-color: #11171d;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container profile-container">
+  <div class="profile-header">
+    <img src="profile-picture.jpg" alt="Profile Picture" class="profile-picture">
+   <h1> {{ user.userName }}</h1>
+   <p>{{ user.email }}</p>
+  </div>
+  <div class="options">
+    <a href="#"><i class="fas fa-heart"></i> Wishlist</a>
+    <a href="#"><i class="fas fa-user-edit"></i> Edit Details</a>
+    <a href="#"><i class="fas fa-lock"></i> Change Password</a>
+    <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  </div>
+</div>
+
+<!-- Bootstrap JS Bundle (Popper.js + Bootstrap JS) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Font Awesome -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
