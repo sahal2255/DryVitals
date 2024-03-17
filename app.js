@@ -3,6 +3,7 @@ const path=require('path')
 const mongoose=require('mongoose')
 const cookieParser=require('cookie-parser')
 const userRoute=require('./routes/userRoute')
+const adminRoute=require('./routes/adminRoute')
 const app=express()
 
 app.use(express.static('public'))
@@ -13,6 +14,8 @@ app.use(cookieParser());
 app.set('view engine','hbs')
 
 app.use('/',userRoute)
+
+app.use('/',adminRoute)
 
 
 mongoose.connect('mongodb://localhost:27017/DryVitals')

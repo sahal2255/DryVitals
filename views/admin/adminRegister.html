@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Register</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .register-form {
+            background-color: #ebe1e1;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        h2{
+            color: rgb(16, 24, 17);
+        }
+        .btn{
+            background-color: rgb(29, 191, 0);
+            color: white;
+        }
+        .error {
+            color: red;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <form class="register-form" action="#" method="post">
+                    <h2 class="text-center">Admin Registration</h2>
+                    <div class="form-group">
+                        <label for="username">AdminName:</label>
+                        <input type="text" id="username" name="username" class="form-control">
+                        <p id="usernameError" class="error"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" class="form-control">
+                        <p id="emailError" class="error"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" class="form-control">
+                        <p id="passwordError" class="error"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password:</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" class="form-control">
+                        <p id="confirmPasswordError" class="error"></p>
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn ">Register</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.querySelector("form").addEventListener("submit", function(event) {
+            var username = document.getElementById("username").value.trim();
+            var email = document.getElementById("email").value.trim();
+            var password = document.getElementById("password").value.trim();
+            var confirmPassword = document.getElementById("confirmPassword").value.trim();
+            var usernameError = document.getElementById("usernameError");
+            var emailError = document.getElementById("emailError");
+            var passwordError = document.getElementById("passwordError");
+            var confirmPasswordError = document.getElementById("confirmPasswordError");
+
+            usernameError.textContent = "";
+            emailError.textContent = "";
+            passwordError.textContent = "";
+            confirmPasswordError.textContent = "";
+
+            if (username === "") {
+                usernameError.textContent = "Username is required";
+                event.preventDefault();
+            }
+
+            if (email === "") {
+                emailError.textContent = "Email is required";
+                event.preventDefault();
+            }
+
+            if (password === "") {
+                passwordError.textContent = "Password is required";
+                event.preventDefault();
+            } else if (password.length < 6) {
+                passwordError.textContent = "Password must be at least 6 characters";
+                event.preventDefault();
+            }
+
+            if (confirmPassword === "") {
+                confirmPasswordError.textContent = "Please confirm your password";
+                event.preventDefault();
+            } else if (confirmPassword !== password) {
+                confirmPasswordError.textContent = "Passwords do not match";
+                event.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

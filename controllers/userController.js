@@ -26,6 +26,8 @@ let loginPage=async(req,res)=>{
 
 
 
+// user login section
+
 let loginPostPage=async(req,res)=>{
     const {email,password} = req.body
 
@@ -63,12 +65,21 @@ let loginPostPage=async(req,res)=>{
     };
 
 
+// ----end login section
+
+
+
+// user logout section
+
+
 let logOut=async(req,res)=>{
     res.clearCookie('user_jwt')
     console.log('logout success');
     res.redirect('/')
 }
 
+
+// ----end user logout section
 
 
 
@@ -86,6 +97,10 @@ let signUpPage=async(req,res)=>{
 }
 
 
+
+
+
+// user signing section
 
 
 let signUp=async(req,res)=>{
@@ -128,6 +143,14 @@ let signUp=async(req,res)=>{
   };
 
 
+
+//   -----end user signin section
+
+
+
+
+//   get user profile page
+
   let profile=async(req,res)=>{
 
     let userId=req.user.id
@@ -140,7 +163,7 @@ let signUp=async(req,res)=>{
    
   }
 
-
+// ----end profile page section
 
 
 
