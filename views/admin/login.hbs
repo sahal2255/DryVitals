@@ -78,7 +78,7 @@
 <body>
     <div class="container">
         <h1>Admin Login</h1>
-        <form action="/login" method="POST" id="login-form">
+        <form action="/admin/login" method="POST" id="login-form">
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" >
             <span id="emailError"></span>
@@ -91,10 +91,10 @@
        
         
     </div>
-    <script>
+       <script>
         const loginForm = document.getElementById('login-form');
         
-        loginForm.addEventListener('submit', async (event) => {
+        loginForm.addEventListener('submit', (event) => {
             event.preventDefault();
 
             // Reset previous error messages
@@ -104,7 +104,6 @@
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
             let isFormValid = true;
-
 
             if (!isValidEmail(email)) {
                 document.getElementById('emailError').textContent = 'Please enter a valid email address';
@@ -117,18 +116,9 @@
             }
 
             if (isFormValid) {
-            const formData = new FormData(loginForm);
-            const responseData = await fetch('/login', {
-            method: 'POST',
-            body: formData
-        }).then(response => response.json());
-
-            if (responseData.error) {
-                alert(responseData.error);
-            } else {
-                window.location.href = '/users';
+                // Submit the form if it's valid
+                loginForm.submit();
             }
-        }
         });
 
         function isValidEmail(email) {
@@ -138,9 +128,7 @@
 
         function isValidPassword(password) {
             return password.length >= 6;
-   
         }
-       
     </script>
 
 </body>

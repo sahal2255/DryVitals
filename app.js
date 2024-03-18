@@ -15,7 +15,7 @@ app.set('view engine','hbs')
 
 app.use('/',userRoute)
 
-app.use('/',adminRoute)
+app.use(adminRoute)
 
 
 mongoose.connect('mongodb://localhost:27017/DryVitals')

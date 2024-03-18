@@ -2,12 +2,13 @@ const jwt=require('jsonwebtoken')
 require('dotenv').config()
 
 let adminAuth=async(req,res,next)=>{
-    const token=req.cookies.admin_jwt
+    const token=req.cookies.admin_jwt;
     console.log('token',token);
     if(token){
         jwt.verify(token,process.env.JWT_SECRET,(err,decodedToken)=>{
             if(err){
-               return res.redirect('/admin/login')
+                console.log('jwt not');
+                res.redirect('/admin/login')
             }else{
                 req.admin=decodedToken
                 next()
@@ -15,7 +16,7 @@ let adminAuth=async(req,res,next)=>{
         })
     }else{
         res.redirect('/admin/login')
-        console.log('this is errpr');
+        console.log('this is error');
     }
 }
 

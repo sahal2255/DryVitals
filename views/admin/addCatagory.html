@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Category</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa; /* Set background color */
+            padding-top: 40px; /* Add space at the top */
+        }
+        .container {
+            max-width: 500px; /* Limit container width */
+            background-color: #fff; /* Set container background color */
+            padding: 30px; /* Add padding inside container */
+            border-radius: 8px; /* Add border radius */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Add box shadow */
+            margin: 0 auto; /* Center container horizontally */
+        }
+        h1 {
+            text-align: center; /* Center-align heading */
+            margin-bottom: 30px; /* Add space below heading */
+        }
+        label {
+            font-weight: bold; /* Bold labels */
+        }
+        textarea {
+            resize: vertical; /* Allow vertical resizing of textarea */
+        }
+        button[type="submit"] {
+            width: 100%; /* Make button full width */
+            margin-top: 20px; /* Add space above button */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Add Category</h1>
+        <form action="/admin/categories/add" method="POST">
+            <div class="form-group">
+                <label for="name">Category Name:</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea class="form-control" id="description" name="description"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Category</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS (optional) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -7,14 +7,14 @@ let userAuth=async(req,res,next)=>{
     if(token){
         jwt.verify(token,process.env.JWT_SECRET,(err,decodedToken)=>{
             if(err){
-               return res.redirect('/login')
+               return res.redirect('admin/login')
             }else{
                 req.user=decodedToken
                 next()
             }
         })
     }else{
-        res.redirect('/login')
+        res.redirect('/admin/login')
         console.log('this is errpr');
     }
 }
