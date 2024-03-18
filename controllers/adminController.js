@@ -74,15 +74,15 @@ let adminLoginPost=async(req,res)=>{
 
 // profilepage
 
-let profile=async(req,res)=>{
-    let adminId=req.admin.id;
-    let admin= await Admin.findOne({_id:adminId})
-    console.log(admin);
-    if(!admin){
-        return res.status(400).send('admin not found')
-    }
-    return res.render('/admin/adminProfile')
-}
+// let profile=async(req,res)=>{
+//     let adminId=req.admin.id;
+//     let admin= await Admin.findOne({_id:adminId})
+//     console.log(admin);
+//     if(!admin){
+//         return res.status(400).send('admin not found')
+//     }
+//     return res.render('/admin/adminProfile')
+// }
 
 // let profile = async (req, res) => {
 //     try {
@@ -113,6 +113,6 @@ module.exports = {
     adminDash,
     adminLogin,
     adminLoginPost,
-    profile,
+    // profile,
     adminLogOut
 };

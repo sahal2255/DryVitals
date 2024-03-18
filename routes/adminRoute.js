@@ -13,10 +13,9 @@ router.get('/admin/index',adminAuth,adminController.adminDash)
 router.get('/admin/login', adminController.adminLogin);
 router.post('/admin/login',adminController.adminLoginPost)
 
-// router.get('/admin/register', adminController.registerAdmin);
-// router.post('/register', adminController.register);
 
-router.get('/admin/adminProfile', adminAuth, adminController.profile);
+
+// router.get('/admin/adminProfile', adminAuth, adminController.profile);
 router.get('/admin/adminLogOut',adminController.adminLogOut)
 
 module.exports = router;
