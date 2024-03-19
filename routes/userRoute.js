@@ -20,6 +20,8 @@ router.get('/logOut',userController.logOut)
 router.get('/sign',userController.signUpPage)
 router.post('/signup',userController.signUp)
 
+
+
 router.get('/profile',userAuth,userController.profile)
 
 

@@ -14,6 +14,8 @@ router.get('/admin/login', adminController.adminLogin);
 router.post('/admin/login',adminController.adminLoginPost)
 
 
+router.get('/admin/addCatagory',adminAuth,adminController.addCatagory)
+
 
 // router.get('/admin/adminProfile', adminAuth, adminController.profile);
 router.get('/admin/adminLogOut',adminController.adminLogOut)

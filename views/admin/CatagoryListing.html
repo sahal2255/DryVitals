@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category List</title>
+    <!-- Bootstrap CSS link -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Your custom styles */
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Category List</h1>
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th>Category ID</th>
+                    <th>Category Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="categoryTableBody">
+                <!-- Categories will be added here dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Bootstrap JS and jQuery links (required for Bootstrap functionality) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Your JavaScript code -->
+    <script>
+        // Sample data for demonstration
+        var categories = [
+            { id: 1, name: 'Category 1' },
+            { id: 2, name: 'Category 2' },
+            // Add more categories as needed
+        ];
+
+        // Function to populate the table with categories
+        function populateCategoryTable() {
+            var tableBody = document.getElementById('categoryTableBody');
+            tableBody.innerHTML = '';
+
+            categories.forEach(function(category) {
+                var row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${category.id}</td>
+                    <td>${category.name}</td>
+                    <td>
+                        <button onclick="editCategory(${category.id})" class="btn btn-primary">Edit</button>
+                        <button onclick="deleteCategory(${category.id})" class="btn btn-danger">Delete</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Function to delete a category
+        function deleteCategory(id) {
+            categories = categories.filter(function(category) {
+                return category.id !== id;
+            });
+            populateCategoryTable();
+        }
+
+        // Function to edit a category (just a demonstration)
+        function editCategory(id) {
+            alert('Edit category with ID: ' + id);
+        }
+
+        // Call the function to populate the table when the page loads
+        window.onload = function() {
+            populateCategoryTable();
+        };
+    </script>
+</body>
+</html>

@@ -71,36 +71,14 @@ let adminLoginPost=async(req,res)=>{
 
 }
 
-
-// profilepage
-
-// let profile=async(req,res)=>{
-//     let adminId=req.admin.id;
-//     let admin= await Admin.findOne({_id:adminId})
-//     console.log(admin);
-//     if(!admin){
-//         return res.status(400).send('admin not found')
-//     }
-//     return res.render('/admin/adminProfile')
-// }
-
-// let profile = async (req, res) => {
-//     try {
-//         let adminId = req.admin.id; // Assuming your admin ID is stored in 'id' field
-//         let foundAdmin = await Admin.findOne({ _id: adminId }); // Renamed variable to 'foundAdmin'
-//         console.log('Admin:', foundAdmin);
-//         if (!foundAdmin) {
-//             return res.status(400).send('Admin not found');
-//         }
-//         // Render the admin profile page
-//         return res.render('admin/adminProfile', { admin: foundAdmin }); // Passing 'foundAdmin' data to the profile page
-//     } catch (error) {
-//         console.error('Error fetching admin profile:', error);
-//         return res.status(500).send('Internal server error');
-//     }
-// }
+let addCatagory=async(req,res)=>{
+    res.render('admin/addCatagory',{error:''})
+    console.log('error');
+}
 
 
+
+// logout section
 
 let adminLogOut=async(req,res)=>{
     res.clearCookie('admin_jwt')
@@ -113,6 +91,6 @@ module.exports = {
     adminDash,
     adminLogin,
     adminLoginPost,
-    // profile,
+    addCatagory,
     adminLogOut
 };
