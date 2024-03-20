@@ -160,14 +160,31 @@ let catagoryList = async (req, res) => {
     }
 };
 
-// let deletCatagory=async(req,res)=>{
-//     try{
 
-//     }
-//     catch(error){
 
-//     }
-// }
+// adminController.js
+
+
+
+const deleteCategory = async (req, res) => {
+    const categoryId = req.params.id;
+    console.log(categoryId);
+    try {
+        let product = await Product.findOne();
+        if (!product) {
+          return res.status(400).send('product not found');
+        }
+        product.categories = product.categories.filter(category => category._id.toString() !== categoryId);
+        await product.save();
+        return res.redirect('/admin/catagoryList');
+    } catch (error) {
+      console.log('Error deleting category:', error);
+      return res.status(500).send('Internal server error');
+    }
+  };
+
+
+
 
 
 
@@ -187,6 +204,6 @@ module.exports = {
     addCatagory,
     addCatagoryPost,
     catagoryList,
-    // deletCatagory,
+    deleteCategory,
     adminLogOut
 };

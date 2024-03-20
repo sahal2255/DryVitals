@@ -18,7 +18,14 @@ router.get('/admin/addCatagory',adminAuth,adminController.addCatagory)
 router.post('/admin/addCatagory',adminAuth,adminController.addCatagoryPost)
 
 router.get('/admin/catagoryList',adminAuth,adminController.catagoryList)
-// router.post('/admin/delteCatagorylist',adminAuth,adminController.deleteCatagory)
+
+// router.post('/admin/delteCategory/:id',adminController.deleteCategory)
+// router.delete('/admin/deleteCategory/:id', adminController.deleteCategory);
+
+
+router.get('/admin/deleteCategory/:id', adminController.deleteCategory); 
+router.delete('/admin/deleteCategory/:id', adminController.deleteCategory); 
+
 
 
 
