@@ -1,4 +1,5 @@
 const Admin = require('../models/admin');
+const Product=require('../models/products')
 const bcrypt = require('bcrypt');
 const { application } = require('express')
 const jwt = require('jsonwebtoken');
@@ -30,11 +31,11 @@ const adminLogin = (req, res) => {
 
 let adminLoginPost=async(req,res)=>{
     const {email,password}=req.body;
-    console.log(email,password);
+    // console.log(email,password);
     if(email&&password){
         try{
             const admin=await Admin.findOne({email})
-            console.log(admin);
+            // console.log(admin);
             if (!admin){
                 return res.status(400).send({error:'admin is not found'})
             }
@@ -71,10 +72,102 @@ let adminLoginPost=async(req,res)=>{
 
 }
 
+
+// get catagory page
+
 let addCatagory=async(req,res)=>{
     res.render('admin/addCatagory',{error:''})
-    console.log('error');
+    // console.log('error');
 }
+
+
+
+// catagory post
+
+// catagory post
+
+let addCatagoryPost = async (req, res) => {
+    try {
+        let { catagoryName } = req.body;
+        if (!req.admin) {
+            throw new Error('Admin is not authenticated');
+        }
+
+
+        let product = await Product.findOne();
+        if (!product) {
+            product = new Product({});
+        }
+
+        product.categories.push({ catagoryName: catagoryName });
+            await product.save();
+            console.log('Category adding success');
+        return res.redirect('/admin/catagoryList');
+
+        } catch (error) {
+            console.log('addCatagory error:', error);
+            return res.render('admin/addCatagory', { error: 'Error adding category' });
+    }
+};
+
+// let addCatagoryPost = async (req, res) => {
+//     try {
+//         const { catagoryName } = req.body;
+
+//         if (!req.admin) {
+//             throw new Error('Admin is not authenticated');
+//         }
+//         console.log('check admin ',req.admin);
+//         console.log('found admin id',req.admin.id);
+//         const admin = await Admin.findByIdAndUpdate(req.admin.id, {
+//             $push: { categories: { catagoryName } }
+//         });
+
+//         console.log('Admin:', admin);
+//         if (!admin) {
+//             return res.status(404).json({ error: 'Admin not found' });
+//         }
+
+//         console.log('Category added successfully');
+//         return res.redirect('/admin/addCatagory');
+//     } catch (error) {
+//         console.log('addCatagory error:', error);
+//         // return res.render('admin/addCatagory', { error: 'Error adding category' });
+//         return res.status(500).json({ error: 'Failed to add category' });
+//     }
+// };
+
+
+
+// added catagory listing section
+
+// let catagoryList=async(req,res)=>{
+//     res.render('admin/catagoryList',{error:''})
+// }
+
+
+let catagoryList = async (req, res) => {
+    try {
+        const products = await Product.find({});
+        let categories = [];
+        products.forEach(product => {
+            categories = categories.concat(product.categories);
+        });
+        res.render('admin/catagoryList', { categories });
+    } catch (error) {
+        console.log('Error fetching categories:', error);
+        res.render('admin/catagoryList', { error: 'Error fetching categories' });
+    }
+};
+
+// let deletCatagory=async(req,res)=>{
+//     try{
+
+//     }
+//     catch(error){
+
+//     }
+// }
 
 
 
@@ -92,5 +185,8 @@ module.exports = {
     adminLogin,
     adminLoginPost,
     addCatagory,
+    addCatagoryPost,
+    catagoryList,
+    // deletCatagory,
     adminLogOut
 };

@@ -9,9 +9,10 @@ const adminSchema=new mongoose.Schema({
     password:{
         type:String,
         required:true
-    }
+    },
+    
     
 })
-const Admin=mongoose.model('admin',adminSchema)
+const Admin=mongoose.model('admins',adminSchema)
 
 module.exports=Admin

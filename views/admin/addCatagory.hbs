@@ -10,7 +10,7 @@
         <meta content="" name="Mannatthemes" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <!-- App favicon -->
-        <link rel="shortcut icon" href="assets/images/favicon.ico" />
+        {{!-- <link rel="shortcut icon" href="assets/images/favicon.ico" /> --}}
         
         <!-- Css -->
         <link rel="stylesheet" href="assets/libs/filepond/filepond.min.css">
@@ -33,10 +33,10 @@
             <div class=" text-center border-b bg-[#603dc3] border-r h-[64px] flex justify-center items-center brand-logo dark:bg-[#603dc3] dark:border-slate-700/40 group-data-[sidebar=dark]:bg-[#603dc3] group-data-[sidebar=dark]:border-slate-700/40 group-data-[sidebar=brand]:bg-brand group-[.dark]:group-data-[sidebar=brand]:bg-[#603dc3] group-data-[sidebar=brand]:border-slate-700/40">
                 <a href="index.html" class="logo">
                     <span>
-                        <img src="assets/images/logo-sm.png" alt="logo-small" class="logo-sm h-8 align-middle inline-block">
+                        {{!-- <img src="assets/images/logo-sm.png" alt="logo-small" class="logo-sm h-8 align-middle inline-block"> --}}
                     </span>
                     <span>
-                        <img src="assets/images/logo.png" alt="logo-large" class="logo-lg h-[28px] logo-light hidden dark:inline-block ms-1 group-data-[sidebar=dark]:inline-block group-data-[sidebar=brand]:inline-block">
+                        {{!-- <img src="assets/images/logo.png" alt="logo-large" class="logo-lg h-[28px] logo-light hidden dark:inline-block ms-1 group-data-[sidebar=dark]:inline-block group-data-[sidebar=brand]:inline-block"> --}}
                         <img src="assets/images/logo.png" alt="logo-large"
                             class="logo-lg h-[28px] logo-dark inline-block dark:hidden ms-1 group-data-[sidebar=dark]:hidden group-data-[sidebar=brand]:hidden">
                     </span>
@@ -75,14 +75,14 @@
                                             </a>
                                         </li>
                                         <li class="nav-item relative block">
-                                            <a href="addCatagory.hbs"
+                                            <a href="/admin/addCatagory"
                                                class="nav-link  hover:text-primary-500  rounded-md dark:hover:text-primary-500 relative   flex items-center decoration-0 px-3 py-3 group-data-[sidebar=brand]:hover:text-slate-200">
                                                 <i class="icofont-dotted-right me-2 text-slate-600 text-[8px] group-data-[sidebar=brand]:text-slate-400"></i>
                                                Add Catagory
                                             </a>
                                         </li>
                                         <li class="nav-item relative block">
-                                            <a href="CatagoryListing.html"
+                                            <a href="/admin/catagoryList"
                                                class="nav-link  hover:text-primary-500  rounded-md dark:hover:text-primary-500 relative   flex items-center decoration-0 px-3 py-3 group-data-[sidebar=brand]:hover:text-slate-200">
                                                 <i class="icofont-dotted-right me-2 text-slate-600 text-[8px] group-data-[sidebar=brand]:text-slate-400"></i>
                                                 Catagory List
@@ -132,88 +132,7 @@
                                         </li>
                                     </ul>                            
                                 </div>
-                                <!-- <a href="#"
-                                    class="nav-link hover:bg-transparent hover:text-black  rounded-md dark:hover:text-slate-200   flex items-center  decoration-0 px-3 py-3 cursor-pointer group-data-[sidebar=dark]:hover:text-slate-200 group-data-[sidebar=brand]:hover:text-slate-200 "
-                                    data-fc-type="collapse" data-fc-parent="parent-accordion">
-                                    <span data-lucide="home"
-                                        class="w-5 h-5 text-center text-slate-800 dark:text-slate-400 me-2 group-data-[sidebar=dark]:text-slate-400 group-data-[sidebar=brand]:text-slate-400"></span>
-                                    <span>Customer</span>
-                                    <i class="icofont-thin-down ms-auto inline-block text-[14px] transform transition-transform duration-300 text-slate-800 dark:text-slate-400 group-data-[sidebar=dark]:text-slate-400 group-data-[sidebar=brand]:text-slate-400 fc-collapse-open:rotate-180 "></i>
-                                </a> -->
-                                <!-- <div id="Customer-flush" class="hidden  overflow-hidden">
-                                    <ul class="nav flex-col flex flex-wrap ps-0 mb-0 ms-2">
-                                        <li class="nav-item relative block">
-                                            <a href="customers-home.html"
-                                               class="nav-link  hover:text-primary-500  rounded-md dark:hover:text-primary-500 relative   flex items-center decoration-0 px-3 py-3 group-data-[sidebar=brand]:hover:text-slate-200">
-                                                <i class="icofont-dotted-right me-2 text-slate-600 text-[8px] group-data-[sidebar=brand]:text-slate-400 "></i>
-                                                Home 
-                                            </a>
-                                        </li>
-                                        <li class="nav-item relative block">
-                                            <a href="customers-pro-details.html"
-                                               class="nav-link  hover:text-primary-500  rounded-md dark:hover:text-primary-500 relative   flex items-center decoration-0 px-3 py-3 group-data-[sidebar=brand]:hover:text-slate-200">
-                                                <i class="icofont-dotted-right me-2 text-slate-600 text-[8px] group-data-[sidebar=brand]:text-slate-400"></i>
-                                                Product details
-                                            </a>
-                                        </li>
-                                        <li class="nav-item relative block">
-                                            <a href="customers-products.html"
-                                               class="nav-link  hover:text-primary-500  rounded-md dark:hover:text-primary-500 relative   flex items-center decoration-0 px-3 py-3 group-data-[sidebar=brand]:hover:text-slate-200">
-                                                <i class="icofont-dotted-right me-2 text-slate-600 text-[8px] group-data-[sidebar=brand]:text-slate-400"></i>
-                                               Product filter
-                                            </a>
-                                        </li>
-                                        <li class="nav-item relative block">
-                                            <a href="customers-cart.html"
-                                               class="nav-link  hover:text-primary-500  rounded-md dark:hover:text-primary-500 relative   flex items-center decoration-0 px-3 py-3 group-data-[sidebar=brand]:hover:text-slate-200">
-                                                <i class="icofont-dotted-right me-2 text-slate-600 text-[8px] group-data-[sidebar=brand]:text-slate-400"></i>
-                                                Cart
-                                            </a>
-                                        </li>
-                                        <li class="nav-item relative block">
-                                            <a href="customers-checkout.html"
-                                               class="nav-link  hover:text-primary-500  rounded-md dark:hover:text-primary-500 relative   flex items-center decoration-0 px-3 py-3 group-data-[sidebar=brand]:hover:text-slate-200">
-                                                <i class="icofont-dotted-right me-2 text-slate-600 text-[8px] group-data-[sidebar=brand]:text-slate-400"></i>
-                                                Checkout
-                                            </a>
-                                        </li>
-                                        <li class="nav-item relative block">
-                                            <a href="customers-profile.html"
-                                               class="nav-link  hover:text-primary-500  rounded-md dark:hover:text-primary-500 relative   flex items-center decoration-0 px-3 py-3 group-data-[sidebar=brand]:hover:text-slate-200">
-                                                <i class="icofont-dotted-right me-2 text-slate-600 text-[8px] group-data-[sidebar=brand]:text-slate-400"></i>
-                                                Profile
-                                            </a>
-                                        </li>
-                                        <li class="nav-item relative block">
-                                            <a href="customers-stores.html"
-                                               class="nav-link  hover:text-primary-500  rounded-md dark:hover:text-primary-500 relative   flex items-center decoration-0 px-3 py-3 group-data-[sidebar=brand]:hover:text-slate-200">
-                                                <i class="icofont-dotted-right me-2 text-slate-600 text-[8px] group-data-[sidebar=brand]:text-slate-400"></i>
-                                               Favourite store
-                                            </a>
-                                        </li>
-                                        <li class="nav-item relative block">
-                                            <a href="customers-wishlist.html"
-                                               class="nav-link  hover:text-primary-500  rounded-md dark:hover:text-primary-500 relative   flex items-center decoration-0 px-3 py-3 group-data-[sidebar=brand]:hover:text-slate-200">
-                                                <i class="icofont-dotted-right me-2 text-slate-600 text-[8px] group-data-[sidebar=brand]:text-slate-400"></i>
-                                               Wishlist
-                                            </a>
-                                        </li>
-                                        <li class="nav-item relative block">
-                                            <a href="customers-order-track.html"
-                                               class="nav-link  hover:text-primary-500  rounded-md dark:hover:text-primary-500 relative   flex items-center decoration-0 px-3 py-3 group-data-[sidebar=brand]:hover:text-slate-200">
-                                                <i class="icofont-dotted-right me-2 text-slate-600 text-[8px] group-data-[sidebar=brand]:text-slate-400"></i>
-                                               Order track
-                                            </a>
-                                        </li>
-                                        <li class="nav-item relative block">
-                                            <a href="customers-invoice.html"
-                                               class="nav-link  hover:text-primary-500  rounded-md dark:hover:text-primary-500 relative   flex items-center decoration-0 px-3 py-3 group-data-[sidebar=brand]:hover:text-slate-200">
-                                                <i class="icofont-dotted-right me-2 text-slate-600 text-[8px] group-data-[sidebar=brand]:text-slate-400"></i>
-                                               Invoice
-                                            </a>
-                                        </li>
-                                    </ul>                            
-                                </div> -->
+                                
                                 <div data-fc-type="collapse" data-fc-parent="parent-accordion">
                                     <a href="#"
                                        class="nav-link hover:bg-transparent hover:text-black  rounded-md dark:hover:text-slate-200   flex items-center  decoration-0 px-3 py-3 cursor-pointer group-data-[sidebar=dark]:hover:text-slate-200 group-data-[sidebar=brand]:hover:text-slate-200">
@@ -1129,6 +1048,8 @@
           </nav>
 
 
+
+
         <div class="ltr:flex flex-1 rtl:flex-row-reverse">
             <div class="page-wrapper relative ltr:ms-auto rtl:me-auto rtl:ms-0 w-[calc(100%-260px)] px-4 pt-[64px] duration-300">
                 <div class="xl:w-full">        
@@ -1158,8 +1079,12 @@
                         </div>
                     </div>
                 </div><!--end container-->
+
+
+
+     {{!-- ======= add catagory section =============            --}}
             
-                <form id="categoryForm" action="#" method="post">
+                <form id="categoryForm" action="/admin/addCatagory " method="POST">
                     <div class="xl:w-full min-h-[calc(100vh-138px)] relative pb-14">
                         <div class="grid grid-cols-12 sm:grid-cols-12 md:grid-cols-12 lg:grid-cols-12 xl:grid-cols-12 gap-4 justify-between">
                             <!-- <div class="col-span-12 sm:col-span-12 md:col-span-12 lg:col-span-3 xl:col-span-3">
@@ -1177,11 +1102,11 @@
                                     <div class="flex-auto p-0 md:p-4">
                                         <div class="mb-2">
                                             <label for="title" class="font-medium text-sm text-slate-600 dark:text-slate-400">Category Name</label>
-                                            <input type="title" id="catagoryName" class="form-input w-full rounded-md mt-1 border border-slate-300/60 dark:border-slate-700 dark:text-slate-300 bg-transparent px-3 py-2 focus:outline-none focus:ring-0 placeholder:text-slate-400/70 placeholder:font-normal placeholder:text-sm hover:border-slate-400 focus:border-brand-500 dark:focus:border-brand-500 dark:hover:border-slate-700" placeholder="Category">
+                                            <input type="text" id="catagoryName" name="catagoryName" class="form-input w-full rounded-md mt-1 border border-slate-300/60 dark:border-slate-700 dark:text-slate-300 bg-transparent px-3 py-2 focus:outline-none focus:ring-0 placeholder:text-slate-400/70 placeholder:font-normal placeholder:text-sm hover:border-slate-400 focus:border-brand-500 dark:focus:border-brand-500 dark:hover:border-slate-700" placeholder="Category">
                                         </div>
                                         <div class="">
                                             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add</button>
-                                            <button type="button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-2" onclick="cancelImage()">Cancel</button>
+                                            <button type="button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-2" >Cancel</button>
                                         </div>
                                     </div>
                                 </div>

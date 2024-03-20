@@ -15,9 +15,14 @@ router.post('/admin/login',adminController.adminLoginPost)
 
 
 router.get('/admin/addCatagory',adminAuth,adminController.addCatagory)
+router.post('/admin/addCatagory',adminAuth,adminController.addCatagoryPost)
+
+router.get('/admin/catagoryList',adminAuth,adminController.catagoryList)
+// router.post('/admin/delteCatagorylist',adminAuth,adminController.deleteCatagory)
 
 
-// router.get('/admin/adminProfile', adminAuth, adminController.profile);
+
+
 router.get('/admin/adminLogOut',adminController.adminLogOut)
 
 module.exports = router;
