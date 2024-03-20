@@ -109,42 +109,7 @@ let addCatagoryPost = async (req, res) => {
             return res.render('admin/addCatagory', { error: 'Error adding category' });
     }
 };
-
-// let addCatagoryPost = async (req, res) => {
-//     try {
-//         const { catagoryName } = req.body;
-
-//         if (!req.admin) {
-//             throw new Error('Admin is not authenticated');
-//         }
-//         console.log('check admin ',req.admin);
-//         console.log('found admin id',req.admin.id);
-//         const admin = await Admin.findByIdAndUpdate(req.admin.id, {
-//             $push: { categories: { catagoryName } }
-//         });
-
-//         console.log('Admin:', admin);
-//         if (!admin) {
-//             return res.status(404).json({ error: 'Admin not found' });
-//         }
-
-//         console.log('Category added successfully');
-//         return res.redirect('/admin/addCatagory');
-//     } catch (error) {
-//         console.log('addCatagory error:', error);
-//         // return res.render('admin/addCatagory', { error: 'Error adding category' });
-//         return res.status(500).json({ error: 'Failed to add category' });
-//     }
-// };
-
-
-
-// added catagory listing section
-
-// let catagoryList=async(req,res)=>{
-//     res.render('admin/catagoryList',{error:''})
-// }
-
+    
 
 let catagoryList = async (req, res) => {
     try {
@@ -204,39 +169,37 @@ let editCatagory=async(req,res)=>{
 }
 
 
-let editCatagoryPost=async(req,res)=>{
-    try{
-        let categoryId=req.params.id
-        console.log(categoryId);
+let editCatagoryPost = async (req, res) => {
+    try {
+        let categoryId = req.params.id;
+        // console.log(categoryId);
+        let newName = req.body.editCatagoryName;
 
-        let product=await Product.findOne({'categories._id':categoryId})
+        let product = await Product.findOne({ 'categories._id': categoryId });
+        // console.log(product);
+        
+        if (!product) {
+            console.log('Product not found');
+            return res.status(404).send('Product not found');
+        }
+
+        let category = product.categories.id(categoryId);
+        if (!category) {
+            console.log('Category not found in product');
+            return res.status(404).send('Category not found in product');
+        }
+
+        category.catagoryName = newName;
+        await product.save();
+        return res.redirect('/admin/catagoryList');
+    } catch (error) {
+        console.log('Error updating category:', error);
+        return res.status(500).send('Internal server error');
     }
-}
+};
 
 
-// let catagoryEdit = async (req, res) => {
-//     try {
-//         const categoryId = req.params.id;
-//         if (!categoryId) {
-//             return res.status(400).send('Category ID not found');
-//         }
 
-//         const product = await Product.findOne({ categories: { $elemMatch: { _id: categoryId } } });
-//         if (!product) {
-//             return res.status(404).send('Product not found');
-//         }
-
-//         const editCategory = product.categories.find(category => category._id.toString() === categoryId);
-//         if (!editCategory) {
-//             return res.status(404).send('Category not found');
-//         }
-
-//         res.render('admin/catagoryEdit', { editCategory });
-//     } catch (error) {
-//         console.log('Error editing category:', error);
-//         return res.status(500).send('Internal server error');
-//     }
-// };
 
 
 
@@ -259,5 +222,6 @@ module.exports = {
     catagoryList,
     deleteCategory,
     editCatagory,
+    editCatagoryPost,
     adminLogOut
 };

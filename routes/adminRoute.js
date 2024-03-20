@@ -28,6 +28,7 @@ router.delete('/admin/deleteCategory/:id', adminController.deleteCategory);
 
 
 router.get('/admin/editCatagory/:id',adminAuth,adminController.editCatagory)
+router.post('/admin/editCatagory/:id',adminController.editCatagoryPost)
 
 
 

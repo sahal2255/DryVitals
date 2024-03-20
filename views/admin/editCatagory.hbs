@@ -53,14 +53,17 @@
     <div class="container">
         <div class="card">
             <h1 class="card-title">Edit Category</h1>
-            <form id="categoryForm" action="/admin/categoryEdit/{{categories._id}}" method="POST">
+                <form id="categoryForm" action="/admin/editCatagory/{{catagory._id}}" method="POST">
                 <div class="mb-3">
                     <label for="catagoryName" class="form-label">Category Name</label>
-                    <input type="text" id="catagoryName" name="catagoryName" class="form-control"  value="{{catagory.catagoryName}}">
+                <input type="text" id="catagoryName" name="editCatagoryName" class="form-control" value="{{catagory.catagoryName}}">
                 </div>
                 <div class="text-center">
-                    <button type="submit" class="btn btn-primary btn-edit">Edit</button>
-                    <button type="button" class="btn btn-danger btn-cancel">Cancel</button>
+                    {{!-- <form action="/admin/editCatagory/{{categories._id}}" method="POST"> --}}
+                    
+                    <button type="submit" class="btn btn-primary btn-edit">Save</button>
+                    {{!-- </form> --}}
+                    {{!-- <button type="button" class="btn btn-danger btn-cancel">Cancel</button> --}}
                 </div>
             </form>
         </div>
