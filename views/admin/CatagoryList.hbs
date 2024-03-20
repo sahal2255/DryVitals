@@ -1103,11 +1103,12 @@
       {{!-- <td>{{this.categories.id}}</td> --}}
       <td>{{this.catagoryName}}</td>
       <td>
-            <a href="/admin/categories/edit/{{this.id}}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
-            {{!-- <form action="/admin/deleteCatagory" method="POST"> --}}
-
-            {{!-- <button class="btn btn-danger btn-sm" onclick="deleteCategory('{{this.id}}')"><i class="fas fa-trash-alt"></i></button> --}}
-            {{!-- </form> --}}
+            {{!-- <a href="/admin/catagoryEdit/{{this.id}}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a> --}}
+            {{!-- <a href="/admin/catagoryEdit{{this.id}}?catagoryName={{this.catagoryName}}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a> --}}
+            <form action="/admin/editCatagory/{{this._id}}" method="GET">
+                <button type="submit" class="btn btn-primary btn-sm" style="background-color: rgb(21, 69, 241);"><i class="fas fa-edit"></i> </button>
+            </form>
+            
             <form id="deleteCategoryForm" action="/admin/deleteCategory/{{this._id}}" method="DELETE">
                 <input type="hidden" id="categoryId" name="_method" value="DELETE">
                 <button class="btn btn-danger btn-sm" onclick="prepareDelete('{{this.id}}')"><i class="fas fa-trash-alt"></i></button>

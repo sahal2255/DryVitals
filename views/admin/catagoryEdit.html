@@ -1084,36 +1084,27 @@
 
      {{!-- ======= add catagory section =============            --}}
             
-                <form id="categoryForm" action="/admin/addCatagory " method="POST">
-                    <div class="xl:w-full min-h-[calc(100vh-138px)] relative pb-14">
-                        <div class="grid grid-cols-12 sm:grid-cols-12 md:grid-cols-12 lg:grid-cols-12 xl:grid-cols-12 gap-4 justify-between">
-                            <!-- <div class="col-span-12 sm:col-span-12 md:col-span-12 lg:col-span-3 xl:col-span-3">
-                                <div class="w-full relative p-4">
-                                    <div class="mb-3">
-                                        <label for="categoryImage" class="form-label">Category Image</label>
-                                        <input type="file" class="custom-file-input" id="categoryImage" name="categoryImage" accept="image/*" required onchange="previewImage(event)">
-                                        <img id="preview" class="preview-image" src="#" alt="Preview Image" style="display: none;">
-                                    </div>
-                                </div>
-                            </div> -->
-                            <!--end col-->
-                            <div class="col-span-12 sm:col-span-12 md:col-span-12 lg:col-span-6 xl:col-span-6">
-                                <div class="w-full relative mb-4">
-                                    <div class="flex-auto p-0 md:p-4">
-                                        <div class="mb-2">
-                                            <label for="title" class="font-medium text-sm text-slate-600 dark:text-slate-400">Category Name</label>
-                                            <input type="text" id="catagoryName" name="catagoryName" class="form-input w-full rounded-md mt-1 border border-slate-300/60 dark:border-slate-700 dark:text-slate-300 bg-transparent px-3 py-2 focus:outline-none focus:ring-0 placeholder:text-slate-400/70 placeholder:font-normal placeholder:text-sm hover:border-slate-400 focus:border-brand-500 dark:focus:border-brand-500 dark:hover:border-slate-700" placeholder="Category">
-                                        </div>
-                                        <div class="">
-                                            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add</button>
-                                            <button type="button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-2" >Cancel</button>
-                                        </div>
-                                    </div>
-                                </div>
+     <form id="categoryForm" action="/admin/categoryEdit/{{categories.id}}" method="POST">
+        <div class="xl:w-full min-h-[calc(100vh-138px)] relative pb-14">
+            <div class="grid grid-cols-12 sm:grid-cols-12 md:grid-cols-12 lg:grid-cols-12 xl:grid-cols-12 gap-4 justify-between">
+                <div class="col-span-12 sm:col-span-12 md:col-span-12 lg:col-span-6 xl:col-span-6">
+                    <div class="w-full relative mb-4">
+                        <div class="flex-auto p-0 md:p-4">
+                            <div class="mb-2">
+                                <label for="catagoryName" class="font-medium text-sm text-slate-600 dark:text-slate-400">Category Name</label>
+                                <input type="text" id="catagoryName" name="catagoryName" class="form-input w-full rounded-md mt-1 border border-slate-300/60 dark:border-slate-700 dark:text-slate-300 bg-transparent px-3 py-2 focus:outline-none focus:ring-0 placeholder:text-slate-400/70 placeholder:font-normal placeholder:text-sm hover:border-slate-400 focus:border-brand-500 dark:focus:border-brand-500 dark:hover:border-slate-700" placeholder="Category" value="{{req.query.catagoryName}}">
+                            </div>
+                            <div class="">
+                                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</button>
+                                <button type="button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-2">Cancel</button>
                             </div>
                         </div>
                     </div>
-                </form>
+                </div>
+            </div>
+        </div>
+    </form>
+    
                 
                         <!--end col-->  
                                                            
