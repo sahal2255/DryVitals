@@ -2,8 +2,13 @@ const Admin = require('../models/admin');
 const Product=require('../models/products')
 const bcrypt = require('bcrypt');
 const { application } = require('express')
+const cloudinary=require('../config/cloudinary')
 const jwt = require('jsonwebtoken');
-// const admin = require('../models/admin');
+const fs=require('fs')
+const path=require('path')
+
+// const cloudinary=require('../config/cloudinary')
+const upload=require('../config/multer')
 require('dotenv').config();
 
 
@@ -84,8 +89,6 @@ let addCatagory=async(req,res)=>{
 
 // catagory post
 
-// catagory post
-
 let addCatagoryPost = async (req, res) => {
     try {
         let { catagoryName } = req.body;
@@ -94,9 +97,9 @@ let addCatagoryPost = async (req, res) => {
         }
 
 
-        let product = await Product.findOne();
+        let product = await Admin.findOne();
         if (!product) {
-            product = new Product({});
+            product = new Admin({});
         }
 
         product.categories.push({ catagoryName: catagoryName });
@@ -110,10 +113,12 @@ let addCatagoryPost = async (req, res) => {
     }
 };
     
+// catagory list
+
 
 let catagoryList = async (req, res) => {
     try {
-        const products = await Product.find({});
+        const products = await Admin.find({});
         let categories = [];
         products.forEach(product => {
             categories = categories.concat(product.categories);
@@ -135,7 +140,7 @@ const deleteCategory = async (req, res) => {
     const categoryId = req.params.id;
     console.log(categoryId);
     try {
-        let product = await Product.findOne();
+        let product = await Admin.findOne();
         if (!product) {
           return res.status(400).send('product not found');
         }
@@ -155,7 +160,7 @@ let editCatagory=async(req,res)=>{
     try{
         let categoryId=req.params.id
         console.log(categoryId);
-        let product=await Product.findOne({'categories._id':categoryId})
+        let product=await Admin.findOne({'categories._id':categoryId})
 
         // let catagory=product.categories._id(categoryId)
         let catagory=product.categories.find(category=>category._id.toString()===categoryId)
@@ -175,7 +180,7 @@ let editCatagoryPost = async (req, res) => {
         // console.log(categoryId);
         let newName = req.body.editCatagoryName;
 
-        let product = await Product.findOne({ 'categories._id': categoryId });
+        let product = await Admin.findOne({ 'categories._id': categoryId });
         // console.log(product);
         
         if (!product) {
@@ -201,6 +206,105 @@ let editCatagoryPost = async (req, res) => {
 
 
 
+// let addProduct=async(req,res)=>{
+//     res.render('admin/addProduct',{error:' '})
+// }
+
+
+let addProduct = async (req, res) => {
+    try {
+        const products = await Admin.find({});
+        let categories = [];
+        products.forEach(product => {
+            categories = categories.concat(product.categories);
+        });
+        res.render('admin/addProduct', { categories, error: ' ' });
+    } catch (error) {
+        console.log('Error fetching categories:', error);
+        res.render('admin/addProduct', { error: 'Error fetching categories' });
+    }
+};
+
+
+
+
+// adding product details on the database
+
+let addProductPost = async (req, res) => {
+    try {
+        const { productName, category, description, variant, price } = req.body;
+        const image = req.files; // Access uploaded files via req.files
+        console.log("req.files :",image);  
+        const imageUrl = []; 
+
+        // Upload each image to Cloudinary and collect their URLs
+        // await Promise.all(image.map(async (image) => {
+        //     const result = await cloudinary.uploader.upload(image.path);
+        //     imageUrl.push(result.secure_url);
+        // }));
+        for (const file of image) {
+            const result = await cloudinary.uploader.upload(file.path);
+            imageUrl.push(result.secure_url);
+          }
+          console.log(imageUrl);
+        // Create a new product instance with the collected image URLs
+        const newProduct = new Product({
+            productName,
+            category,
+            description,
+            variant,
+            price,
+            imageUrl: imageUrl,
+            // imageUrl: imageUrl.map((url) => url)
+        });
+        // console.log(imageUrl);
+        // console.log(newProduct);
+
+        // Save the new product to the database
+        await newProduct.save();
+        console.log('image upload successfully');
+        res.status(201).json({ message: 'Image uploaded successfully' });
+    } catch (error) {
+        console.error('Error uploading image:', error);
+        res.status(500).json({ message: 'Error uploading image' });
+    }
+};
+
+
+
+
+
+// const addProductPost = async (req, res) => {
+//     try {
+//         console.log('req file',req.file);
+//         const result = await cloudinary.uploader.upload(req.file.path);
+//         console.log('Cloudinary upload result:', result); 
+//         const { productName, category, description, variant, price } = req.body;
+
+//         const newProduct = new Product({
+//             productName,
+//             category,
+//             description,
+//             variant,
+//             price,
+//             // imageUrl: result.secure_url
+//         });
+
+//         // Save the new product to the database
+//         await newProduct.save();
+
+//         res.status(201).json({ message: 'Product added successfully' });
+//     } catch (error) {
+//         console.error('Error adding product:', error);
+//         res.status(500).json({ message: 'Error adding product' });
+//     }
+// };
+
+
+let productList=async(req,res)=>{
+    res.redirect('/admin/productList')
+}
+
 
 
 
@@ -223,5 +327,8 @@ module.exports = {
     deleteCategory,
     editCatagory,
     editCatagoryPost,
+    addProduct,
+    addProductPost,
+    productList,
     adminLogOut
 };

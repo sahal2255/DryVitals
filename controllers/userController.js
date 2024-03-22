@@ -155,7 +155,7 @@ let signUp=async(req,res)=>{
 
     let userId=req.user.id
     let user=await User.findOne({_id:userId})
-    console.log(user);
+    // console.log(user);
     if(!user){
         return res.status(400).send('user not found')
     }
