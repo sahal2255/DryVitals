@@ -33,7 +33,13 @@ router.get('/admin/addProduct',adminAuth,adminController.addProduct)
 
 router.post('/admin/addProduct',adminAuth , upload.array('image',3), adminController.addProductPost);
 
-router.get('/admin/productList',adminAuth.adminController.productList)
+router.get('/admin/productList',adminAuth,adminController.productList)
+
+router.get('/admin/deleteProduct/:id',adminAuth,adminController.deleteProduct)
+router.delete('/admin/deleteProduct/:id',adminController.deleteProduct)
+
+router.get('/admin/editProduct/:id',adminAuth,adminController.editProduct)
+router.post('/admin/editProduct/:id',adminAuth,adminController.editProductPost)
 
 
 

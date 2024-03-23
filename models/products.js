@@ -21,10 +21,7 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    // imageUrl: {
-    //     type: [{type:String}], // Define imageUrl as an array of strings
-    //     required: true
-    // }
+    
     imageUrl:{ type: Array }
 });
 

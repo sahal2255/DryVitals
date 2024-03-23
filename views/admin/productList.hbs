@@ -57,21 +57,35 @@
                                 <div id="Admin-flush" class="hidden  overflow-hidden">
                                     <ul class="nav flex-col flex flex-wrap ps-0 mb-0 ms-2">
                                         <li class="nav-item relative block">
-                                            <a href="index.html"
+                                            <a href="/admin/index"
                                                class="nav-link  hover:text-primary-500  rounded-md dark:hover:text-primary-500 relative   flex items-center decoration-0 px-3 py-3 group-data-[sidebar=brand]:hover:text-slate-200">
                                                 <i class="icofont-dotted-right me-2 text-slate-600 text-[8px] group-data-[sidebar=brand]:text-slate-400 "></i>
                                                 Dashboard
                                             </a>
                                         </li>
                                         <li class="nav-item relative block">
-                                            <a href="admin-products.html"
+                                            <a href="/admin/catagoryList"
+                                               class="nav-link  hover:text-primary-500  rounded-md dark:hover:text-primary-500 relative   flex items-center decoration-0 px-3 py-3 group-data-[sidebar=brand]:hover:text-slate-200">
+                                                <i class="icofont-dotted-right me-2 text-slate-600 text-[8px] group-data-[sidebar=brand]:text-slate-400"></i>
+                                                Catagory
+                                            </a>
+                                        </li>
+                                        <li class="nav-item relative block">
+                                            <a href="/admin/addCatagory"
+                                               class="nav-link  hover:text-primary-500  rounded-md dark:hover:text-primary-500 relative   flex items-center decoration-0 px-3 py-3 group-data-[sidebar=brand]:hover:text-slate-200">
+                                                <i class="icofont-dotted-right me-2 text-slate-600 text-[8px] group-data-[sidebar=brand]:text-slate-400"></i>
+                                                Add Catagory
+                                            </a>
+                                        </li>
+                                        <li class="nav-item relative block">
+                                            <a href="/admin/productList"
                                                class="nav-link  hover:text-primary-500  rounded-md dark:hover:text-primary-500 relative   flex items-center decoration-0 px-3 py-3 group-data-[sidebar=brand]:hover:text-slate-200">
                                                 <i class="icofont-dotted-right me-2 text-slate-600 text-[8px] group-data-[sidebar=brand]:text-slate-400"></i>
                                                 Products
                                             </a>
                                         </li>
                                         <li class="nav-item relative block">
-                                            <a href="admin-add-product.html"
+                                            <a href="/admin/addProduct"
                                                class="nav-link  hover:text-primary-500  rounded-md dark:hover:text-primary-500 relative   flex items-center decoration-0 px-3 py-3 group-data-[sidebar=brand]:hover:text-slate-200">
                                                 <i class="icofont-dotted-right me-2 text-slate-600 text-[8px] group-data-[sidebar=brand]:text-slate-400"></i>
                                                Add New Product
@@ -1068,21 +1082,21 @@
                                     <div class="mb-4 border-b border-gray-200 dark:border-slate-700" data-fc-type="tab">
                                         <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" aria-label="Tabs">
                                             <li class="me-2" role="presentation">
-                                                <button class="inline-block p-4 rounded-t-lg border-b-2 active " id="all-tab" data-fc-target="#all" type="button" role="tab" aria-controls="all" aria-selected="false">All <span class="text-slate-400">(4251)</span></button>
+                                                {{!-- <button class="inline-block p-4 rounded-t-lg border-b-2 active " id="all-tab" data-fc-target="#all" type="button" role="tab" aria-controls="all" aria-selected="false">All <span class="text-slate-400">(4251)</span></button> --}}
                                             </li>
                                             <li class="me-2" role="presentation">
-                                                <button class="inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="published-tab" data-fc-target="#published" type="button" role="tab" aria-controls="published" aria-selected="false">Published <span class="text-slate-400">(3255)</span></button>
+                                                {{!-- <button class="inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="published-tab" data-fc-target="#published" type="button" role="tab" aria-controls="published" aria-selected="false">Published <span class="text-slate-400">(3255)</span></button> --}}
                                             </li>
                                             <li class="me-2" role="presentation">
-                                                <button class="inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="drafts-tab" data-fc-target="#drafts" type="button" role="tab" aria-controls="drafts" aria-selected="false">Drafts <span class="text-slate-400">(25)</span></button>
+                                                {{!-- <button class="inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="drafts-tab" data-fc-target="#drafts" type="button" role="tab" aria-controls="drafts" aria-selected="false">Drafts <span class="text-slate-400">(25)</span></button> --}}
                                             </li>
                                             <li role="presentation">
-                                                <button class="inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="discount-tab" data-fc-target="#discount" type="button" role="tab" aria-controls="discount" aria-selected="false">On Discount <span class="text-slate-400">(532)</span></button>
+                                                {{!-- <button class="inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="discount-tab" data-fc-target="#discount" type="button" role="tab" aria-controls="discount" aria-selected="false">On Discount <span class="text-slate-400">(532)</span></button> --}}
                                             </li>
                                         </ul>
                                     </div>
                                     <div class="flex flex-wrap gap-4 mb-3">
-                                        <div class="mb-2 w-44">                                           
+                                        {{!-- <div class="mb-2 w-44">                                           
                                             <select id="Category" class="w-full rounded-md mt-1 border border-slate-300/60 dark:border-slate-700 dark:text-slate-300 bg-transparent px-3 py-2 focus:outline-none focus:ring-0 placeholder:text-slate-400/70 placeholder:font-normal placeholder:text-sm hover:border-slate-400 focus:border-primary-500 dark:focus:border-primary-500  dark:hover:border-slate-700">
                                                 <option  class="dark:text-slate-700">All Category</option>
                                                 <option  class="dark:text-slate-700">Electronics</option>
@@ -1090,7 +1104,7 @@
                                                 <option  class="dark:text-slate-700">Footwear</option>
                                                 <option  class="dark:text-slate-700">Clothes</option>
                                             </select> 
-                                        </div>
+                                        </div> --}}
                                         
                                         <div class="ms-auto">
                                             <form>
@@ -1104,7 +1118,7 @@
                                         </div>
                                         <div>
                                             <button class="inline-block focus:outline-none bg-brand-500 mt-1 text-white hover:bg-brand-600 hover:text-white  text-md font-medium py-2 px-4 rounded">
-                                                Add product
+                                                <a href="/admin/addProduct"> Add Product</a>
                                             </button>
                                         </div>
                                     </div>
@@ -1139,21 +1153,20 @@
                                                             </thead>
                                                             <tbody>
                                                                 {{#each products}}
-                                                                <tr class="bg-white border-b border-dashed dark:bg-gray-900 dark:border-gray-700/40">
+                                                                <tr class="product-row bg-white border-b border-dashed dark:bg-gray-900 dark:border-gray-700/40">
                                                                     <td class="p-3 text-sm font-medium whitespace-nowrap dark:text-white">
                                                                         <div class="flex items-center">
-                                                                            <img src="{{imageUrl}}" alt="" class="me-2 h-8 inline-block">
+                                                                            <img src="{{imageUrl}}" alt="{{productName}}" class="me-2 h-8 inline-block">
                                                                             <div class="self-center">                                                                        
-                                                                                <h5 class="text-sm font-semibold text-slate-700 dark:text-gray-400">{{productName}}</h5>
+                                                                                <h5 class="text-sm font-semibold text-slate-700 dark:text-gray-400 product-name">{{productName}}</h5>
                                                                                 <!-- <span class="block  font-medium text-slate-500">{{variant}} </span> -->
                                                                             </div>
                                                                         </div>
                                                                     </td>
                                                                     <td class="p-3 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                                                        {{#each categories}}
-                                                                        <a href="#" class="text-brand-500 underline">{{this}}</a>{{#unless @last}}, {{/unless}}
-                                                                        {{/each}}
+                                                                        <a href="#" class="text-brand-500 ">{{category}}</a>
                                                                     </td>
+
                                                                     <td class="p-3 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
                                                                         <span class="bg-green-600/5 text-green-600 text-[11px] font-medium px-2.5 py-0.5 rounded h-5">In stock</span>
                                                                     </td>
@@ -1175,8 +1188,15 @@
                                                                     </td>
                                                                     <td class="p-3 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
                                                                         <!-- Add your action buttons here -->
-                                                                        <a href="#"><i class="icofont-ui-edit text-lg text-gray-500 dark:text-gray-400"></i></a>
-                                                                        <a href="#"><i class="icofont-ui-delete text-lg text-red-500 dark:text-red-400"></i></a>
+                                                                        {{!-- <a href=""><i class="icofont-ui-edit text-lg text-gray-500 dark:text-gray-400"></i></a> --}}
+                                                                        <form action="/admin/editProduct/{{this._id}}" method="GET">
+                                                                            <button type="submit" class="btn btn-primary btn-sm" ><i class="icofont-ui-edit text-lg text-gray-500 dark:text-gray-400"></i> </button>
+                                                                        </form>
+                                                                        {{!-- <a href="#"><i class="icofont-ui-delete text-lg text-red-500 dark:text-red-400"></i></a> --}}
+                                                                        <form id="deleteCategoryForm" action="/admin/deleteProduct/{{this._id}}" method="DELETE">
+                                                                            <input type="hidden" id="categoryId" name="_method" value="DELETE">
+                                                                            <button class="btn btn-danger btn-sm" onclick="prepareDelete('{{this.id}}')"><i class="icofont-ui-delete text-lg text-red-500 dark:text-red-400"></i></button>
+                                                                        </form>
                                                                     </td>
                                                                 </tr>
                                                                 {{/each}}
@@ -1192,31 +1212,35 @@
                             </div><!--end card-->                                  
                         </div><!--end col-->                        
                     </div> <!--end grid-->                                        
-                    <!-- footer -->
-                    <div class="absolute bottom-0 -left-4 -right-4 block print:hidden border-t p-4 h-[52px] dark:border-slate-700/40">
-                        <div class="container">
-                          <!-- Footer Start -->
-                          <footer
-                            class="footer bg-transparent  text-center  font-medium text-slate-600 dark:text-slate-400 md:text-left "
-                          >
-                            &copy;
-                            <script>
-                              var year = new Date();document.write(year.getFullYear());
-                            </script>
-                            Robotech
-                            <span class="float-right hidden text-slate-600 dark:text-slate-400 md:inline-block"
-                              >Crafted with <i class="ti ti-heart text-red-500"></i> by
-                              Mannatthemes</span
-                            >
-                          </footer>
-                          <!-- end Footer -->
-                        </div>
-                      </div>
+                    
   
   
                 </div><!--end container-->
             </div><!--end page-wrapper-->
         </div><!--end /div-->
+    <script>
+    // Select the search input element
+    const searchInput = document.getElementById('productSearch');
+    searchInput.addEventListener('input', function () {
+        const query = this.value.toLowerCase();
+        const productRows = document.querySelectorAll('.product-row');
+        productRows.forEach(row => {
+            const productName = row.querySelector('.product-name').textContent.toLowerCase();
+            if (productName.includes(query)) {
+                
+                row.style.display = 'table-row';
+            } else {
+                
+                row.style.display = 'none';
+            }
+        });
+    });
+    function prepareDelete(categoryId) {
+                if (confirm("Are you sure you want to delete this Product?")) {
+            document.getElementById('deleteProduct').submit();
+            }
+    }
+</script>
 
         <!-- JAVASCRIPTS -->
         <!-- <div class="menu-overlay"></div> -->

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Add your custom styles here */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .form-control {
+            border-radius: 10px;
+        }
+
+        .btn-primary {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn-secondary{
+            background-color: bisque;
+        }
+        .btn-secondary:hover{
+            background-color: bisque;
+        }
+
+        .btn-primary:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900">
+    <div class="container">
+        <div class="max-w-4xl mx-auto">
+            <div id="myTabContent">
+                <div class="p-4 bg-gray-50 rounded-lg dark:bg-gray-900">
+                    <form id="editProductForm" action="/admin/editProduct/{{product._id}}" method="POST">
+                        <!-- Image -->
+                        <div class="mb-4 text-center">
+                            <img src="{{product.imageUrl}}" alt="{{product.productName}}" class="mx-auto h-32 w-32 ">
+                            {{!-- <input type="file" id="image" name="image" class="hidden" onchange="previewFile()"> --}}
+                        </div>
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Change Image</label>
+                            <input type="file" id="image" name="image" class="form-control">
+                        </div>
+                        
+                        <!-- Product details -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="productName" class="form-label">Product Name</label>
+                                <input type="text" id="productName" name="productName" value="{{product.productName}}"
+                                    class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="category" class="form-label">Category</label>
+                                <input type="text" id="category" name="category" value="{{product.category}}"
+                                    class="form-control">
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea id="description" name="description" class="form-control"
+                                    rows="3">{{product.description}}</textarea>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="variant" class="form-label">Variant</label>
+                                <input type="text" id="variant" name="variant" value="{{product.variant}}"
+                                    class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="price" class="form-label">Price</label>
+                                <input type="number" id="price" name="price" value="{{product.price}}"
+                                    class="form-control">
+                            </div>
+                        </div>
+                        <!-- Submit button -->
+                        <div class="mt-6 text-center">
+                            <button type="submit"
+                                class="btn btn-primary">Save Changes</button>
+                                <button type="button" class="btn btn-secondary"><a href="/admin/productList" style="text-decoration: none;">Cancel</a></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    function previewFile() {
+        const preview = document.getElementById('previewImage');
+        const file = document.getElementById('image').files[0];
+        const reader = new FileReader();
+
+        reader.onloadend = function() {
+            preview.src = reader.result;
+        };
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = "{{product.imageUrl}}"; // Default image URL if no new image selected
+        }
+        function cancelChanges() {
+            // Redirect or perform any other action needed to cancel changes
+            window.location.href = '/admin/productList';
+        }
+    }
+</script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -237,33 +237,27 @@ let addProductPost = async (req, res) => {
         console.log("req.files :",image);  
         const imageUrl = []; 
 
-        // Upload each image to Cloudinary and collect their URLs
-        // await Promise.all(image.map(async (image) => {
-        //     const result = await cloudinary.uploader.upload(image.path);
-        //     imageUrl.push(result.secure_url);
-        // }));
+        
         for (const file of image) {
             const result = await cloudinary.uploader.upload(file.path);
             imageUrl.push(result.secure_url);
           }
           console.log(imageUrl);
-        // Create a new product instance with the collected image URLs
-        const newProduct = new Product({
+            const newProduct = new Product({
             productName,
             category,
             description,
             variant,
             price,
             imageUrl: imageUrl,
-            // imageUrl: imageUrl.map((url) => url)
+            
         });
         // console.log(imageUrl);
         // console.log(newProduct);
-
-        // Save the new product to the database
         await newProduct.save();
         console.log('image upload successfully');
-        res.status(201).json({ message: 'Image uploaded successfully' });
+        res.redirect('/admin/productList')
+        // res.status(201).json({ message: 'Image uploaded successfully' });
     } catch (error) {
         console.error('Error uploading image:', error);
         res.status(500).json({ message: 'Error uploading image' });
@@ -274,36 +268,92 @@ let addProductPost = async (req, res) => {
 
 
 
-// const addProductPost = async (req, res) => {
-//     try {
-//         console.log('req file',req.file);
-//         const result = await cloudinary.uploader.upload(req.file.path);
-//         console.log('Cloudinary upload result:', result); 
-//         const { productName, category, description, variant, price } = req.body;
-
-//         const newProduct = new Product({
-//             productName,
-//             category,
-//             description,
-//             variant,
-//             price,
-//             // imageUrl: result.secure_url
-//         });
-
-//         // Save the new product to the database
-//         await newProduct.save();
-
-//         res.status(201).json({ message: 'Product added successfully' });
-//     } catch (error) {
-//         console.error('Error adding product:', error);
-//         res.status(500).json({ message: 'Error adding product' });
-//     }
-// };
+// product listing section
 
 
 let productList=async(req,res)=>{
-    res.redirect('/admin/productList')
+    try {
+        const products = await Product.find({});
+        
+        res.render('admin/productList', { products });
+    } catch (error) {
+        console.log('Product list pge error:', error);
+        res.status(201).json({ message: 'error showing product list' })
+        // res.render('admin/catagoryList', { error: 'Error fetching categories' });
+    }
 }
+
+
+
+
+let deleteProduct = async (req, res) => {
+    const productId = req.params.id;
+    console.log(productId);
+    try {
+        const deletedProduct = await Product.findOneAndDelete({ _id: productId });
+        if (!deletedProduct) {
+            return res.status(404).send('Product not found');
+        }
+        console.log('Product deleted successfully');
+        return res.redirect('/admin/productList');
+    } catch (error) {
+        console.log('Error deleting product:', error);
+        return res.status(500).send('Internal server error');
+    }
+}
+
+
+
+
+let editProduct = async (req, res) => {
+    try {
+        let productId = req.params.id;
+        // console.log(productId);
+        let product = await Product.findById(productId);
+
+        if (!product) {
+            console.log('Product not found');
+            return res.status(404).send('Product not found');
+        }
+
+        res.render('admin/editProduct', { product: product });
+    } catch (error) {
+        console.log('Error finding product:', error);
+        res.status(500).send('Internal server error');
+    }
+}
+
+
+// let editProductPost=async(req,res)=>{
+//     try{
+//     let productId=req.params.id;
+//     console.log(productId);
+//     let newProduct=req.body;
+//     console.log(newProduct);
+//     let products=await Product.findOne({'product._id':productId})
+//     // console.log(product);
+//     // if (!products) {
+//     //     console.log('Product not found');
+//     //     return res.status(404).send('Product not found');
+//     // }
+//         let Products = products.product.id(productId);
+//         if (!Products) {
+//             console.log('Category not found in product');
+//             return res.status(404).send('Category not found in product');
+//         }
+
+//         Products.set(newProduct)
+//         await products.save();
+//         return res.redirect('/admin/productList');
+//     } catch (error) {
+//         console.log('Error updating product:', error);
+//         return res.status(500).send('Internal server error');
+//     }
+// }
+
+
+
+
 
 
 
@@ -330,5 +380,8 @@ module.exports = {
     addProduct,
     addProductPost,
     productList,
+    deleteProduct,
+    editProduct,
+    editProductPost,
     adminLogOut
 };
