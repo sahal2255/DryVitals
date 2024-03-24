@@ -2,6 +2,7 @@ const User =require('../models/user')
 const bcrypt=require('bcrypt')
 const { application } = require('express')
 const jwt=require('jsonwebtoken')
+const Product=require('../models/products')
 
 require('dotenv').config()
 
@@ -64,11 +65,6 @@ let loginPostPage=async(req,res)=>{
       }
     };
 
-
-// ----end login section
-
-
-
 // user logout section
 
 
@@ -77,18 +73,6 @@ let logOut=async(req,res)=>{
     console.log('logout success');
     res.redirect('/')
 }
-
-
-// ----end user logout section
-
-
-
-
-
-
-
-
-
 
 
 //--------- getting signUpPage ---------
@@ -143,8 +127,43 @@ let signUp=async(req,res)=>{
   };
 
 
+// product page get section
 
-//   -----end user signin section
+let productGet=async(req,res)=>{
+    
+    try{
+        const products =await Product.find({})
+        // console.log(products);
+        res.render('user/product',{products})
+    }
+    catch(error){
+        console.log('product page error',error);
+        res.status(201).json({message:'error showing product'})
+    }
+}
+
+
+// single product get section
+
+let singleProduct=async(req,res)=>{
+    // res.render('user/singleProduct')
+    try{
+
+    
+    let productId=req.params._id;
+    console.log(productId);
+    let singlepro=await Product.findById(productId)
+    if(!singlepro){
+        console.log('Product not found');
+        return res.status(404).send('product nt found')
+    }
+    res.render('user/singleProduct',{product:singlepro})
+    }catch(error){
+        console.log('error finding product');
+        res.status(500).send('internal server error')
+    }
+}
+
 
 
 
@@ -178,6 +197,8 @@ module.exports={
     signUp,
     loginPostPage,
     logOut,
+    productGet,
+    singleProduct,
     profile
 }
 

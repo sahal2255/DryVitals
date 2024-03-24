@@ -206,10 +206,6 @@ let editCatagoryPost = async (req, res) => {
 
 
 
-// let addProduct=async(req,res)=>{
-//     res.render('admin/addProduct',{error:' '})
-// }
-
 
 let addProduct = async (req, res) => {
     try {
@@ -324,34 +320,37 @@ let editProduct = async (req, res) => {
 }
 
 
-// let editProductPost=async(req,res)=>{
-//     try{
-//     let productId=req.params.id;
-//     console.log(productId);
-//     let newProduct=req.body;
-//     console.log(newProduct);
-//     let products=await Product.findOne({'product._id':productId})
-//     // console.log(product);
-//     // if (!products) {
-//     //     console.log('Product not found');
-//     //     return res.status(404).send('Product not found');
-//     // }
-//         let Products = products.product.id(productId);
-//         if (!Products) {
-//             console.log('Category not found in product');
-//             return res.status(404).send('Category not found in product');
-//         }
-
-//         Products.set(newProduct)
-//         await products.save();
-//         return res.redirect('/admin/productList');
-//     } catch (error) {
-//         console.log('Error updating product:', error);
-//         return res.status(500).send('Internal server error');
-//     }
-// }
 
 
+let editProductPost = async (req, res) => {
+    try {
+        let productId = req.params.id;
+        let newProduct = req.body;
+
+        let product = await Product.findOne({ _id: productId });
+
+        if (!product) {
+            console.log('Product not found');
+            return res.status(404).send('Product not found');
+        }
+        product.productName = newProduct.productName;
+        product.category = newProduct.category;
+        product.description = newProduct.description;
+        product.variant = newProduct.variant;
+        product.price = newProduct.price;
+        // if(req.file){
+        //     const imagePath=path.join(__dirname,'../public/uploads',product.imageUrl)
+        //     fs.unlinkSync(imagePath)
+        //     product.imageUrl=req.file.filename
+        // }
+        await product.save();
+
+        return res.redirect('/admin/productList');
+    } catch (error) {
+        console.log('Error updating product:', error);
+        return res.status(500).send('Internal server error');
+    }
+}
 
 
 
