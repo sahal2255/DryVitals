@@ -205,5 +205,3 @@ module.exports={
     singleProduct,
     profile
 }
-
-
