@@ -102,11 +102,12 @@
 								</li>
 								<li>
 									<div class="header-icons">
-										<a> <div class="header-icons">
 										<a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
 										<a class="shopping-cart" href="cart.html"><i class="fas fa-shopping-cart"></i></a>
 										<a class="mobile-hide wishlist-bar-icon" href=""><i class="bi bi-heart-fill"></i></a>
 										<a class="mobile-hide person-bar-icon" href="/profile"><i class="bi bi-person-circle"></i></a>
+									</div>
+									
 								</li>
 							</ul>
 						</nav>
@@ -165,9 +166,10 @@
 				</div>
 				<div class="col-md-7">
 					<div class="single-product-content">
-						<h3>{{product.productName}}</h3>
+						<h3>{{product.productName}}({{product.category}})</h3>
 						<p class="single-product-pricing"><span></span>${{product.price}}</p>
 						<p class="single-product"><span></span>{{product.variant}}</p>
+
 						<p>{{product.description}}</p>
 
 						<div class="single-product-form">

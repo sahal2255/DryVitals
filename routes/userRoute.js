@@ -23,11 +23,11 @@ router.post('/signup',userController.signUp)
 
 router.get('/product',userAuth,userController.productGet)
 
-router.get('/singleProduct',userAuth,userController.singleProduct)
+router.get('/singleProduct/:id', userAuth, userController.singleProduct);
 
 
 
-router.get('/profile/:id',userAuth,userController.profile)
+router.get('/profile',userAuth,userController.profile)
 
 
 

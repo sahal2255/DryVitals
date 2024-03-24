@@ -146,13 +146,14 @@ let productGet=async(req,res)=>{
 // single product get section
 
 let singleProduct=async(req,res)=>{
-    // res.render('user/singleProduct')
+
     try{
 
     
-    let productId=req.params._id;
-    console.log(productId);
+    let productId=req.params.id;
+    // console.log('product id',productId);
     let singlepro=await Product.findById(productId)
+    // console.log('single product',singlepro);
     if(!singlepro){
         console.log('Product not found');
         return res.status(404).send('product nt found')
@@ -163,6 +164,9 @@ let singleProduct=async(req,res)=>{
         res.status(500).send('internal server error')
     }
 }
+
+
+
 
 
 
