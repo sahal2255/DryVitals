@@ -4,24 +4,34 @@ const { application } = require('express')
 const jwt=require('jsonwebtoken')
 const Product=require('../models/products')
 
+
 require('dotenv').config()
 
 
 
 //------- getting homepage -----
-let homepage=(req,res)=>{
-    res.render('user/index')
+let homepage=async(req,res)=>{
+    // res.render('user/index')
+    try{
+        const products=await Product.find({}).limit(3)
+        res.render('user/index',{products})
+    }
+    catch(error){
+        console.log('product page error',error);
+        res.status(201).json({message:'error showing product'})
+    }
 }
 
 
 
 //-------- getting loginPage ---------
-let loginPage=async(req,res)=>{
-    // if(req.cookies.jwt){
-        // return res.redirect('/')
-    // }
+let loginPage = async (req, res) => {
+    if (req.user) {
+        // User is already logged in, redirect to another page or the homepage
+        return res.redirect('/');
+    }
     console.log('loginpage get');
-    res.render('user/login',{error:''})
+    res.render('user/login', { error: '' });
 }
 
 
@@ -116,7 +126,7 @@ let signUp=async(req,res)=>{
         res.cookie("jwt", token, { httpOnly: true, maxAge: 86400000 }); // 24 hour expiry
 
         console.log("New user created:", newUser);
-        return res.redirect('/')
+        return res.redirect('/login')
       } 
      catch (error) {
       console.error("Verification failed:", error);
@@ -132,7 +142,8 @@ let signUp=async(req,res)=>{
 let productGet=async(req,res)=>{
     
     try{
-        const products =await Product.find({})
+        const products =await Product.find({isDisabled:false})
+        // const catagory=await Admin.distinct('catagories')
         // console.log(products);
         res.render('user/product',{products})
     }
@@ -141,6 +152,8 @@ let productGet=async(req,res)=>{
         res.status(201).json({message:'error showing product'})
     }
 }
+
+
 
 
 // single product get section

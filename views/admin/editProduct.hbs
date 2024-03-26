@@ -57,7 +57,7 @@
         <div class="max-w-4xl mx-auto">
             <div id="myTabContent">
                 <div class="p-4 bg-gray-50 rounded-lg dark:bg-gray-900">
-                    <form id="editProductForm" action="/admin/editProduct/{{product._id}}" method="POST">
+                    <form id="editProductForm" action="/admin/editProduct/{{product._id}}" method="POST" enctype="multipart/form-data">
                         <!-- Image -->
                         <div class="mb-4 text-center">
                             <img src="{{product.imageUrl}}" alt="{{product.productName}}" class="mx-auto h-32 w-32 ">
@@ -65,7 +65,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="image" class="form-label">Change Image</label>
-                            <input type="file" id="image" name="image" class="form-control">
+                            <input type="file" id="image" name="image" class="form-control" multiple>
                         </div>
                         
                         <!-- Product details -->
@@ -88,6 +88,11 @@
                             <div class="col-md-6 mb-3">
                                 <label for="variant" class="form-label">Variant</label>
                                 <input type="text" id="variant" name="variant" value="{{product.variant}}"
+                                    class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="stock" class="form-label">Stock</label>
+                                <input type="text" id="stock" name="stock" value="{{product.stock}}"
                                     class="form-control">
                             </div>
                             <div class="col-md-6 mb-3">

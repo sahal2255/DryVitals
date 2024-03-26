@@ -78,7 +78,7 @@
 
   <div class="container">
     <h2 class="mb-4 text-center">Sign Up</h2>
-    <form action="/signup" method="POST">
+    <form action="/signup" method="POST" id="signupForm">
       <div class="form-group">
         <label for="name">Name:</label>
         <input type="text" class="form-control" id="userName" name="userName" placeholder="Enter your name">
@@ -105,27 +105,29 @@
         <p id="confirmPasswordError" class="error-msg"></p>
       </div>
       <button type="submit" class="btn btn-primary" id="signUpBtn">Sign Up</button>
-      <button type="submit" class="btn btn-secondary login-btn" id="loginBtn">Login</button>
+      <button type="button" class="btn btn-secondary login-btn" id="loginBtn">Login</button>
     </form>
   </div>
 
-  <script>
-    document.getElementById("signUpBtn").addEventListener("click", function() {
-      validateForm();
+   <script>
+    document.getElementById("signupForm").addEventListener("submit", function(event) {
+      if (!validateForm()) {
+        event.preventDefault(); // Prevent form submission if validation fails
+      }
     });
 
     function validateForm() {
-      var name = document.getElementById("userName").value;
-      var email = document.getElementById("email").value;
-      var phone = document.getElementById("phoneNumber").value;
-      var password = document.getElementById("password").value;
-      var confirmPassword = document.getElementById("confirmPassword").value;
+      var name = document.getElementById("userName").value.trim();
+      var email = document.getElementById("email").value.trim();
+      var phone = document.getElementById("phoneNumber").value.trim();
+      var password = document.getElementById("password").value.trim();
+      var confirmPassword = document.getElementById("confirmPassword").value.trim();
+
       var nameError = document.getElementById("nameError");
       var emailError = document.getElementById("emailError");
       var phoneError = document.getElementById("phoneError");
       var passwordError = document.getElementById("passwordError");
       var confirmPasswordError = document.getElementById("confirmPasswordError");
-      var isValid = true;
 
       // Clear previous error messages
       nameError.textContent = "";
@@ -134,41 +136,47 @@
       passwordError.textContent = "";
       confirmPasswordError.textContent = "";
 
-      if (userName.trim() == '') {
+      var isValid = true;
+
+      // Validate name
+      if (name === "") {
         nameError.textContent = "Please enter your name";
         isValid = false;
       }
 
-      if (email.trim() == '') {
+      // Validate email
+      if (email === "") {
         emailError.textContent = "Please enter your email";
         isValid = false;
       }
 
-      // Validate phone number using regular expression
-      var phonePattern = /^\d{10}$/;
-      if (!phoneNumber.match(phonePattern)) {
+      // Validate phone number
+      if (!phone.match(/^\d{10}$/)) {
         phoneError.textContent = "Please enter a valid 10-digit phone number";
         isValid = false;
       }
 
-      if (password.trim() == '') {
+      // Validate password
+      if (password === "") {
         passwordError.textContent = "Please enter your password";
         isValid = false;
       }
 
-      if (confirmPassword.trim() == '') {
+      // Validate confirm password
+      if (confirmPassword === "") {
         confirmPasswordError.textContent = "Please confirm your password";
         isValid = false;
-      }
-
-      if (password != confirmPassword) {
+      } else if (password !== confirmPassword) {
         confirmPasswordError.textContent = "Passwords do not match";
         isValid = false;
       }
 
       return isValid;
     }
-   
+    document.getElementById("loginBtn").addEventListener("click", function() {
+    // Add your logic to show the login form here
+    window.location.href = "/login"; // Redirect to the login page
+  });
   </script>
   <!-- Bootstrap JS and dependencies -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

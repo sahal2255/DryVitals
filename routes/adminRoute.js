@@ -23,6 +23,8 @@ router.get('/admin/catagoryList',adminAuth,adminController.catagoryList)
 router.get('/admin/deleteCategory/:id', adminController.deleteCategory); 
 router.delete('/admin/deleteCategory/:id', adminController.deleteCategory); 
 
+router.post('/admin/disableProduct', adminController.disableProduct);
+
 router.get('/admin/editCatagory/:id',adminAuth,adminController.editCatagory)
 router.post('/admin/editCatagory/:id',adminController.editCatagoryPost)
 
@@ -33,10 +35,10 @@ router.post('/admin/addProduct',adminAuth , upload.array('image',3), adminContro
 router.get('/admin/productList',adminAuth,adminController.productList)
 
 router.get('/admin/deleteProduct/:id',adminAuth,adminController.deleteProduct)
-router.delete('/admin/deleteProduct/:id',adminController.deleteProduct)
+router.post('/admin/deleteProduct/:id',adminController.deleteProduct)
 
 router.get('/admin/editProduct/:id',adminAuth,adminController.editProduct)
-router.post('/admin/editProduct/:id',adminAuth,adminController.editProductPost)
+router.post('/admin/editProduct/:id',upload.array('image',3),adminAuth,adminController.editProductPost)
 
 
 

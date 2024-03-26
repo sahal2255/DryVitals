@@ -228,7 +228,7 @@ let addProduct = async (req, res) => {
 
 let addProductPost = async (req, res) => {
     try {
-        const { productName, category, description, variant, price } = req.body;
+        const { productName, category, description, variant, price,stock } = req.body;
         const image = req.files; // Access uploaded files via req.files
         console.log("req.files :",image);  
         const imageUrl = []; 
@@ -245,27 +245,23 @@ let addProductPost = async (req, res) => {
             description,
             variant,
             price,
+            stock,
             imageUrl: imageUrl,
             
         });
         // console.log(imageUrl);
         // console.log(newProduct);
         await newProduct.save();
-        console.log('image upload successfully');
+        console.log('Product added successfully');
         res.redirect('/admin/productList')
         // res.status(201).json({ message: 'Image uploaded successfully' });
     } catch (error) {
         console.error('Error uploading image:', error);
-        res.status(500).json({ message: 'Error uploading image' });
+        res.status(500).render('admin/addProduct', { error: 'Error adding product', categories: [] });
     }
 };
 
-
-
-
-
 // product listing section
-
 
 let productList=async(req,res)=>{
     try {
@@ -278,9 +274,6 @@ let productList=async(req,res)=>{
         // res.render('admin/catagoryList', { error: 'Error fetching categories' });
     }
 }
-
-
-
 
 let deleteProduct = async (req, res) => {
     const productId = req.params.id;
@@ -297,6 +290,78 @@ let deleteProduct = async (req, res) => {
         return res.status(500).send('Internal server error');
     }
 }
+
+
+// const enableProduct = async (req, res) => {
+//     const productId = req.params.id;
+//     try {
+//         let product = await Product.findById(productId);
+//         if (!product) {
+//             return res.status(404).send('Product not found');
+//         }
+//         product.enabled = true; 
+        
+//         // Update the stock status based on the product's stock
+//         product.stockStatus = product.stock > 0 ? `${product.stock} ` : 'Out of stock';
+//         console.log(product.stockStatus);
+//         await product.save();
+//         console.log('Product enabled successfully');
+
+//         return res.redirect('/admin/productList');
+        
+//     } catch (error) {
+//         console.log('Error enabling product:', error);
+//         return res.status(500).send('Internal server error');
+//     }
+// };
+
+
+// let disableProduct = async (req, res) => {
+//     const productId = req.params.id; // Get product id from route parameters
+//     console.log(productId);
+//     try {
+//         const product = await Product.findById(productId);
+//         console.log(product);
+//         if (!product) {
+//             return res.status(404).send('Product not found');
+//         }
+//         console.log('isDisabled:', product.isDisabled); 
+//         // Toggle the isDisabled field
+//         product.isDisabled = !product.isDisabled;
+//         await product.save(); // Save the changes
+
+//         // Redirect back to the product list page
+//         res.redirect('/admin/productList');
+//     } catch (error) {
+//         console.error('Error while checking status:', error);
+//         res.status(500).send('Internal Server Error');
+//     }
+// }
+
+
+
+let disableProduct = async (req, res) => {
+    const productId = req.body.productid;
+    try {
+        const product = await Product.findById(productId);
+        if (!product) {
+            return res.status(404).send('Product not found');
+        }
+        if(product.isDisabled){
+            product.isDisabled = !product.isDisabled;
+        }
+        else{
+            product.isDisabled = true; 
+        }
+        
+        await product.save();
+
+        return res.redirect('/admin/productList');
+    } catch (error) {
+        console.error('Error while toggling product status:', error);
+        return res.status(500).send('Internal Server Error');
+    }
+};
 
 
 
@@ -337,12 +402,17 @@ let editProductPost = async (req, res) => {
         product.category = newProduct.category;
         product.description = newProduct.description;
         product.variant = newProduct.variant;
+        product.stock=newProduct.stock;
         product.price = newProduct.price;
-        // if(req.file){
-        //     const imagePath=path.join(__dirname,'../public/uploads',product.imageUrl)
-        //     fs.unlinkSync(imagePath)
-        //     product.imageUrl=req.file.filename
-        // }
+
+        
+
+        
+        if (req.files && req.files.length > 0) {
+            const file = req.files[0]; 
+            const result = await cloudinary.uploader.upload(file.path); 
+            product.imageUrl = result.secure_url; 
+        }
         await product.save();
 
         return res.redirect('/admin/productList');
@@ -351,11 +421,6 @@ let editProductPost = async (req, res) => {
         return res.status(500).send('Internal server error');
     }
 }
-
-
-
-
-
 
 // logout section
 
@@ -380,6 +445,8 @@ module.exports = {
     addProductPost,
     productList,
     deleteProduct,
+    disableProduct,
+    // enableProduct,
     editProduct,
     editProductPost,
     adminLogOut

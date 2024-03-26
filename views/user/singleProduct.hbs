@@ -167,10 +167,16 @@
 				<div class="col-md-7">
 					<div class="single-product-content">
 						<h3>{{product.productName}}({{product.category}})</h3>
-						<p class="single-product-pricing"><span></span>${{product.price}}</p>
+						<p class="single-product-pricing"><span style="text-decoration: line-through;"></span>₹{{product.price}}</p>
 						<p class="single-product"><span></span>{{product.variant}}</p>
+						<p>Available stock :{{product.stock}}</p>
 
 						<p>{{product.description}}</p>
+						<div class="product-quantity">
+    						<button id="quantity-decrement" class="minus">-</button>
+    						<input type="number" id="quantity" min="1" value="1" style="width: 40px; height:35px">
+    						<button id="quantity-increment" class="plus">+</button>
+</div>
 
 						<div class="single-product-form">
 							{{!-- <form action="index.html">
@@ -337,7 +343,31 @@
 		</div>
 	</div>
 	<!-- end copyright -->
-	
+	<script>
+// Get the quantity input and quantity buttons
+const quantityInput = document.getElementById("quantity");
+const quantityDecrementBtn = document.getElementById("quantity-decrement");
+const quantityIncrementBtn = document.getElementById("quantity-increment");
+
+// Set the initial minimum value for the quantity input
+
+// Add event listener for decrement button
+quantityDecrementBtn.addEventListener("click", function() {
+    // Decrement the quantity value
+    let currentValue = parseInt(quantityInput.value);
+    if (currentValue > quantityInput.min) {
+        quantityInput.value = currentValue - 1;
+    }
+});
+
+// Add event listener for increment button
+quantityIncrementBtn.addEventListener("click", function() {
+	console.log(quantityIncrementBtn)
+    // Increment the quantity value
+    let currentValue = parseInt(quantityInput.value);
+        quantityInput.value = currentValue + 1;
+});
+</script>
 	<!-- jquery -->
 	<script src="/assets/js/jquery-1.11.3.min.js"></script>
 	<!-- bootstrap -->

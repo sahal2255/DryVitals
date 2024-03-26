@@ -1097,13 +1097,15 @@
                                 </div>
                                 
                             </div>                                  
-                        </div>  
+                          
                         <div class="col-span-12 sm:col-span-12 md:col-span-12 lg:col-span-6 xl:col-span-6">
                             <div class="w-full relative mb-4">  
                                 <div class="flex-auto p-0 md:p-4">                                   
                                     <div class="mb-2">
                                         <label for="productName" class="font-medium text-sm text-slate-600 dark:text-slate-400">Product Name</label>
                                         <input type="text" id="productName" name="productName" class="form-input w-full rounded-md mt-1 border border-slate-300/60 dark:border-slate-700 dark:text-slate-300 bg-transparent px-3 py-2 focus:outline-none focus:ring-0 placeholder:text-slate-400/70 placeholder:font-normal placeholder:text-sm hover:border-slate-400 focus:border-brand-500 dark:focus:border-brand-500  dark:hover:border-slate-700" placeholder="Product Name">
+                                        <p id="productNameError" class="text-red-500 text-xs hidden">Please enter product name</p>
+
                                     </div>
                                     <div class="mb-2">
                                         <label for="category" class="font-medium text-sm text-slate-600 dark:text-slate-400">Category</label>
@@ -1115,10 +1117,14 @@
 
                                             {{/each}}
                                         </select>
+                                        <p id="categoryError" class="text-red-500 text-xs hidden">Please select a category</p>
+
                                     </div>
                                     <div class="mb-2">
                                         <label for="description" class="font-medium text-sm text-slate-600 dark:text-slate-400">Description</label>
                                         <textarea id="description" name="description" rows="3" class="form-input w-full rounded-md mt-1 border border-slate-300/60 dark:border-slate-700 dark:text-slate-300 bg-transparent px-3 py-1 focus:outline-none focus:ring-0 placeholder:text-slate-400/70 placeholder:font-normal placeholder:text-sm hover:border-slate-400 focus:border-primary-500 dark:focus:border-primary-500  dark:hover:border-slate-700" placeholder="Description ..."></textarea>
+                                        <p id="descriptionError" class="text-red-500 text-xs hidden">Please enter description</p>
+
                                     </div>
                                     <div class="mb-2">
                                         <div class="grid grid-cols-2 gap-3">
@@ -1126,7 +1132,7 @@
                                                 <label for="variant"  class="font-medium text-sm text-slate-600 dark:text-slate-400">Product Variant</label>
                                                 
                                                 <select id="variant" name="variant" class="form-select w-full rounded-md mt-1 border border-slate-300/60 dark:border-slate-700 dark:text-slate-300 bg-transparent px-3 py-2 focus:outline-none focus:ring-0 placeholder:text-slate-400/70 placeholder:font-normal placeholder:text-sm hover:border-slate-400 focus:border-primary-500 dark:focus:border-primary-500 dark:hover:border-slate-700" name="product_variant">
-                                                    <option value="" disabled >Select Variant</option>
+                                                    <option value="" disabled selected>Select Variant</option>
                                                     <option value="500g">500 g</option>
                                                     <option value="1kg">1 Kg</option>
                                                     <option value="2kg">2 Kg</option>
@@ -1134,56 +1140,101 @@
                                                     <option value="5kg">5 Kg</option>
                                                     
                                                 </select>
+                                                <p id="variantError" class="text-red-500 text-xs hidden">Please select a variant</p>
+
                                             </div>
                                             <div class="col-span-1">
                                                 <label for="price" class="font-medium text-sm text-slate-600 dark:text-slate-400">Price</label>
-                                                <input type="title" id="price" name="price" class="form-input w-full rounded-md mt-1 border border-slate-300/60 dark:border-slate-700 dark:text-slate-300 bg-transparent px-3 py-2 focus:outline-none focus:ring-0 placeholder:text-slate-400/70 placeholder:font-normal placeholder:text-sm hover:border-slate-400 focus:border-brand-500 dark:focus:border-brand-500  dark:hover:border-slate-700" placeholder="Price" required>
+                                                <input type="title" id="price" name="price" class="form-input w-full rounded-md mt-1 border border-slate-300/60 dark:border-slate-700 dark:text-slate-300 bg-transparent px-3 py-2 focus:outline-none focus:ring-0 placeholder:text-slate-400/70 placeholder:font-normal placeholder:text-sm hover:border-slate-400 focus:border-brand-500 dark:focus:border-brand-500  dark:hover:border-slate-700" placeholder="Price" >
+                                                <p id="priceError" class="text-red-500 text-xs hidden">Please enter price</p>
+
                                             </div>
                                         </div>
                                     </div>
-                                    
+                                    <div class="mb-2">
+                                        <label for="stock" class="font-medium text-sm text-slate-600 dark:text-slate-400">Stock</label>
+                                        <input type="number" id="stock" name="stock" class="form-input w-full rounded-md mt-1 border border-slate-300/60 dark:border-slate-700 dark:text-slate-300 bg-transparent px-3 py-2 focus:outline-none focus:ring-0 placeholder:text-slate-400/70 placeholder:font-normal placeholder:text-sm hover:border-slate-400 focus:border-primary-500 dark:focus:border-primary-500  dark:hover:border-slate-700" placeholder="Stock" >
+                                        <p id="stockError" class="text-red-500 text-xs hidden">Please enter stock</p>
+
+                                    </div>
 
                                     <div class="">
                                         <button class="px-2 py-2 lg:px-4 bg-brand  text-white text-sm  rounded hover:bg-brand-600 border border-brand-500">Cancel</button>
-                                        <button type="submit" class="px-2 py-2 lg:px-4 bg-transparent  text-brand text-sm  rounded transition hover:bg-brand-500 hover:text-white border border-brand font-medium">Save Product</button>
+                                        <button type="submit" class="px-2 py-2 lg:px-4 bg-transparent  text-brand text-sm  rounded transition hover:bg-brand-500 hover:text-white border border-brand font-medium" id="submittButton">Save Product</button>
                                     </div>
                              
                                 </div><!--end card-body--> 
-                                </form>
+                                </div>
                             </div><!--end card-->                                  
                         </div><!--end col-->  
                         <!--end col-->                        
                     </div>  
+                    </form>
                 
-                        <!--end col-->  
-                                                           
-                    <!-- footer -->
-                    {{!-- <div class="absolute bottom-0 -left-4 -right-4 block print:hidden border-t p-4 h-[52px] dark:border-slate-700/40">
-                        <div class="container">
-                          <!-- Footer Start -->
-                          <footer
-                            class="footer bg-transparent  text-center  font-medium text-slate-600 dark:text-slate-400 md:text-left "
-                          >
-                            &copy;
-                            <script>
-                              var year = new Date();document.write(year.getFullYear());
-                            </script>
-                            Robotech
-                            <span class="float-right hidden text-slate-600 dark:text-slate-400 md:inline-block"
-                              >Crafted with <i class="ti ti-heart text-red-500"></i> by
-                              Mannatthemes</span
-                            >
-                          </footer> --}}
-                          <!-- end Footer -->
-                        {{!-- </div>
-                      </div> --}}
   
   
-                </div><!--end container-->
-            </div><!--end page-wrapper-->
+                </div>
+            </div>
         </div><!--end /div-->
 
         <!-- JAVASCRIPTS -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const form = document.querySelector('form');
+
+    form.addEventListener('submit', function(event) {
+        const productName = document.getElementById("productName").value.trim();
+        const category = document.getElementById("category").value.trim();
+        const description = document.getElementById("description").value.trim();
+        const variant = document.getElementById("variant").value.trim();
+        const price = document.getElementById("price").value.trim();
+        const stock = document.getElementById("stock").value.trim();
+        let isValid = true;
+
+        // Reset previous error messages and remove the 'hidden' class
+        document.querySelectorAll('.text-red-500').forEach(element => {
+            element.classList.add('hidden');
+        });
+
+        if (productName === "") {
+            document.getElementById("productNameError").classList.remove('hidden');
+            isValid = false;
+        }
+        if (category === "") {
+            document.getElementById("categoryError").classList.remove('hidden');
+            isValid = false;
+        }
+        if (description === "") {
+            document.getElementById("descriptionError").classList.remove('hidden');
+            isValid = false;
+        }
+        if (variant === "") {
+            document.getElementById("variantError").classList.remove('hidden');
+            isValid = false;
+        }
+        if (price === "") {
+            document.getElementById("priceError").classList.remove('hidden');
+            isValid = false;
+        }
+        if (stock === "") {
+            document.getElementById("stockError").classList.remove('hidden');
+            isValid = false;
+        }
+
+        // Prevent form submission if validation fails
+        if (!isValid) {
+            event.preventDefault();
+        }
+    });
+});
+
+</script>
+
+
+
+
+
+
         <!-- <div class="menu-overlay"></div> -->
         <script src="assets/libs/lucide/umd/lucide.min.js"></script>
         <script src="assets/libs/simplebar/simplebar.min.js"></script>
