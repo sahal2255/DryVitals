@@ -13,31 +13,32 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    variant: {
-        type: String,
-        required: true
-    },
-    price: {
-        type: Number,
-        required: true
-    },
-    stock:{
-        type:Number,
-        required:true
-    },
-    // stock:[{
-    //     variant:{
-    //         type:String,
-    //         required:true
-    //     },
-    //     quantity:{
-    //         type:String,
-    //         required:true
-    //     },price:{
-    //         type:Number,
-    //         required:true
-    //     }
-    // }],
+    // variant: {
+    //     type: String,
+    //     required: true
+    // },
+    // price: {
+    //     type: Number,
+    //     required: true
+    // },
+    // stock:{
+    //     type:Number,
+    //     required:true
+    // },
+    stock:[{
+        variant:{
+            type:String,
+            required:true
+        },
+        stock:{
+            type:Number,
+            required:true
+        },
+        price:{
+            type:Number,
+            required:true
+        }
+    }],
     isDisabled: {
         type: Boolean,
         default: false

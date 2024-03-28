@@ -85,7 +85,7 @@
                                 <textarea id="description" name="description" class="form-control"
                                     rows="3">{{product.description}}</textarea>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            {{!-- <div class="col-md-6 mb-3">
                                 <label for="variant" class="form-label">Variant</label>
                                 <input type="text" id="variant" name="variant" value="{{product.variant}}"
                                     class="form-control">
@@ -99,7 +99,28 @@
                                 <label for="price" class="form-label">Price</label>
                                 <input type="number" id="price" name="price" value="{{product.price}}"
                                     class="form-control">
-                            </div>
+                            </div> --}}
+                            <div class="row" id="variantFields">
+                            {{#each product.stock}}
+<div class="col-md-6 mb-3">
+    <label for="variant{{@index}}" class="form-label">Variant</label>
+    <input type="text" id="variant{{@index}}" name="stock[{{@index}}][variant]" value="{{this.variant}}"
+        class="form-control">
+</div>
+<div class="col-md-6 mb-3">
+    <label for="stock{{@index}}" class="form-label">Stock</label>
+    <input type="text" id="stock{{@index}}" name="stock[{{@index}}][stock]" value="{{this.stock}}"
+        class="form-control">
+</div>
+<div class="col-md-6 mb-3">
+    <label for="price{{@index}}" class="form-label">Price</label>
+    <input type="number" id="price{{@index}}" name="stock[{{@index}}][price]" value="{{this.price}}"
+        class="form-control">
+</div>
+{{/each}}
+    </div>
+    {{!-- <button type="button" class="btn btn-primary" style="width:150px;background-color:#7f9280" onclick="addVariantField()">Add Variant</button> --}}
+
                         </div>
                         <!-- Submit button -->
                         <div class="mt-6 text-center">
@@ -132,6 +153,18 @@
             window.location.href = '/admin/productList';
         }
     }
+//function addVariantField() {
+    // Get the container div for variant fields
+    //const variantContainer = document.getElementById('variantFields');
+
+    // Create new variant fields
+    //const newVariantField = `
+       // <div class="col-md-6 mb-3">
+
+    // Append new fields to the container
+
+
+
 </script>
 
     <!-- Bootstrap JS -->

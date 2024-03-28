@@ -167,31 +167,33 @@
 				<div class="col-md-7">
 					<div class="single-product-content">
 						<h3>{{product.productName}}({{product.category}})</h3>
-						<p class="single-product-pricing"><span style="text-decoration: line-through;"></span>₹{{product.price}}</p>
-						<p class="single-product"><span></span>{{product.variant}}</p>
-						<p>Available stock :{{product.stock}}</p>
-
+						<p class="single-product-pricing" id="selectedPrice"><span style="text-decoration: line-through;"></span>₹{{product.price}}</p>
+						<p class="single-product" id="selectedVariant">Variant: {{#if product.stock}}{{product.stock.[0].variant}}{{/if}}</p>
+						<p id="selectedStock">Available stock: {{#if product.stock}}{{product.stock.[0].stock}}{{/if}}</p>
 						<p>{{product.description}}</p>
-						<div class="product-quantity">
+						<div class="stock-details">
+                    		<label for="stockSelect{{_id}}">Choose</label>
+                    		<select id="stockSelect{{_id}}" name="stockSelect{{_id}}" onchange="updateProductDetails('{{_id}}', this)" style="width:80px">
+                      			{{#each product.stock}}
+    								<option value="{{variant}}" data-price="{{price}}" data-stock="{{stock}}" {{#if @first}} selected{{/if}}>{{variant}}</option>
+					  			{{/each}}
+                    		</select>
+                		</div>
+						{{!-- <div class="product-quantity">
     						<button id="quantity-decrement" class="minus">-</button>
-    						<input type="number" id="quantity" min="1" value="1" style="width: 40px; height:35px">
+    						<input type="number" id="quantity" min="1" value="1" style="width: 80px; height:35px">
     						<button id="quantity-increment" class="plus">+</button>
-</div>
+						</div> --}}
 
-						<div class="single-product-form">
-							{{!-- <form action="index.html">
-								<input type="number" placeholder="0">
-							</form> --}}
-							<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
-							{{!-- <p><strong>Categories: </strong>Fruits, Organic</p> --}}
-						</div>
-						{{!-- <h4>Share:</h4>
-						 <ul class="product-share">
-							<li><a href=""><i class="fab fa-facebook-f"></i></a></li>
-							<li><a href=""><i class="fab fa-twitter"></i></a></li>
-							<li><a href=""><i class="fab fa-google-plus-g"></i></a></li>
-							<li><a href=""><i class="fab fa-linkedin"></i></a></li>
-						</ul> --}}
+						{{!-- <div class="single-product-form">
+							    <button class="cart-btn" type="submit" onclick="addToCart('{{product._id}}')"><i class="fas fa-shopping-cart"></i>Add to Cart</button> --}}
+
+							{{!-- <a href="/cart" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a> --}}
+						{{!-- </div> --}}
+
+						<form action="/cart" method="GET">
+						<button class="cart-btn" type="submit" onclick="addToCart('{{product._id}}')"><i class="fas fa-shopping-cart"></i>Add to Cart</button></form>
+						
 					</div>
 				</div>
 			</div>
@@ -199,80 +201,7 @@
 	</div>
 	<!-- end single product -->
 
-	<!-- more products -->
-	{{!-- <div class="more-products mb-150">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-8 offset-lg-2 text-center">
-					<div class="section-title">	
-						<h3><span class="orange-text">Related</span> Products</h3>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, fuga quas itaque eveniet beatae optio.</p>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-lg-4 col-md-6 text-center">
-					<div class="single-product-item">
-						<div class="product-image">
-							<a href="single-product.html"><img src="/assets/img/products/product-img-1.jpg" alt=""></a>
-						</div>
-						<h3>Strawberry</h3>
-						<p class="product-price"><span>Per Kg</span> 85$ </p>
-						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
-					</div>
-				</div>
-				<div class="col-lg-4 col-md-6 text-center">
-					<div class="single-product-item">
-						<div class="product-image">
-							<a href="single-product.html"><img src="/assets/img/products/product-img-2.jpg" alt=""></a>
-						</div>
-						<h3>Berry</h3>
-						<p class="product-price"><span>Per Kg</span> 70$ </p>
-						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
-					</div>
-				</div>
-				<div class="col-lg-4 col-md-6 offset-lg-0 offset-md-3 text-center">
-					<div class="single-product-item">
-						<div class="product-image">
-							<a href="single-product.html"><img src="/assets/img/products/product-img-3.jpg" alt=""></a>
-						</div>
-						<h3>Lemon</h3>
-						<p class="product-price"><span>Per Kg</span> 35$ </p>
-						<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div> --}}
-	<!-- end more products -->
 
-	<!-- logo carousel -->
-	<div class="logo-carousel-section">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="logo-carousel-inner">
-						<div class="single-logo-item">
-							<img src="/assets/img/company-logos/1.png" alt="">
-						</div>
-						<div class="single-logo-item">
-							<img src="/assets/img/company-logos/2.png" alt="">
-						</div>
-						<div class="single-logo-item">
-							<img src="/assets/img/company-logos/3.png" alt="">
-						</div>
-						<div class="single-logo-item">
-							<img src="/assets/img/company-logos/4.png" alt="">
-						</div>
-						<div class="single-logo-item">
-							<img src="/assets/img/company-logos/5.png" alt="">
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end logo carousel -->
 
 	<!-- footer -->
 	<div class="footer-area">
@@ -367,6 +296,65 @@ quantityIncrementBtn.addEventListener("click", function() {
     let currentValue = parseInt(quantityInput.value);
         quantityInput.value = currentValue + 1;
 });
+  // Function to update product details
+// Function to update product details
+function updateProductDetails(productId, selectElement) {
+    // Get the selected variant option
+    var selectedOption = selectElement.options[selectElement.selectedIndex];
+
+    // Get the selected variant details
+    var selectedVariant = selectedOption.value;
+    var selectedPrice = selectedOption.getAttribute('data-price');
+    var selectedStock = selectedOption.getAttribute('data-stock');
+
+    // Update the product details displayed on the page
+    var priceElement = document.getElementById('selectedPrice');
+    var variantElement = document.getElementById('selectedVariant');
+    var stockElement = document.getElementById('selectedStock');
+
+    priceElement.textContent = '₹' + selectedPrice;
+    variantElement.textContent = 'Variant: ' + selectedVariant;
+    stockElement.textContent = 'Available stock: ' + selectedStock;
+}
+
+// Set default selected variant details when the page loads
+window.onload = function() {
+    // Get the select element
+    var selectElement = document.getElementById('stockSelect{{_id}}');
+
+    // Get the default selected option
+    var defaultOption = selectElement.querySelector('option[selected]')|| selectElement.options[0];
+
+    // Get the default selected variant details
+    var defaultVariant = defaultOption.value;
+    var defaultPrice = defaultOption.getAttribute('data-price');
+    var defaultStock = defaultOption.getAttribute('data-stock');
+
+    // Update the product details displayed on the page
+    var priceElement = document.getElementById('selectedPrice');
+    var variantElement = document.getElementById('selectedVariant');
+    var stockElement = document.getElementById('selectedStock');
+
+    priceElement.textContent = '₹' + defaultPrice;
+    variantElement.textContent = 'Variant: ' + defaultVariant;
+    stockElement.textContent = 'Available stock: ' + defaultStock;
+};
+
+
+function addToCart(productId) {
+    axios.post('/cart/add', { productId })
+        .then(response => {
+            // Handle success, e.g., show a success message
+            console.log('Product added to cart:', response.data);
+        })
+        .catch(error => {
+            // Handle error, e.g., show an error message
+            console.error('Error adding product to cart:', error);
+        });
+}
+
+
+
 </script>
 	<!-- jquery -->
 	<script src="/assets/js/jquery-1.11.3.min.js"></script>

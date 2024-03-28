@@ -1167,27 +1167,46 @@
                                                                             </div>
                                                                         </div>
                                                                     </td>
+                                                                    
                                                                     <td class="p-3 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
                                                                         <a href="#" class="text-brand-500 ">{{category}}</a>
                                                                     </td>
 
-                                                                    <td class="p-3 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
+                                                                    {{!-- <td class="p-3 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400"> --}}
                                                                     {{!-- <span class="bg-green-600/5 text-green-600 text-[11px] font-medium px-2.5 py-0.5 rounded h-5">{{stock}}</span> --}}
+                                                                        <td class="p-3 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
+                                                                            {{#if isDisabled}}
+                                                                            <span class="bg-red-600/5 text-red-600 text-[11px] font-medium px-2.5 py-0.5 rounded h-5">Out of stock</span>
+                                                                            {{else}}
+                                                                        {{#each stock}}
+                                                                        <div>
+                                                                            <span class="bg-green-600/5 text-green-600 text-[11px] font-medium px-2.5 py-0.5 rounded h-5">{{stock}} in stock</span>
+                                                                        </div>
+                                                                        {{/each}}
+                                                                        {{/if}}
+                                                                    </td>       
 
-                                                                    {{#if isDisabled}}
+
+                                                                    {{!-- {{#if isDisabled}}
                                                                             <span class="bg-red-600/5 text-red-600 text-[11px] font-medium px-2.5 py-0.5 rounded h-5">Out of stock</span>
                                                                     {{else}}
                                                                             <span class="bg-green-600/5 text-green-600 text-[11px] font-medium px-2.5 py-0.5 rounded h-5">{{stock}} in stock</span>
-                                                                    {{/if}}
+                                                                    {{/if}} --}}
                                                                     </td>
                                                                     <td class="p-3 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
                                                                     
                                                                         <div> 
+                                                                            {{#each stock}}
                                                                             <span class="block  font-medium text-slate-500">{{variant}} </span>
+                                                                            {{/each}}
                                                                         </div>
                                                                     </td>
                                                                     <td class="p-3 font-semibold text-lg text-gray-800 whitespace-nowrap dark:text-gray-400">
-                                                                        ₹{{price}} <del class="text-slate-500 font-normal"></del>
+                                                                        {{!-- ₹{{price}} <del class="text-slate-500 font-normal"></del> --}}
+                                                                        {{#each stock}}
+                                                                        <span class="block  font-medium text-slate-500">₹{{price}} </span>
+                                                                        {{/each}}
+
                                                                     </td>
                                                                     <td class="p-3 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
                                                                         <!-- Add your action buttons here -->

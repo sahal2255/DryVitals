@@ -142,7 +142,7 @@ let signUp=async(req,res)=>{
 let productGet=async(req,res)=>{
     
     try{
-        const products =await Product.find({isDisabled:false})
+        const products =await Product.find({})
         // const catagory=await Admin.distinct('catagories')
         // console.log(products);
         res.render('user/product',{products})
@@ -171,6 +171,7 @@ let singleProduct=async(req,res)=>{
         console.log('Product not found');
         return res.status(404).send('product nt found')
     }
+    
     res.render('user/singleProduct',{product:singlepro})
     }catch(error){
         console.log('error finding product');
@@ -181,7 +182,31 @@ let singleProduct=async(req,res)=>{
 
 
 
+//cart page
 
+
+let cart=async (req,res)=>{
+    try {
+        const productId = req.body.productId;
+        res.status(200).send({ message: 'Product added to cart successfully' });
+    } catch (error) {
+        console.error('Error adding product to cart:', error);
+        res.status(500).send({ error: 'Internal server error' });
+    }
+}
+
+
+let cartAdd = async (req, res) => {
+    try {
+        const productId = req.body.productId;
+        // Add the product to the user's cart
+        // Example: const cart = await Cart.findOneAndUpdate({ userId: req.user._id }, { $addToSet: { products: productId } }, { upsert: true, new: true });
+        res.status(200).send({ message: 'Product added to cart successfully' });
+    } catch (error) {
+        console.error('Error adding product to cart:', error);
+        res.status(500).send({ error: 'Internal server error' });
+    }
+};
 
 
 
@@ -216,5 +241,7 @@ module.exports={
     logOut,
     productGet,
     singleProduct,
+    cart,
+    cartAdd,
     profile
 }

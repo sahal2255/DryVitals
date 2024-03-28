@@ -208,12 +208,14 @@ let editCatagoryPost = async (req, res) => {
 
 
 let addProduct = async (req, res) => {
+    // console.log('products');
     try {
         const products = await Admin.find({});
         let categories = [];
         products.forEach(product => {
             categories = categories.concat(product.categories);
         });
+        // console.log(categories);
         res.render('admin/addProduct', { categories, error: ' ' });
     } catch (error) {
         console.log('Error fetching categories:', error);
@@ -226,40 +228,88 @@ let addProduct = async (req, res) => {
 
 // adding product details on the database
 
-let addProductPost = async (req, res) => {
-    try {
-        const { productName, category, description, variant, price,stock } = req.body;
-        const image = req.files; // Access uploaded files via req.files
-        console.log("req.files :",image);  
-        const imageUrl = []; 
+// let addProductPost = async (req, res) => {
+//     try {
+//         const { productName, category, description, variant, price,stock } = req.body;
+//         const image = req.files; // Access uploaded files via req.files
+//         console.log("req.files :",image);  
+//         const imageUrl = []; 
 
         
-        for (const file of image) {
+//         for (const file of image) {
+//             const result = await cloudinary.uploader.upload(file.path);
+//             imageUrl.push(result.secure_url);
+//           }
+//           console.log(imageUrl);
+//             const newProduct = new Product({
+//             productName,
+//             category,
+//             description,
+//             variant,
+//             price,
+//             stock,
+//             imageUrl: imageUrl,
+            
+//         });
+//         // console.log(imageUrl);
+//         // console.log(newProduct);
+//         await newProduct.save();
+//         console.log('Product added successfully');
+//         res.redirect('/admin/productList')
+//         // res.status(201).json({ message: 'Image uploaded successfully' });
+//     } catch (error) {
+//         console.error('Error uploading image:', error);
+//         res.status(500).render('admin/addProduct', { error: 'Error adding product', categories: [] });
+//     }
+// };
+
+
+
+let addProductPost = async (req, res) => {
+    try {
+        const { productName, category, description } = req.body;
+        const images = req.files;
+        const variants = req.body.variant;
+        const prices = req.body.price;
+        const stocks = req.body.stock;
+
+        // Upload images to cloudinary
+        const imageUrl = [];
+        for (const file of images) {
             const result = await cloudinary.uploader.upload(file.path);
             imageUrl.push(result.secure_url);
-          }
-          console.log(imageUrl);
-            const newProduct = new Product({
+        }
+
+        // Construct array of variant objects
+        const stockDetails = variants.map((variant, index) => ({
+            variant,
+            price: prices[index],
+            stock: stocks[index]
+        }));
+
+        // Create a new product instance
+        const newProduct = new Product({
             productName,
             category,
             description,
-            variant,
-            price,
-            stock,
-            imageUrl: imageUrl,
-            
+            stock: stockDetails,
+            imageUrl
         });
-        // console.log(imageUrl);
-        // console.log(newProduct);
+
+        // Save the new product to the database
         await newProduct.save();
+
         console.log('Product added successfully');
-        res.redirect('/admin/productList')
-        // res.status(201).json({ message: 'Image uploaded successfully' });
+        res.redirect('/admin/productList');
     } catch (error) {
-        console.error('Error uploading image:', error);
+        console.error('Error adding product:', error);
         res.status(500).render('admin/addProduct', { error: 'Error adding product', categories: [] });
     }
 };
+
+
+
+
 
 // product listing section
 
@@ -387,40 +437,105 @@ let editProduct = async (req, res) => {
 
 
 
+// let editProductPost = async (req, res) => {
+//     try {
+//         let productId = req.params.id;
+//         let newProduct = req.body;
+
+//         let product = await Product.findOne({ _id: productId });
+
+//         if (!product) {
+//             console.log('Product not found');
+//             return res.status(404).send('Product not found');
+//         }
+//         product.productName = newProduct.productName;
+//         product.category = newProduct.category;
+//         product.description = newProduct.description;
+//         product.variant = newProduct.variant;
+//         product.stock=newProduct.stock;
+//         product.price = newProduct.price;
+
+        
+
+        
+//         if (req.files && req.files.length > 0) {
+//             const file = req.files[0]; 
+//             const result = await cloudinary.uploader.upload(file.path); 
+//             product.imageUrl = result.secure_url; 
+//         }
+//         await product.save();
+
+//         return res.redirect('/admin/productList');
+//     } catch (error) {
+//         console.log('Error updating product:', error);
+//         return res.status(500).send('Internal server error');
+//     }
+// }
+
+
 let editProductPost = async (req, res) => {
     try {
-        let productId = req.params.id;
-        let newProduct = req.body;
+        const productId = req.params.id;
+        const newProduct = req.body;
 
-        let product = await Product.findOne({ _id: productId });
+        let product = await Product.findById(productId);
 
         if (!product) {
             console.log('Product not found');
             return res.status(404).send('Product not found');
         }
+
+        // Update basic product details
         product.productName = newProduct.productName;
         product.category = newProduct.category;
         product.description = newProduct.description;
-        product.variant = newProduct.variant;
-        product.stock=newProduct.stock;
-        product.price = newProduct.price;
 
-        
-
-        
+        // Update product image if a new one is provided
         if (req.files && req.files.length > 0) {
-            const file = req.files[0]; 
-            const result = await cloudinary.uploader.upload(file.path); 
-            product.imageUrl = result.secure_url; 
+            const file = req.files[0];
+            const result = await cloudinary.uploader.upload(file.path);
+            product.imageUrl = result.secure_url;
         }
-        await product.save();
 
+        // Update stock details
+        if (newProduct.stock && newProduct.stock.length > 0) {
+            product.stock = newProduct.stock.map(item => ({
+                variant: item.variant,
+                stock: item.stock,
+                price: item.price
+            }));
+        }
+
+        await product.save();
         return res.redirect('/admin/productList');
     } catch (error) {
         console.log('Error updating product:', error);
         return res.status(500).send('Internal server error');
     }
-}
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // logout section
 

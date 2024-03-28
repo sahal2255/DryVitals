@@ -26,6 +26,8 @@ router.get('/product',userController.productGet)
 
 router.get('/singleProduct/:id', userController.singleProduct);
 
+router.get('/cart',userAuth,userController.cart)
+router.post('/cart/add',userAuth,userController.cartAdd);
 
 
 router.get('/profile',userAuth,userController.profile)
