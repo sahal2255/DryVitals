@@ -5,6 +5,7 @@ const userController=require('../controllers/userController')
 const userMiddleware=require('../middleware/userMiddleware')
 router.use(bodyparser.urlencoded({extended:true}))
 const userAuth=require('../middleware/user_jwt')
+const axios = require('axios');
 // const { route } = require('./adminRoute')
 
 
@@ -26,9 +27,11 @@ router.get('/product',userController.productGet)
 
 router.get('/singleProduct/:id', userController.singleProduct);
 
+router.post('/cart/:id',userAuth,userController.cartAdd);
 router.get('/cart',userAuth,userController.cart)
-router.post('/cart/add',userAuth,userController.cartAdd);
 
+
+router.delete('/cart/:id',userAuth,userController.deleteCart)
 
 router.get('/profile',userAuth,userController.profile)
 

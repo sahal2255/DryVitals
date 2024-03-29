@@ -6,6 +6,7 @@ const cloudinary=require('../config/cloudinary')
 const jwt = require('jsonwebtoken');
 const fs=require('fs')
 const path=require('path')
+const axios = require('axios');
 
 // const cloudinary=require('../config/cloudinary')
 const upload=require('../config/multer')

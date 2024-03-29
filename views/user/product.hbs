@@ -8,6 +8,57 @@
 
 	<!-- title -->
 	<title>Shop</title>
+	<style>
+		/* Styling for sorting and filtering options */
+
+.sorting-filtering {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.sorting-filtering h4 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.sorting-filtering select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.sorting-filtering select:focus {
+    border-color: #999;
+}
+/* CSS for positioning the wishlist icon */
+.single-product-item {
+    position: relative;
+    margin-bottom: 30px; /* Adjust as needed */
+}
+
+.product-image-container {
+    position: relative;
+}
+
+.wishlist-btn {
+    position: absolute;
+    top: 10px; 
+    right: 10px; /* Adjust the right position */
+    z-index: 1; /* Ensure the icon is above the image */
+    color: #9a9696; /* Adjust color as needed */
+    font-size: 20px; /* Adjust font size as needed */
+    text-decoration: none;
+	
+}
+
+	</style>
 
 	<!-- favicon -->
 	{{!-- <link rel="shortcut icon" type="image/png" href="/assets/img/favicon.png"> --}}
@@ -162,7 +213,7 @@
                     <div class="product-filters">
                         <ul>
                             <li class="active" data-filter="*">All</li>
-                            <li data-filter=".{{this}}">Dry Fruits</li>
+                            <li data-filter=".">Dry Fruits</li>
                             <li data-filter=".nuts">Nuts</li>
                             <li data-filter=".dates">Dates</li>
 							{{!-- {{#each catagories}}
@@ -176,6 +227,22 @@
 			
 	
 
+<div class="col-md-4">
+	<div>
+    <div class="sorting-filtering">
+        <h4>Sort By</h4>
+        <select id="sortSelect">
+            <option value="default">Default</option>
+            <option value="price-low-high"> Low to High</option>
+            <option value="price-high-low"> High to Low</option>
+        </select>
+
+       
+    </div>
+	
+		
+	</div>
+</div>
 
 				
 
@@ -184,9 +251,11 @@
 	<div class="row product-lists">
     {{#each products}}
         <div class="col-lg-4 col-md-6 text-center">
-            <div class="single-product-item">
+            <div class="single-product-item" data-filter="{{category}}">
                 <div class="product-image">
                     <a href="/singleProduct/{{_id}}"><img src="{{imageUrl}}" alt="productimage" style="width: 200px ;height: 200px;;"></a>
+					        <a href="#" class="wishlist-btn"><i class="bi bi-heart-fill"></i></a>
+
                 </div>
                 <h3>{{productName}}</h3>
                 <p class="product-price"> ₹{{stock.[0].price}}</p>
@@ -203,6 +272,8 @@
                     </select>
                 </div>
                 <a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+				                        <a href="#" class="wishlist-btn"><i class="bi bi-heart-fill"></i></a>
+
             </div>
         </div>
     {{/each}}
@@ -284,6 +355,7 @@
 		</div>
 	</div>
 	<!-- end copyright -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     function updateProductDetails(productId, selectElement) {
@@ -304,6 +376,22 @@
         variantElement.textContent = ' ' + selectedVariant;
         stockElement.textContent = ' ' + selectedStock;
     }
+
+
+
+// Event listener for product filters
+$('.product-filters li').click(function() {
+    $('.product-filters li').removeClass('active');
+    $(this).addClass('active');
+
+    var category = $(this).data('filter');
+    if (category === '*') {
+        $('.single-product-item').show();
+    } else {
+        $('.single-product-item').hide();
+        $('.single-product-item[data-category="' + category + '"]').show();
+    }
+});
 
 
 </script>

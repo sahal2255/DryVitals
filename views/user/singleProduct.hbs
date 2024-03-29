@@ -8,6 +8,7 @@
 
 	<!-- title -->
 	<title>Single Product</title>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 	<!-- favicon -->
 	{{!-- <link rel="shortcut icon" type="image/png" href="/assets/img/mainLogo.png"> --}}
@@ -31,6 +32,54 @@
 	<link rel="stylesheet" href="/assets/css/main.css">
 	<!-- responsive -->
 	<link rel="stylesheet" href="/assets/css/responsive.css">
+
+<style>
+    /* Form container */
+    form {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+		border: none;
+    }
+
+    /* Form input fields */
+    input[type="text"],
+    select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 16px;
+		border: none;
+    }
+
+    /* Button */
+    button {
+        width: 50%;
+        padding: 10px;
+        background-color: #e07e17;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+		border-radius: 40px;
+    }
+
+    /* Button hover effect */
+    button:hover {
+        background-color: #000000;
+		color: white;
+    }
+	
+</style>
+
+
 
 </head>
 <body>
@@ -158,45 +207,53 @@
 	<!-- single product -->
 	<div class="single-product mt-150 mb-150">
 		<div class="container">
+		<form action="/cart/{{product._id}}" method="POST">
 			<div class="row">
 				<div class="col-md-5">
 					<div class="single-product-img">
 						<img src="{{product.imageUrl}}" alt="single image">
 					</div>
+					<div>
+						{{!-- <input type="text" id="description" value="{{product.description}}"> --}}
+							        <p id="fullDescription">{{product.description}}</p>
+
+
+						</div>
 				</div>
 				<div class="col-md-7">
-					<div class="single-product-content">
-						<h3>{{product.productName}}({{product.category}})</h3>
-						<p class="single-product-pricing" id="selectedPrice"><span style="text-decoration: line-through;"></span>₹{{product.price}}</p>
-						<p class="single-product" id="selectedVariant">Variant: {{#if product.stock}}{{product.stock.[0].variant}}{{/if}}</p>
-						<p id="selectedStock">Available stock: {{#if product.stock}}{{product.stock.[0].stock}}{{/if}}</p>
-						<p>{{product.description}}</p>
-						<div class="stock-details">
-                    		<label for="stockSelect{{_id}}">Choose</label>
-                    		<select id="stockSelect{{_id}}" name="stockSelect{{_id}}" onchange="updateProductDetails('{{_id}}', this)" style="width:80px">
-                      			{{#each product.stock}}
-    								<option value="{{variant}}" data-price="{{price}}" data-stock="{{stock}}" {{#if @first}} selected{{/if}}>{{variant}}</option>
-					  			{{/each}}
-                    		</select>
-                		</div>
-						{{!-- <div class="product-quantity">
-    						<button id="quantity-decrement" class="minus">-</button>
-    						<input type="number" id="quantity" min="1" value="1" style="width: 80px; height:35px">
-    						<button id="quantity-increment" class="plus">+</button>
-						</div> --}}
-
-						{{!-- <div class="single-product-form">
-							    <button class="cart-btn" type="submit" onclick="addToCart('{{product._id}}')"><i class="fas fa-shopping-cart"></i>Add to Cart</button> --}}
-
-							{{!-- <a href="/cart" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a> --}}
-						{{!-- </div> --}}
-
-						<form action="/cart" method="GET">
-						<button class="cart-btn" type="submit" onclick="addToCart('{{product._id}}')"><i class="fas fa-shopping-cart"></i>Add to Cart</button></form>
+					
+						<div class="producNamefield">
+    					<input type="text" id="productName" value="{{product.productName}}">
+						</div>
+						<div>
+    					<input type="text" id="category" value="{{product.category}}">
+						</div>
+						<div>
+    					<input type="text" id="price" name="selectedPrice" value="₹{{product.stock.[0].price}}">
+						</div>
 						
-					</div>
+						<div>
+    					<input type="text" id="selectedVariant" name="selectedVariant" value="{{#if product.stock}}{{product.stock.[0].variant}}{{/if}}">
+						</div>
+    					<select id="stockSelect{{_id}}" name="stockSelect{{_id}}" onchange="updateProductDetails('{{_id}}', this)" style="width:80px">
+        					{{#each product.stock}}
+            					<option value="{{variant}}" data-price="{{price}}" data-stock="{{stock}}" {{#if @first}} selected{{/if}}>{{variant}}</option>
+        					{{/each}}
+    					</select>
+								
+						<div>
+
+						<button type="submit"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+						
+
+						</div>
+
+						{{!-- <input type="text" value="{{}}"> --}}
+
 				</div>
 			</div>
+			</form>
+						<button type="button">Buy Now</button>
 		</div>
 	</div>
 	<!-- end single product -->
@@ -272,32 +329,9 @@
 		</div>
 	</div>
 	<!-- end copyright -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js" integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script>
-// Get the quantity input and quantity buttons
-const quantityInput = document.getElementById("quantity");
-const quantityDecrementBtn = document.getElementById("quantity-decrement");
-const quantityIncrementBtn = document.getElementById("quantity-increment");
-
-// Set the initial minimum value for the quantity input
-
-// Add event listener for decrement button
-quantityDecrementBtn.addEventListener("click", function() {
-    // Decrement the quantity value
-    let currentValue = parseInt(quantityInput.value);
-    if (currentValue > quantityInput.min) {
-        quantityInput.value = currentValue - 1;
-    }
-});
-
-// Add event listener for increment button
-quantityIncrementBtn.addEventListener("click", function() {
-	console.log(quantityIncrementBtn)
-    // Increment the quantity value
-    let currentValue = parseInt(quantityInput.value);
-        quantityInput.value = currentValue + 1;
-});
-  // Function to update product details
-// Function to update product details
+			
 function updateProductDetails(productId, selectElement) {
     // Get the selected variant option
     var selectedOption = selectElement.options[selectElement.selectedIndex];
@@ -307,17 +341,20 @@ function updateProductDetails(productId, selectElement) {
     var selectedPrice = selectedOption.getAttribute('data-price');
     var selectedStock = selectedOption.getAttribute('data-stock');
 
+    // Update the input fields with the selected variant details
+    document.getElementById('productName').value = '{{product.productName}}';
+    document.getElementById('category').value = '{{product.category}}';
+    document.getElementById('price').value = '₹' + selectedPrice; // Update the price field with the selected price
+    document.getElementById('selectedVariant').value = selectedVariant;
+
     // Update the product details displayed on the page
-    var priceElement = document.getElementById('selectedPrice');
-    var variantElement = document.getElementById('selectedVariant');
     var stockElement = document.getElementById('selectedStock');
 
-    priceElement.textContent = '₹' + selectedPrice;
-    variantElement.textContent = 'Variant: ' + selectedVariant;
     stockElement.textContent = 'Available stock: ' + selectedStock;
 }
 
-// Set default selected variant details when the page loads
+
+
 window.onload = function() {
     // Get the select element
     var selectElement = document.getElementById('stockSelect{{_id}}');
@@ -335,23 +372,15 @@ window.onload = function() {
     var variantElement = document.getElementById('selectedVariant');
     var stockElement = document.getElementById('selectedStock');
 
+
+
     priceElement.textContent = '₹' + defaultPrice;
     variantElement.textContent = 'Variant: ' + defaultVariant;
     stockElement.textContent = 'Available stock: ' + defaultStock;
 };
 
 
-function addToCart(productId) {
-    axios.post('/cart/add', { productId })
-        .then(response => {
-            // Handle success, e.g., show a success message
-            console.log('Product added to cart:', response.data);
-        })
-        .catch(error => {
-            // Handle error, e.g., show an error message
-            console.error('Error adding product to cart:', error);
-        });
-}
+
 
 
 
