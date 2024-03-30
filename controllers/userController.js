@@ -277,20 +277,50 @@ let deleteCart = async (req, res) => {
 }
 
 
+// let incrementQuantity=async(req,res)=>{
+//     const user=req.user.id
+//     console.log(user);
+//     const productId=req.params.id
+
+//     const cartItem= user.cart.product.find(item=>item.productId.toString()===productId)
+//     console.log(cartItem);
+//     cartItem.quantity++;
+//     let cartTotal = user.cart.product.reduce((acc,item)=>acc+(parseInt(item.productPrice)*parseInt(item.quantity)),0)
+//     user.cart.total=cartTotal.toString()
+//     await user.save()
+//     console.log('quantity increased ');
+// }
+
+
 let incrementQuantity=async(req,res)=>{
-    const user=req.user.id
-    console.log(user);
-    const productId=req.params.id
+    try{
+        const userId=req.user.id;
+        // console.log(userId);
+        const productId=req.params.id;
+        // console.log(productId);
 
-    const cartItem= user.cart.product.find(item=>item.productId.toString()===productId)
-    console.log(cartItem);
-    cartItem.quantity++;
-    let cartTotal = user.cart.product.reduce((acc,item)=>acc+(parseInt(item.productPrice)*parseInt(item.quantity)),0)
-    user.cart.total=cartTotal.toString()
-    await user.save()
-    console.log('quantity increased ');
+        const user=await User.findById(userId)
+        // console.log(user);
+        if(!user){
+            return res.status(404).json({error:"user not found"})
+        }
+
+
+        const cartItem=user.cart.product.find(item=>item.productId.toString()===productId)
+        if(!cartItem){
+            return res.status(404).json({error:'product not found in the cart'})
+        }
+        cartItem.quantity++;
+
+
+        
+        await user.save();
+        res.status(200).json({ message: "Quantity incremented successfully", user: user });
+    } catch (error) {
+        console.error('Error incrementing quantity:', error);
+        res.status(500).json({ error: "Internal server error" });
+    }
 }
-
 
 
 

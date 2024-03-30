@@ -210,7 +210,7 @@
         {{/each}}
     </tbody>
 </table>
-<i class="fas fa-trash-alt"></i>
+{{!-- <i class="fas fa-trash-alt"></i> --}}
 
 					</div>
 				</div>
@@ -328,20 +328,24 @@
 
 
 function incrementQuantity(productId) {
-    axios.post('/updateQuantity/' + productId, { quantity: 1 })
-        .then(response => {
-            if (response.status === 200) {
-                // Update the displayed quantity on the webpage
-                const quantityElement = document.getElementById(`quantity_${productId}`);
-                let quantity = parseInt(quantityElement.textContent);
-                quantity++;
-                quantityElement.textContent = quantity;
-            }
-        })
-        .catch(error => {
-            console.error('Error incrementing quantity:', error);
-        });
+    // Make a POST request to your backend server to increment the quantity
+    axios.post(`/cart/incrementQuantity/${productId}`)
+
+    .then(function (response) {
+        // Update the quantity in the UI
+        const quantityElement = document.getElementById(`quantity_${productId}`);
+        const currentQuantity = parseInt(quantityElement.textContent);
+        quantityElement.textContent = currentQuantity + 1;
+
+        
+    })
+    .catch(function (error) {
+        console.error('Error incrementing quantity:', error);
+    });
 }
+
+
+	
 
 
 	</script>
