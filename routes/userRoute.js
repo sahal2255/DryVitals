@@ -31,7 +31,9 @@ router.post('/cart/:id',userAuth,userController.cartAdd);
 router.get('/cart',userAuth,userController.cart)
 
 
-router.delete('/cart/:id',userAuth,userController.deleteCart)
+router.delete('/cart/delete-product/:id',userAuth,userController.deleteCart)
+router.put('/cart/update-quantity/:id',userAuth,userController.incrementQuantity)
+// router.put('/cart/update-price/:id',userAuth,userController.priceUpdate)
 
 router.get('/profile',userAuth,userController.profile)
 

@@ -184,56 +184,6 @@ let singleProduct=async(req,res)=>{
 
 
 
-
-//cart page
-
-
-
-
-
-// let cartAdd = async (req, res) => {
-//     try {
-        
-        
-//         const user = await User.findById(req.user.id);
-//         console.log(user);
-//         if (!user) {
-//             return res.status(404).send({ error: 'User not found' });
-//         }
-//         const productId = req.params.id; 
-
-//         console.log(productId);
-//         const selectedVariant=req.body.variant
-        
-//         // Find the product by ID
-//         const product = await Product.findById(productId);
-//         console.log(product);
-//         if (!product) {
-//             return res.status(404).send({ error: 'Product not found' });
-//         }
-        
-//         // Add the product to the user's cart
-//         user.cart.product.push({
-//             productId: product._id,
-//             productImage: product.imageUrl,
-//             productName: product.productName,
-//             productPrice: product.price,
-//             productVariant: product.stock[0].variant, // Assuming variant is available in the stock array
-//             quantity: 1 // Default quantity
-//         });
-
-//         // Save the user object to persist changes
-//         await user.save();
-//         console.log('product added to cart');
-//         // Redirect to the cart page or render it with updated data
-//         res.redirect('/cart');
-//     } catch (error) {
-//         console.error('Error adding product to cart:', error);
-//         res.status(500).send({ error: 'Internal server error' });
-//     }
-// };
-
-
 let cartAdd = async (req, res) => {
     try {
         const { ...FormData } = req.body;
@@ -293,28 +243,56 @@ let cart = async (req, res) => {
     }
 };
 
+
+
 let deleteCart = async (req, res) => {
     try {
-        const productId = req.params.id;
-        const ObjectId = mongoose.Types.ObjectId;
-        const productObjectId = new ObjectId(productId);
-        // Update the user's cart by pulling the product with the specified productId
-        const user = await User.findByIdAndUpdate(
-            req.user.id,
-            { $pull: { 'cart.product': { _id: productObjectId } } },
-            { new: true }
-        );
+        const userId = req.user.id;
+        const productId = req.params.id; 
 
-        if (!user) {
-            return res.status(404).send({ error: 'User not found' });
+        console.log(productId);
+
+        const user = await User.findById(userId);
+        console.log(user);
+        if (!user || !user.cart || !user.cart.product || user.cart.product.length === 0) {
+            return res.status(404).send('User or cart data not found');
+        }
+        const index = user.cart.product.findIndex(item => item.productId.toString() === productId);
+
+        if (index !== -1) {
+            user.cart.product.splice(index, 1);
+        } else {
+            return res.status(404).send('Product not found in cart');
         }
 
-        res.status(200).send({ message: 'Product removed from cart' });
-    } catch(error) {
-        console.error('Error removing product from cart:', error);
-        res.status(500).send({ error: 'Internal server error' });
+        // Save the updated user
+        await user.save();
+
+        console.log('success', user);
+        res.status(200).send(user);
+    } catch (error) {
+        console.log('error', error);
+        res.status(500).send('Internal Server Error');
     }
 }
+
+
+let incrementQuantity=async(req,res)=>{
+    const user=req.user.id
+    console.log(user);
+    const productId=req.params.id
+
+    const cartItem= user.cart.product.find(item=>item.productId.toString()===productId)
+    console.log(cartItem);
+    cartItem.quantity++;
+    let cartTotal = user.cart.product.reduce((acc,item)=>acc+(parseInt(item.productPrice)*parseInt(item.quantity)),0)
+    user.cart.total=cartTotal.toString()
+    await user.save()
+    console.log('quantity increased ');
+}
+
+
+
 
 
 
@@ -352,5 +330,7 @@ module.exports={
     cart,
     cartAdd,
     deleteCart,
+    incrementQuantity,
+    
     profile
 }

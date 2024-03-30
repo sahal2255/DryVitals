@@ -37,11 +37,11 @@
 <body>
 	
 	<!--PreLoader-->
-    <div class="loader">
+    {{!-- <div class="loader">
         <div class="loader-inner">
             <div class="circle"></div>
         </div>
-    </div>
+    </div> --}}
     <!--PreLoader Ends-->
 	
 	<!-- header -->
@@ -194,18 +194,18 @@
     <tbody>
 		
         {{#each data}}
-        <tr class="table-body-row">
+        <tr class="table-body-row" id="data-product-id">
 			{{!-- <td>{{productId}}</td> --}}
-            <td class="product-remove"><button onclick="deleteProduct('{{this._id}}')" style="border: none;"><i class="fas fa-trash-alt"></i></button></td>
+            <td class="product-remove"><button onclick="deleteProduct('{{this.productId}}')" style="border: none;"><i class="fas fa-trash-alt"></i></button></td>
             <td class="product-image"><img src="{{productImage}}" alt=""></td>
             <td class="product-name">{{productName}}</td>
             <td class="product-quantity">{{productVariant}}</td>
             <td class="product-total">
-                <button class="quantity-btn" onclick="decrementQuantity('{{this._id}}')">-</button>
-                <span class="quantity">{{quantity}}</span>
-                <button class="quantity-btn" onclick="incrementQuantity('{{this._id}}')">+</button>
+                <button class="quantity-btn" onclick="decrementQuantity('{{this.productId}}')">-</button>
+                <span class="quantity" id="quantity_{{this.productId}}">{{quantity}}</span>
+                <button class="quantity-btn" onclick="incrementQuantity('{{this.productId}}')">+</button>
             </td>
-            <td class="product-price">{{productPrice}}</td>
+            <td class="product-price" id="totalPrice_{{this.productId}}">{{productPrice}}</td>
         </tr>
         {{/each}}
     </tbody>
@@ -311,15 +311,38 @@
 	
 		function deleteProduct(productId) {
 			console.log('deleting',productId)
-    		axios.delete('/cart/:id' +productId)
+    		axios.delete(`/cart/delete-product/${productId}`)
         .then(response => {
+			if(response.status===200){
+
             console.log('Product deleted successfully');
 			location.reload()
+			}else{
+				console.log('failed deled')
+			}
         })
         .catch(error => {
             console.error('Error deleting product:', error);
         });
+		}
+
+
+function incrementQuantity(productId) {
+    axios.post('/updateQuantity/' + productId, { quantity: 1 })
+        .then(response => {
+            if (response.status === 200) {
+                // Update the displayed quantity on the webpage
+                const quantityElement = document.getElementById(`quantity_${productId}`);
+                let quantity = parseInt(quantityElement.textContent);
+                quantity++;
+                quantityElement.textContent = quantity;
+            }
+        })
+        .catch(error => {
+            console.error('Error incrementing quantity:', error);
+        });
 }
+
 
 	</script>
 	
