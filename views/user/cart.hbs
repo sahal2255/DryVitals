@@ -205,7 +205,7 @@
                 <span class="quantity" id="quantity_{{this.productId}}">{{quantity}}</span>
                 <button class="quantity-btn" onclick="incrementQuantity('{{this.productId}}')">+</button>
             </td>
-            <td class="product-price" id="totalPrice_{{this.productId}}">{{productPrice}}</td>
+            <td class="product-price" id="Price_{{this.productId}}">{{productPrice}}</td>
         </tr>
         {{/each}}
     </tbody>
@@ -325,24 +325,50 @@
             console.error('Error deleting product:', error);
         });
 		}
-
+    
 
 function incrementQuantity(productId) {
-    // Make a POST request to your backend server to increment the quantity
     axios.post(`/cart/incrementQuantity/${productId}`)
+        .then(async function (response) {
+            const quantityElement = document.getElementById(`quantity_${productId}`);
+            const currentQuantity = parseInt(quantityElement.textContent);
+            quantityElement.textContent = currentQuantity + 1;
 
-    .then(function (response) {
-        // Update the quantity in the UI
-        const quantityElement = document.getElementById(`quantity_${productId}`);
-        const currentQuantity = parseInt(quantityElement.textContent);
-        quantityElement.textContent = currentQuantity + 1;
-
-        
-    })
-    .catch(function (error) {
-        console.error('Error incrementing quantity:', error);
-    });
+            const totalPriceElement = document.getElementById(`totalPrice_${productId}`);
+            totalPriceElement.textContent = response.data.totalPrice;
+        })
+        .catch(function (error) {
+            console.error('Error incrementing quantity:', error);
+        });
 }
+
+function decrementQuantity(productId) {
+    axios.post(`/cart/decrementQuantity/${productId}`)
+        .then(async function (response) {
+            const quantityElement = document.getElementById(`quantity_${productId}`);
+            const currentQuantity = parseInt(quantityElement.textContent);
+
+            if (currentQuantity > 1) {
+                quantityElement.textContent = currentQuantity - 1;
+
+                const totalPriceElement = document.getElementById(`totalPrice_${productId}`);
+                totalPriceElement.textContent = response.data.totalPrice;
+            } else {
+                console.log('Minimum quantity reached');
+            }
+        })
+        .catch(function (error) {
+            console.error('Error decrementing quantity:', error);
+        });
+}
+function calculateTotalPrice(cartProducts) {
+    let totalPrice = 0;
+    cartProducts.forEach(item => {
+        totalPrice += item.productPrice;
+    });
+    return totalPrice;
+}
+
 
 
 	

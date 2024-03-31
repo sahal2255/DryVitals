@@ -292,35 +292,68 @@ let deleteCart = async (req, res) => {
 // }
 
 
-let incrementQuantity=async(req,res)=>{
-    try{
-        const userId=req.user.id;
-        // console.log(userId);
-        const productId=req.params.id;
-        // console.log(productId);
+let incrementQuantity = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const productId = req.params.id;
 
-        const user=await User.findById(userId)
-        // console.log(user);
-        if(!user){
-            return res.status(404).json({error:"user not found"})
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
         }
 
-
-        const cartItem=user.cart.product.find(item=>item.productId.toString()===productId)
-        if(!cartItem){
-            return res.status(404).json({error:'product not found in the cart'})
+        const cartItem = user.cart.product.find(item => item.productId.toString() === productId);
+        if (!cartItem) {
+            return res.status(404).json({ error: "Product not found in the cart" });
         }
+
         cartItem.quantity++;
+        // cartItem.productPrice = cartItem.productPrice * cartItem.quantity;
 
-
-        
         await user.save();
-        res.status(200).json({ message: "Quantity incremented successfully", user: user });
+
+        // const totalPrice = calculateTotalPrice(user.cart.product);
+
+        res.status(200).json({ message: "Quantity incremented successfully" });
     } catch (error) {
         console.error('Error incrementing quantity:', error);
         res.status(500).json({ error: "Internal server error" });
     }
-}
+};
+
+
+let decrementQuantity = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const productId = req.params.id;
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        const cartItem = user.cart.product.find(item => item.productId.toString() === productId);
+        if (!cartItem) {
+            return res.status(404).json({ error: "Product not found in the cart" });
+        }
+
+        if (cartItem.quantity > 1) {
+            cartItem.quantity--;
+            // cartItem.productPrice = cartItem.productPrice * cartItem.quantity;
+
+            await user.save();
+
+            // const totalPrice = calculateTotalPrice(user.cart.product);
+
+            res.status(200).json({ message: "Quantity decremented successfully"});
+        } else {
+            res.status(400).json({ error: "Minimum quantity reached" });
+        }
+    } catch (error) {
+        console.error('Error decrementing quantity:', error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
 
 
 
@@ -361,6 +394,6 @@ module.exports={
     cartAdd,
     deleteCart,
     incrementQuantity,
-    
+    decrementQuantity,
     profile
 }
