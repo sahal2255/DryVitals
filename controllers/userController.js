@@ -264,7 +264,11 @@ let deleteCart = async (req, res) => {
         const index = user.cart.product.findIndex(item => item.productId.toString() === productId);
 
         if (index !== -1) {
+            const deletedProductPrice = user.cart.product[index].productPrice;
+
             user.cart.product.splice(index, 1);
+            user.cart.total -= deletedProductPrice;
+
         } else {
             return res.status(404).send('Product not found in cart');
         }
@@ -320,12 +324,12 @@ let incrementQuantity = async (req, res) => {
         
         cartItem.quantity++;
         cartItem.productPrice= cartItem.quantity*product[0].price
-        console.log(user.cart.total);
+        // console.log(user.cart.total);
 
         user.cart.total = user.cart.total + product[0].price
 
         await user.save();
-        console.log(user.cart.total);
+        // console.log(user.cart.total);
         
 
         res.status(200).json({ message: "Quantity incremented successfully" ,cartItem});
@@ -375,7 +379,7 @@ let decrementQuantity = async (req, res) => {
 
             cartItem.quantity--;
             cartItem.productPrice= cartItem.quantity*product[0].price
-            // user.cart.total = user.cart.total + product[0].price
+            user.cart.total -= product[0].price;
 
             await user.save();
 
@@ -409,6 +413,25 @@ let filterProducts = async (req, res) => {
 
 
 
+let sortProducts=async(req,res)=>{
+    const sortOption=req.query.sortOption
+
+    try{
+        let products
+        if(sortOption==='price-low-high'){
+            products=await Product.find().sort({'stock.0.price':1})
+        }
+        else if(sortOption==='price-high-low'){
+            products=await Product.find().sort({'stock.0.price':-1})
+        }else{
+            products=await Product.find()
+        }
+        res.json({products})
+    }
+    catch(error){
+        console.log('error sorting products',error)
+    }
+}
 
 
 //   get user profile page
@@ -448,5 +471,6 @@ module.exports={
     incrementQuantity,
     decrementQuantity,
     filterProducts,
+    sortProducts,
     profile
 }

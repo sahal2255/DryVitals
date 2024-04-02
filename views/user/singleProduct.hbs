@@ -223,17 +223,17 @@
 				<div class="col-md-7">
 					
 						<div class="producNamefield">
-    					<input type="text" id="productName" value="{{product.productName}}">
+    					<input type="text" id="productName" value="{{product.productName}}" readonly>
 						</div>
 						<div>
-    					<input type="text" id="category" value="{{product.category}}">
+    					<input type="text" id="category" value="{{product.category}}" readonly>
 						</div>
 						<div>
-    					<input type="text" id="price" name="selectedPrice" value="{{product.stock.[0].price}}">
+    					<input type="text" id="price" name="selectedPrice" value="{{product.stock.[0].price}}" readonly>
 						</div>
 						
 						<div>
-    					<input type="text" id="selectedVariant" name="selectedVariant" value="{{#if product.stock}}{{product.stock.[0].variant}}{{/if}}">
+    					<input type="text" id="selectedVariant" name="selectedVariant" value="{{#if product.stock}}{{product.stock.[0].variant}}{{/if}}" readonly>
 						</div>
     					<select id="stockSelect{{_id}}" name="stockSelect{{_id}}" onchange="updateProductDetails('{{_id}}', this)" style="width:80px">
         					{{#each product.stock}}
@@ -253,7 +253,7 @@
 				</div>
 			</div>
 			</form>
-						<button type="button">Buy Now</button>
+						{{!-- <button type="button">Buy Now</button> --}}
 		</div>
 	</div>
 	<!-- end single product -->
