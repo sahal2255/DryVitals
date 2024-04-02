@@ -35,6 +35,9 @@ router.delete('/cart/delete-product/:id',userAuth,userController.deleteCart)
 router.post('/cart/incrementQuantity/:id',userAuth,userController.incrementQuantity)
 router.post('/cart/decrementQuantity/:id', userAuth, userController.decrementQuantity);
 
+
+router.get('/filteredProducts',userController.filteredProducts)
+// router.post('/filteredProducts',userController.filteredProducts)
 // router.get('/cart/getProductPrice/:id',userAuth,userController.getProductPrice)
 // router.put('/cart/update-price/:id',userAuth,userController.priceUpdate)
 

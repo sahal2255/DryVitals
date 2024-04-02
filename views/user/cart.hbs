@@ -201,11 +201,11 @@
             <td class="product-name">{{productName}}</td>
             <td class="product-quantity">{{productVariant}}</td>
             <td class="product-total">
-                <button class="quantity-btn" onclick="decrementQuantity('{{this.productId}}')">-</button>
+                <button class="quantity-btn" onclick="decrementQuantity('{{this._id}}')">-</button>
                 <span class="quantity" id="quantity_{{this.productId}}">{{quantity}}</span>
-                <button class="quantity-btn" onclick="incrementQuantity('{{this.productId}}')">+</button>
+                <button class="quantity-btn" onclick="incrementQuantity('{{this._id}}')">+</button>
             </td>
-            <td class="product-price" id="Price_{{this.productId}}">{{productPrice}}</td>
+            <td class="product-price" id="totalPrice_{{this.productId}}">{{productPrice}}</td>
         </tr>
         {{/each}}
     </tbody>
@@ -330,12 +330,8 @@
 function incrementQuantity(productId) {
     axios.post(`/cart/incrementQuantity/${productId}`)
         .then(async function (response) {
-            const quantityElement = document.getElementById(`quantity_${productId}`);
-            const currentQuantity = parseInt(quantityElement.textContent);
-            quantityElement.textContent = currentQuantity + 1;
+        window.location.reload()
 
-            const totalPriceElement = document.getElementById(`totalPrice_${productId}`);
-            totalPriceElement.textContent = response.data.totalPrice;
         })
         .catch(function (error) {
             console.error('Error incrementing quantity:', error);
@@ -345,28 +341,11 @@ function incrementQuantity(productId) {
 function decrementQuantity(productId) {
     axios.post(`/cart/decrementQuantity/${productId}`)
         .then(async function (response) {
-            const quantityElement = document.getElementById(`quantity_${productId}`);
-            const currentQuantity = parseInt(quantityElement.textContent);
-
-            if (currentQuantity > 1) {
-                quantityElement.textContent = currentQuantity - 1;
-
-                const totalPriceElement = document.getElementById(`totalPrice_${productId}`);
-                totalPriceElement.textContent = response.data.totalPrice;
-            } else {
-                console.log('Minimum quantity reached');
-            }
+            window.location.reload()
         })
         .catch(function (error) {
             console.error('Error decrementing quantity:', error);
         });
-}
-function calculateTotalPrice(cartProducts) {
-    let totalPrice = 0;
-    cartProducts.forEach(item => {
-        totalPrice += item.productPrice;
-    });
-    return totalPrice;
 }
 
 

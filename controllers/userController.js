@@ -5,7 +5,7 @@ const jwt=require('jsonwebtoken')
 const Product=require('../models/products')
 const axios = require('axios');
 const mongoose = require('mongoose');
-
+const { ObjectId } = mongoose.Types;
 
 
 require('dotenv').config()
@@ -187,6 +187,7 @@ let singleProduct=async(req,res)=>{
 let cartAdd = async (req, res) => {
     try {
         const { ...FormData } = req.body;
+        console.log('hai');
         console.log(FormData);
 
         const productId = req.params.id;
@@ -194,15 +195,15 @@ let cartAdd = async (req, res) => {
         // console.log(productId);
         const selectedVariant = req.body.selectedVariant;
 
-        const selectedPrice = req.body.selectedPrice;
+        const selectedPrice = parseFloat(req.body.selectedPrice);
 
-        console.log(req.body);
+        // console.log(req.body);
         
         const user = await User.findById(req.user.id);
         if (!user) {
             return res.status(404).send({ error: 'User not found' });
         }
-
+        console.log(user);
         // const selectedStock = req.body.selectedStock;
 
         const product = await Product.findById(productId);
@@ -218,7 +219,7 @@ let cartAdd = async (req, res) => {
             productVariant: selectedVariant,
             quantity: 1 // Default quantity
         });
-
+        user.cart.total = user.cart.total + selectedPrice
         await user.save();
         console.log('Product added to cart');
         // console.log(user.cart.product);
@@ -277,19 +278,11 @@ let deleteCart = async (req, res) => {
 }
 
 
-// let incrementQuantity=async(req,res)=>{
-//     const user=req.user.id
-//     console.log(user);
-//     const productId=req.params.id
 
-//     const cartItem= user.cart.product.find(item=>item.productId.toString()===productId)
-//     console.log(cartItem);
-//     cartItem.quantity++;
-//     let cartTotal = user.cart.product.reduce((acc,item)=>acc+(parseInt(item.productPrice)*parseInt(item.quantity)),0)
-//     user.cart.total=cartTotal.toString()
-//     await user.save()
-//     console.log('quantity increased ');
-// }
+
+
+
+
 
 
 let incrementQuantity = async (req, res) => {
@@ -302,19 +295,45 @@ let incrementQuantity = async (req, res) => {
             return res.status(404).json({ error: "User not found" });
         }
 
-        const cartItem = user.cart.product.find(item => item.productId.toString() === productId);
+        const cartItem = user.cart.product.find(item => item._id.toString() === productId);
         if (!cartItem) {
             return res.status(404).json({ error: "Product not found in the cart" });
         }
-
+       
+        const product = await Product.aggregate([
+            {
+                $match: { _id: new ObjectId(cartItem.productId) } // Convert the ID to ObjectId
+            },
+            {
+                $unwind: '$stock' // Unwind the 'stock' array
+            },
+            {
+                $match: {
+                    $expr: {
+                        $eq: ['$stock.variant', cartItem.productVariant] // Use $getField to access 'variant' field
+                    }
+                }
+            },
+            {
+                $project: {
+                    productName: 1,
+                    variant: '$stock.variant',
+                    price: '$stock.price' // Project the price from the 'stock' subdocument
+                }
+            }
+        ]);
+        
         cartItem.quantity++;
-        // cartItem.productPrice = cartItem.productPrice * cartItem.quantity;
+        cartItem.productPrice= cartItem.quantity*product[0].price
+        console.log(user.cart.total);
+
+        user.cart.total = user.cart.total + product[0].price
 
         await user.save();
+        console.log(user.cart.total);
+        
 
-        // const totalPrice = calculateTotalPrice(user.cart.product);
-
-        res.status(200).json({ message: "Quantity incremented successfully" });
+        res.status(200).json({ message: "Quantity incremented successfully" ,cartItem});
     } catch (error) {
         console.error('Error incrementing quantity:', error);
         res.status(500).json({ error: "Internal server error" });
@@ -332,28 +351,71 @@ let decrementQuantity = async (req, res) => {
             return res.status(404).json({ error: "User not found" });
         }
 
-        const cartItem = user.cart.product.find(item => item.productId.toString() === productId);
+        const cartItem = user.cart.product.find(item => item._id.toString() === productId);
         if (!cartItem) {
             return res.status(404).json({ error: "Product not found in the cart" });
         }
+        const product = await Product.aggregate([
+            {
+                $match: { _id: new ObjectId(cartItem.productId) } // Convert the ID to ObjectId
+            },
+            {
+                $unwind: '$stock' // Unwind the 'stock' array
+            },
+            {
+                $match: {
+                    $expr: {
+                        $eq: ['$stock.variant', cartItem.productVariant] // Use $getField to access 'variant' field
+                    }
+                }
+            },
+            {
+                $project: {
+                    productName: 1,
+                    variant: '$stock.variant',
+                    price: '$stock.price' // Project the price from the 'stock' subdocument
+                }
+            }
+        ]);
 
-        if (cartItem.quantity > 1) {
             cartItem.quantity--;
-            // cartItem.productPrice = cartItem.productPrice * cartItem.quantity;
+            cartItem.productPrice= cartItem.quantity*product[0].price
+            // user.cart.total = user.cart.total + product[0].price
 
             await user.save();
 
-            // const totalPrice = calculateTotalPrice(user.cart.product);
 
-            res.status(200).json({ message: "Quantity decremented successfully"});
-        } else {
-            res.status(400).json({ error: "Minimum quantity reached" });
-        }
+            res.status(200).json({ message: "Quantity decremented successfully",});
+        
     } catch (error) {
         console.error('Error decrementing quantity:', error);
         res.status(500).json({ error: "Internal server error" });
     }
 };
+
+
+let filteredProducts=async(req,res)=>{
+ const category=req.query.category
+ console.log(category);
+
+
+
+    try{
+        let filteredProducts=[]
+        if (category === 'Dry Fruits') {
+            filteredProducts = await Product.find({category:DryFruits})
+        } else  {
+            filteredProducts = await Product.find({category:category})
+        } 
+
+        // Render the filtered products using your template engine (e.g., Handlebars)
+        res.render('product', { product: filteredProducts });
+    } catch (error) {
+        console.error('Error fetching filtered products:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+
+    }
 
 
 
@@ -395,5 +457,6 @@ module.exports={
     deleteCart,
     incrementQuantity,
     decrementQuantity,
+    filteredProducts,
     profile
 }

@@ -229,7 +229,7 @@
     					<input type="text" id="category" value="{{product.category}}">
 						</div>
 						<div>
-    					<input type="text" id="price" name="selectedPrice" value="₹{{product.stock.[0].price}}">
+    					<input type="text" id="price" name="selectedPrice" value="{{product.stock.[0].price}}">
 						</div>
 						
 						<div>
@@ -344,7 +344,7 @@ function updateProductDetails(productId, selectElement) {
     // Update the input fields with the selected variant details
     document.getElementById('productName').value = '{{product.productName}}';
     document.getElementById('category').value = '{{product.category}}';
-    document.getElementById('price').value = '₹' + selectedPrice; // Update the price field with the selected price
+    document.getElementById('price').value =   selectedPrice; // Update the price field with the selected price
     document.getElementById('selectedVariant').value = selectedVariant;
 
     // Update the product details displayed on the page
@@ -374,7 +374,7 @@ window.onload = function() {
 
 
 
-    priceElement.textContent = '₹' + defaultPrice;
+    priceElement.textContent =  defaultPrice;
     variantElement.textContent = 'Variant: ' + defaultVariant;
     stockElement.textContent = 'Available stock: ' + defaultStock;
 };

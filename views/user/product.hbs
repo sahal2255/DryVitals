@@ -57,6 +57,29 @@
     text-decoration: none;
 	
 }
+.product-filters ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.product-filters ul li {
+    margin-right: 10px;
+}
+
+.filter-button {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.filter-button:hover {
+    background-color: #f0f0f0;
+}
+
 
 	</style>
 
@@ -142,13 +165,13 @@
 										<li><a href="/product">Product</a></li>
 										<li><a href="checkout.html">Check Out</a></li>
 										{{!-- <li><a href="/singleProduct">Single Product</a></li> --}}
-										<li><a href="cart.html">Cart</a></li>
+										<li><a href="/cart">Cart</a></li>
 									</ul>
 								</li>
 								<li>
 									<div class="header-icons">
 										<a class="mobile-hide search-bar-icon" href="#" id="search-icon"><i class="fas fa-search"></i></a>
-										<a class="shopping-cart" href="cart.html"><i class="fas fa-shopping-cart"></i></a>
+										<a class="shopping-cart" href="/cart"><i class="fas fa-shopping-cart"></i></a>
 										<a class="mobile-hide wishlist-bar-icon" href=""><i class="bi bi-heart-fill"></i></a>
 										<a class="mobile-hide person-bar-icon" href="/profile"><i class="bi bi-person-circle"></i></a>
 									</div>
@@ -206,26 +229,40 @@
 	<div class="product-section mt-150 mb-150">
 		<div class="container">
 
-			<div class="row">
+			{{!-- <div class="row">
 				
                 <div class="col-md-12">
 					
                     <div class="product-filters">
                         <ul>
-                            <li class="active" data-filter="*">All</li>
-                            <li data-filter=".">Dry Fruits</li>
-                            <li data-filter=".nuts">Nuts</li>
-                            <li data-filter=".dates">Dates</li>
-							{{!-- {{#each catagories}}
-            				<li data-filter=".{{this}}">{{catagories}}</li>
-        					{{/each}} --}}
+                            <li class="filter-button" data-category="all">All</li>
+                            <li class="filter-button" data-category="dry-frutits">Dry Fruits</li>
+                            <li class="filter-button" data-category="nuts">Nuts</li>
+                            <li class="filter-button" data-category="dates">Dates</li>
+							
+                        </ul>
+                    </div>
+		
+                </div>
+            </div> --}}
+			
+	
+<div class="row">
+				
+                <div class="col-md-12">
+					
+                    <div class="product-filters">
+                        <ul>
+							<button><li class="filter-button" data-category="all">All</li></button>
+							<button ><li class="filter-button" data-category="dry-frutits">Dry Fruits</li></button>
+							<button><li class="filter-button" data-category="nuts">Nuts</li></button>
+							<button><li class="filter-button" data-category="dates">Dates</li></button>	
                         </ul>
                     </div>
 		
                 </div>
             </div>
-			
-	
+
 
 <div class="col-md-4">
 	<div>
@@ -249,6 +286,7 @@
 	{{!-- ----product section starting	 --}}
 
 	<div class="row product-lists">
+		
     {{#each products}}
         <div class="col-lg-4 col-md-6 text-center">
             <div class="single-product-item" data-filter="{{category}}">
@@ -277,6 +315,7 @@
             </div>
         </div>
     {{/each}}
+	
 </div>
 
 
@@ -379,22 +418,30 @@
 
 
 
-// Event listener for product filters
-$('.product-filters li').click(function() {
-    $('.product-filters li').removeClass('active');
-    $(this).addClass('active');
+$(document).ready(function() {
+    $(".filter-button").click(function() {
+        var category = $(this).text();
 
-    var category = $(this).data('filter');
-    if (category === '*') {
-        $('.single-product-item').show();
-    } else {
-        $('.single-product-item').hide();
-        $('.single-product-item[data-category="' + category + '"]').show();
-    }
+        $.ajax({
+            url: '/filterProducts',
+            method: 'GET',
+            data: { category: category },
+            success: function(data) {
+                $('.product-lists').html(data); // Update the product list with filtered products
+            },
+            error: function(err) {
+                console.error('Error filtering products:', err);
+            }
+        });
+    });
 });
-
-
 </script>
+
+
+
+
+
+
 
 
 

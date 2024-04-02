@@ -30,17 +30,18 @@ const userSchema=new mongoose.Schema({
                 type:String
             },
             productPrice:{
-                type:String
+                type:Number
             },
             productVariant:{
                 type:String
             },
             quantity:{
-                type:String,default:1
+                type:Number,default:1
             }
         }],
         total:{
-            type:String
+            type:Number,
+            required:true,
         }
     }
 })
