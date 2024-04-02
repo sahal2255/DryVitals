@@ -9,7 +9,7 @@
 	<!-- title -->
 	<title>Shop</title>
 	<style>
-		/* Styling for sorting and filtering options */
+		
 
 .sorting-filtering {
     background-color: #f9f9f9;
@@ -57,28 +57,40 @@
     text-decoration: none;
 	
 }
-.product-filters ul {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
+
+
+.filter-btn-container {
+    text-align: center;
 }
 
-.product-filters ul li {
-    margin-right: 10px;
-}
-
-.filter-button {
+.filter-btn {
     padding: 5px 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 1px solid #db7924;
+    border-radius: 30px; 
+	height: 60px;
+	width: 100px;
     cursor: pointer;
+	color: black;
     transition: background-color 0.3s;
+    margin-right: 10px; 
+    margin-bottom: 20px;
+}
+.filter-btn a {
+    color: #040404; /* Anchor text color */
+    text-decoration: none;
+	font-size: 15px;
+	
+}
+.filter-btn:hover {
+    background-color: #db7924;
+	color: white;
+	font-size: 16px;
+}
+.filter-btn:hover a{
+	color: #f9f9f9;
 }
 
-.filter-button:hover {
-    background-color: #f0f0f0;
-}
+
 
 
 	</style>
@@ -111,11 +123,11 @@
 <body>
 	
 	<!--PreLoader-->
-    <div class="loader">
+    {{!-- <div class="loader">
         <div class="loader-inner">
             <div class="circle"></div>
         </div>
-    </div>
+    </div> --}}
     <!--PreLoader Ends-->
 	
 	<!-- header -->
@@ -228,40 +240,18 @@
 
 	<div class="product-section mt-150 mb-150">
 		<div class="container">
-
-			{{!-- <div class="row">
-				
-                <div class="col-md-12">
-					
-                    <div class="product-filters">
-                        <ul>
-                            <li class="filter-button" data-category="all">All</li>
-                            <li class="filter-button" data-category="dry-frutits">Dry Fruits</li>
-                            <li class="filter-button" data-category="nuts">Nuts</li>
-                            <li class="filter-button" data-category="dates">Dates</li>
-							
-                        </ul>
-                    </div>
-		
-                </div>
-            </div> --}}
 			
 	
-<div class="row">
-				
-                <div class="col-md-12">
-					
-                    <div class="product-filters">
-                        <ul>
-							<button><li class="filter-button" data-category="all">All</li></button>
-							<button ><li class="filter-button" data-category="dry-frutits">Dry Fruits</li></button>
-							<button><li class="filter-button" data-category="nuts">Nuts</li></button>
-							<button><li class="filter-button" data-category="dates">Dates</li></button>	
-                        </ul>
-                    </div>
-		
-                </div>
-            </div>
+<div class="row">				
+    <div class="col-md-12 filter-btn-container">					
+		<button class="filter-btn"><a href="/product">All</a></button>
+		{{#each category}}
+    <button class="filter-btn " data-category="{{this}}">
+        <a href="/product?category={{this}}">{{this}}</a>
+    </button>
+{{/each}}
+	</div>
+</div>
 
 
 <div class="col-md-4">
@@ -284,7 +274,7 @@
 				
 
 	{{!-- ----product section starting	 --}}
-
+<div class="product-lists">
 	<div class="row product-lists">
 		
     {{#each products}}
@@ -309,7 +299,7 @@
 					  {{/each}}
                     </select>
                 </div>
-                <a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+                {{!-- <a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a> --}}
 				                        <a href="#" class="wishlist-btn"><i class="bi bi-heart-fill"></i></a>
 
             </div>
@@ -318,7 +308,7 @@
 	
 </div>
 
-
+</div>
 
 			
 
@@ -418,23 +408,6 @@
 
 
 
-$(document).ready(function() {
-    $(".filter-button").click(function() {
-        var category = $(this).text();
-
-        $.ajax({
-            url: '/filterProducts',
-            method: 'GET',
-            data: { category: category },
-            success: function(data) {
-                $('.product-lists').html(data); // Update the product list with filtered products
-            },
-            error: function(err) {
-                console.error('Error filtering products:', err);
-            }
-        });
-    });
-});
 </script>
 
 

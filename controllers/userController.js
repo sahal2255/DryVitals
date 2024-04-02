@@ -5,6 +5,7 @@ const jwt=require('jsonwebtoken')
 const Product=require('../models/products')
 const axios = require('axios');
 const mongoose = require('mongoose');
+const Admin = require('../models/admin')
 const { ObjectId } = mongoose.Types;
 
 
@@ -145,10 +146,12 @@ let signUp=async(req,res)=>{
 let productGet=async(req,res)=>{
     
     try{
-        const products =await Product.find({})
-        // const catagory=await Admin.distinct('catagories')
-        // console.log(products);
-        res.render('user/product',{products})
+        const admin= await Admin.findOne({})
+        const category=admin.categories.map(category=>category.catagoryName)
+        // console.log(category);
+        const products =await Product.find(req.query)
+       
+        res.render('user/product',{products,category})
     }
     catch(error){
         console.log('product page error',error);
@@ -266,7 +269,6 @@ let deleteCart = async (req, res) => {
             return res.status(404).send('Product not found in cart');
         }
 
-        // Save the updated user
         await user.save();
 
         console.log('success', user);
@@ -276,13 +278,6 @@ let deleteCart = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 }
-
-
-
-
-
-
-
 
 
 let incrementQuantity = async (req, res) => {
@@ -302,15 +297,15 @@ let incrementQuantity = async (req, res) => {
        
         const product = await Product.aggregate([
             {
-                $match: { _id: new ObjectId(cartItem.productId) } // Convert the ID to ObjectId
+                $match: { _id: new ObjectId(cartItem.productId) } 
             },
             {
-                $unwind: '$stock' // Unwind the 'stock' array
+                $unwind: '$stock' 
             },
             {
                 $match: {
                     $expr: {
-                        $eq: ['$stock.variant', cartItem.productVariant] // Use $getField to access 'variant' field
+                        $eq: ['$stock.variant', cartItem.productVariant] 
                     }
                 }
             },
@@ -318,7 +313,7 @@ let incrementQuantity = async (req, res) => {
                 $project: {
                     productName: 1,
                     variant: '$stock.variant',
-                    price: '$stock.price' // Project the price from the 'stock' subdocument
+                    price: '$stock.price' 
                 }
             }
         ]);
@@ -357,15 +352,15 @@ let decrementQuantity = async (req, res) => {
         }
         const product = await Product.aggregate([
             {
-                $match: { _id: new ObjectId(cartItem.productId) } // Convert the ID to ObjectId
+                $match: { _id: new ObjectId(cartItem.productId) } 
             },
             {
-                $unwind: '$stock' // Unwind the 'stock' array
+                $unwind: '$stock' 
             },
             {
                 $match: {
                     $expr: {
-                        $eq: ['$stock.variant', cartItem.productVariant] // Use $getField to access 'variant' field
+                        $eq: ['$stock.variant', cartItem.productVariant] 
                     }
                 }
             },
@@ -373,7 +368,7 @@ let decrementQuantity = async (req, res) => {
                 $project: {
                     productName: 1,
                     variant: '$stock.variant',
-                    price: '$stock.price' // Project the price from the 'stock' subdocument
+                    price: '$stock.price' 
                 }
             }
         ]);
@@ -393,29 +388,24 @@ let decrementQuantity = async (req, res) => {
     }
 };
 
+let filterProducts = async (req, res) => {
+    const category = req.query.category;
+    console.log(category)
 
-let filteredProducts=async(req,res)=>{
- const category=req.query.category
- console.log(category);
+    try {
+        let filteredProducts = [];
+        if (category === 'all') {
+            filteredProducts = await Product.find();
+        } else {
+            filteredProducts = await Product.find({ category: category });
+        }
 
-
-
-    try{
-        let filteredProducts=[]
-        if (category === 'Dry Fruits') {
-            filteredProducts = await Product.find({category:DryFruits})
-        } else  {
-            filteredProducts = await Product.find({category:category})
-        } 
-
-        // Render the filtered products using your template engine (e.g., Handlebars)
-        res.render('product', { product: filteredProducts });
+        res.render('product', { products: filteredProducts });
     } catch (error) {
         console.error('Error fetching filtered products:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
-
-    }
+};
 
 
 
@@ -457,6 +447,6 @@ module.exports={
     deleteCart,
     incrementQuantity,
     decrementQuantity,
-    filteredProducts,
+    filterProducts,
     profile
 }

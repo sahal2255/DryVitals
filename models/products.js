@@ -13,18 +13,7 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    // variant: {
-    //     type: String,
-    //     required: true
-    // },
-    // price: {
-    //     type: Number,
-    //     required: true
-    // },
-    // stock:{
-    //     type:Number,
-    //     required:true
-    // },
+    
     stock:[{
         variant:{
             type:String,

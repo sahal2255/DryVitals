@@ -43,10 +43,10 @@ let adminLoginPost=async(req,res)=>{
             const admin=await Admin.findOne({email})
             // console.log(admin);
             if (!admin){
-                return res.status(400).send({error:'admin is not found'})
+                return res.status(400).render("admin/login",{error:'admin is not found'})
             }
             if(password!=admin.password){
-                return res.status(400).send({error:'password not matching'})
+                return res.status(400).render("admin/login",{errorp:'password not matching'})
             }else{
 
                 const token=jwt.sign(
