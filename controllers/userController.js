@@ -34,7 +34,7 @@ let loginPage = async (req, res) => {
         // User is already logged in, redirect to another page or the homepage
         return res.redirect('/');
     }
-    console.log('loginpage get');
+    console.log('user login page get');
     res.render('user/login', { error: '' });
 }
 
@@ -45,7 +45,7 @@ let loginPage = async (req, res) => {
 
 let loginPostPage=async(req,res)=>{
     const {email,password} = req.body
-
+// console.log(req.body);
     try{
         const user = await User.findOne({email})
         
@@ -146,11 +146,13 @@ let signUp=async(req,res)=>{
 let productGet=async(req,res)=>{
     
     try{
+        
         const admin= await Admin.findOne({})
         const category=admin.categories.map(category=>category.catagoryName)
         // console.log(category);
         const products =await Product.find(req.query)
-       
+        
+        
         res.render('user/product',{products,category})
     }
     catch(error){
@@ -168,7 +170,7 @@ let singleProduct=async(req,res)=>{
 
     try{
 
-    
+   
     let productId=req.params.id;
     // console.log('product id',productId);
     let singlepro=await Product.findById(productId)
@@ -192,6 +194,7 @@ let cartAdd = async (req, res) => {
         const { ...FormData } = req.body;
         console.log('hai');
         console.log(FormData);
+        // console.log('req.body',req.body);
 
         const productId = req.params.id;
 
@@ -413,25 +416,31 @@ let filterProducts = async (req, res) => {
 
 
 
-let sortProducts=async(req,res)=>{
-    const sortOption=req.query.sortOption
+let sortProducts = async (req, res) => {
+    try {
+        // console.log(res.query);
+        const sortOption = req.body.sortBy ;
+        console.log(sortOption);
+        let sort = {};
 
-    try{
-        let products
-        if(sortOption==='price-low-high'){
-            products=await Product.find().sort({'stock.0.price':1})
-        }
-        else if(sortOption==='price-high-low'){
-            products=await Product.find().sort({'stock.0.price':-1})
-        }else{
-            products=await Product.find()
-        }
-        res.json({products})
-    }
-    catch(error){
-        console.log('error sorting products',error)
+        if (sortOption === 'price-low-high') {
+            sort = { 'stock.0.price': 1 };
+        } else if(sortOption === 'price-high-low') {
+            sort = { 'stock.0.price': -1 };
+        } 
+        console.log('Sorting option:', sortOption);
+        console.log('Sort object:', sort);
+        const products = await Product.aggregate([
+            {$sort:sort}
+        ])
+        console.log('Sorted products:', products);
+
+        res.render('user/product', {sort,products }); // Pass sorted products to the view
+    } catch (error) {
+        console.log('error sorting products', error);
     }
 }
+
 
 
 //   get user profile page

@@ -37,10 +37,7 @@ router.post('/cart/decrementQuantity/:id', userAuth, userController.decrementQua
 
 
 router.get('/filteredProducts',userController.filterProducts)
-router.get('/product/sortProducts',userAuth,userController.sortProducts)
-// router.post('/filteredProducts',userController.filteredProducts)
-// router.get('/cart/getProductPrice/:id',userAuth,userController.getProductPrice)
-// router.put('/cart/update-price/:id',userAuth,userController.priceUpdate)
+router.post('/product/sortProducts',userController.sortProducts)
 
 router.get('/profile',userAuth,userController.profile)
 

@@ -1,4 +1,5 @@
 const express=require('express')
+const bodyParser=require('body-parser')
 const path=require('path')
 const mongoose=require('mongoose')
 const cookieParser=require('cookie-parser')
@@ -9,9 +10,12 @@ const app=express()
 app.use(express.static('public'))
 app.use(express.static(path.join(__dirname,'views')))
 app.use(express.urlencoded({extended:true}))
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(cookieParser());
 
 app.set('view engine','hbs')
+app.use(bodyParser.json());
 
 app.use('/',userRoute)
 
