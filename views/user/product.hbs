@@ -9,93 +9,101 @@
 	<!-- title -->
 	<title>Shop</title>
 	<style>
-		
+    .sorting-filtering {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
 
-.sorting-filtering {
-	
-    background-color: #ffffff;
-    
-    padding: 20px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-}
+    .sorting-filtering h4 {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
 
-.sorting-filtering h4 {
-    font-size: 18px;
-    margin-bottom: 10px;
-}
+    .sorting-filtering select {
+        width: 50%;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        outline: none;
+        font-size: 14px;
+        margin-top: 5px;
+    }
 
-.sorting-filtering select {
-    width: 50%;
-    padding: 8px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    outline: none;
-    font-size: 14px;
-    margin-top: 5px;
-}
+    .sorting-filtering select:focus {
+        border-color: #999;
+    }
 
-.sorting-filtering select:focus {
-    border-color: #999;
-}
-.single-product-item {
-    position: relative;
-    margin-bottom: 30px; /* Adjust as needed */
-}
+    .single-product-item {
+        position: relative;
+        margin-bottom: 30px; /* Adjust as needed */
+    }
 
-.product-image-container {
-    position: relative;
-}
+    .product-image-container {
+        position: relative;
+    }
 
-.wishlist-btn {
-    position: absolute;
-    top: 10px; 
-    right: 10px; /* Adjust the right position */
-    z-index: 1; /* Ensure the icon is above the image */
-    color: #9a9696; /* Adjust color as needed */
-    font-size: 20px; /* Adjust font size as needed */
-    text-decoration: none;
-	
-}
+    .wishlist-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 1;
+        color: #9a9696;
+        font-size: 20px;
+        text-decoration: none;
+      /*  background-color: transparent;*/
+        border: none;
+        cursor: pointer;
+    }
 
+    .wishlist-btn:hover {
+        color: #ff0000;
+    }
 
-.filter-btn-container {
-    text-align: center;
-}
+    .wishlist-btn i {
+        vertical-align: middle;
+    }
 
-.filter-btn {
-    padding: 5px 10px;
-    border: 1px solid #db7924;
-    border-radius: 30px; 
-	height: 60px;
-	width: 100px;
-    cursor: pointer;
-	color: black;
-    transition: background-color 0.3s;
-    margin-right: 10px; 
-    margin-bottom: 20px;
-}
-.filter-btn a {
-    color: #040404; /* Anchor text color */
-    text-decoration: none;
-	font-size: 15px;
-	
-}
-.filter-btn:hover {
-    background-color: #db7924;
-	color: white;
-	font-size: 16px;
-}
-.filter-btn:hover a{
-	color: #f9f9f9;
-}
-.main{
-	margin-top: 50px;
-}
+    .filter-btn-container {
+        text-align: center;
+    }
 
+    .filter-btn {
+        padding: 5px 10px;
+        border: 1px solid #db7924;
+        border-radius: 30px;
+        height: 60px;
+        width: 100px;
+        cursor: pointer;
+        color: black;
+        transition: background-color 0.3s;
+        margin-right: 10px;
+        margin-bottom: 20px;
+    }
 
+    .filter-btn a {
+        color: #040404;
+        /* Anchor text color */
+        text-decoration: none;
+        font-size: 15px;
 
-	</style>
+    }
+
+    .filter-btn:hover {
+        background-color: #db7924;
+        color: white;
+        font-size: 16px;
+    }
+
+    .filter-btn:hover a {
+        color: #f9f9f9;
+    }
+
+    .main {
+        margin-top: 50px;
+    }
+</style>
 
 	<!-- favicon -->
 	{{!-- <link rel="shortcut icon" type="image/png" href="/assets/img/favicon.png"> --}}
@@ -186,7 +194,7 @@
 									<div class="header-icons">
 										<a class="mobile-hide search-bar-icon" href="#" id="search-icon"><i class="fas fa-search"></i></a>
 										<a class="shopping-cart" href="/cart"><i class="fas fa-shopping-cart"></i></a>
-										<a class="mobile-hide wishlist-bar-icon" href=""><i class="bi bi-heart-fill"></i></a>
+										<a class="mobile-hide wishlist-bar-icon" href="/wishlist"><i class="bi bi-heart-fill"></i></a>
 										<a class="mobile-hide person-bar-icon" href="/profile"><i class="bi bi-person-circle"></i></a>
 									</div>
 									
@@ -278,7 +286,7 @@
             <div class="single-product-item" data-filter="{{category}}">
                 <div class="product-image">
                     <a href="/singleProduct/{{_id}}"><img src="{{imageUrl}}" alt="productimage" style="width: 200px ;height: 200px;;"></a>
-					        <a href="#" class="wishlist-btn"><i class="bi bi-heart-fill"></i></a>
+					        {{!-- <a href="#" class="wishlist-btn"><i class="bi bi-heart-fill"></i></a> --}}
 
                 </div>
                 <h3>{{productName}}</h3>
@@ -293,8 +301,11 @@
 					  {{/each}}
                     </select>
                 </div>
-                {{!-- <a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a> --}}
-				                        <a href="#" class="wishlist-btn"><i class="bi bi-heart-fill"></i></a>
+				<button class="wishlist-btn" data-product-id="{{_id}}" 
+                        data-product-image="{{imageUrl}}" 
+                        data-product-name="{{productName}}" 
+                        data-product-price="{{stock.[0].price}}" 
+                        data-product-variant="{{stock.[0].variant}}"><i class="bi bi-heart-fill"></i></button>
 
             </div>
         </div>
@@ -402,37 +413,39 @@
         variantElement.textContent = ' ' + selectedVariant;
         stockElement.textContent = ' ' + selectedStock;
     }
+function renderProducts(products) {
+    const productList = document.querySelector('.product-lists ');
+   	productList.innerHTML = ''; 
 
-	    function renderProducts(products) {
-        const productList = document.querySelector('.product-lists .row');
-        productList.innerHTML = ''; // Clear existing products
+    // Check if products is an array, if not, try to convert it to an array
+    const productsArray = Array.isArray(products) ? products : (products && Array.isArray(products.result) ? products.result : []);
 
-        // Iterate through each product and append it to the product list
-        products.forEach(product => {
-            const productHTML = `
-                <div class="col-lg-4 col-md-6 text-center">
-                    <div class="single-product-item" data-filter="${product.category}">
-                        <div class="product-image">
-                            <a href="/singleProduct/${product._id}"><img src="${product.imageUrl}" alt="productimage" style="width: 200px ;height: 200px;"></a>
-                            <a href="#" class="wishlist-btn"><i class="bi bi-heart-fill"></i></a>
-                        </div>
-                        <h3>${product.productName}</h3>
-                        <p class="product-price">₹${product.stock[0].price}</p>
-                        <p class="product-variant">${product.stock[0].variant}</p>
-                        <p class="product-category">${product.category}</p>
-                        <div class="stock-details">
-                            <label for="stockSelect${product._id}">Choose</label>
-                            <select id="stockSelect${product._id}" name="stockSelect${product._id}" onchange="updateProductDetails('${product._id}', this)" style="width:80px">
-                                ${product.stock.map(stock => `<option value="${stock.variant}" data-price="${stock.price}" data-stock="${stock.stock}" ${stock === product.stock[0] ? 'selected' : ''}>${stock.variant}</option>`).join('')}
-                            </select>
-                        </div>
-                        <a href="#" class="wishlist-btn"><i class="bi bi-heart-fill"></i></a>
+    // Iterate through each product and append it to the product list
+    productsArray.forEach(product => {
+        const productHTML = `
+            <div class="col-lg-4 col-md-6 text-center">
+                <div class="single-product-item" data-filter="${product.category}">
+                    <div class="product-image">
+                        <a href="/singleProduct/${product._id}"><img src="${product.imageUrl}" alt="productimage" style="width: 200px; height: 200px;"></a>
                     </div>
+                    <h3>${product.productName}</h3>
+                    <p class="product-price">₹${product.stock[0].price}</p>
+                    <p class="product-variant">${product.stock[0].variant}</p>
+                    <p class="product-category">${product.category}</p>
+                    <div class="stock-details">
+                        <label for="stockSelect${product._id}">Choose</label>
+                        <select id="stockSelect${product._id}" name="stockSelect${product._id}" onchange="updateProductDetails('${product._id}', this)" style="width:80px">
+                            ${product.stock.map(stock => `<option value="${stock.variant}" data-price="${stock.price}" data-stock="${stock.stock}" ${stock === product.stock[0] ? 'selected' : ''}>${stock.variant}</option>`).join('')}
+                        </select>
+                    </div>
+                    <a href="#" class="wishlist-btn"><i class="bi bi-heart-fill"></i></a>
                 </div>
-            `;
-            productList.insertAdjacentHTML('beforeend', productHTML); // Append product to product list
-        });
-    }
+            </div>
+        `;
+        productList.insertAdjacentHTML('beforeend', productHTML); // Append product to product list
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const sortSelect = document.getElementById('sortSelect');
 
@@ -440,13 +453,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const selectedValue = e.target.value;
         console.log(selectedValue);
 
-        // Send a GET request to the server with the sorting option as a query parameter
         axios.post('/product/sortProducts', {
-             sortBy: selectedValue  // Pass sortBy as a query parameter
+             sortBy: selectedValue  
         })
         .then(response => {
             console.log('server response:', response.data);
-        	renderProducts(response.data)
+        	renderProducts(response.data.product)
 
         })
         .catch(error => {
@@ -455,8 +467,59 @@ document.addEventListener('DOMContentLoaded', function () {
     }); 
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+    wishlistButtons.forEach(button => {
+        button.addEventListener('click', function (event) {
+            const productId = button.dataset.productId;
+            const productImage = button.dataset.productImage;
+            const productName = button.dataset.productName;
+            const productPrice = button.dataset.productPrice;
+            const productVariant = button.dataset.productVariant;
+            console.log('productId', productId);
+            console.log('productImage', productImage);
+            console.log('productName', productName);
+            console.log('productPrice', productPrice);
+            console.log('productVariant', productVariant);
+            addToWishlist(productId, productImage, productName, productPrice, productVariant);
+        });
+    });
+});
+
+function addToWishlist(productId, productImage, productName, productPrice, productVariant) {
+    axios.post('/wishlist/add', {
+            productId: productId,
+            productImage: productImage,
+            productName: productName,
+            productPrice: productPrice,
+            productVariant: productVariant
+        })
+        .then(response => {
+            console.log('Product added to wishlist:', response.data);
+            Toastify({
+                text: 'Product added to wishlist',
+                duration: 3000,
+                gravity: 'bottom',
+                backgroundColor: 'green',
+            }).showToast();
+        })
+        .catch(error => {
+            console.error('Error adding product to wishlist:', error);
+            // Show error toast
+            Toastify({
+                text: 'Error adding product to wishlist',
+                duration: 3000,
+                gravity: 'bottom',
+                backgroundColor: 'red',
+            }).showToast();
+        });
+}
+
+
 
 </script>
+<!-- If you're using CDN -->
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
 	<!-- jquery -->
 	<script src="/assets/js/jquery-1.11.3.min.js"></script>

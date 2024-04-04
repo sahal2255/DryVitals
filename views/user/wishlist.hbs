@@ -7,7 +7,7 @@
 	<meta name="description" content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
 
 	<!-- title -->
-	<title>Cart</title>
+	<title>Wishlist</title>
 
 	<!-- favicon -->
 	{{!-- <link rel="shortcut icon" type="image/png" href="/assets/img/favicon.png"> --}}
@@ -97,8 +97,8 @@
 								<li>
 									<div class="header-icons">
 										<a class="mobile-hide search-bar-icon" href="#" id="search-icon"><i class="fas fa-search"></i></a>
-										<a class="shopping-cart" href="/cart"><i class="fas fa-shopping-cart"></i></a>
-										<a class="mobile-hide wishlist-bar-icon" href="/wishlist"><i class="bi bi-heart-fill"></i></a>
+										<a class="shopping-cart" href="cart.html"><i class="fas fa-shopping-cart"></i></a>
+										<a class="mobile-hide wishlist-bar-icon" href=""><i class="bi bi-heart-fill"></i></a>
 										<a class="mobile-hide person-bar-icon" href="/profile"><i class="bi bi-person-circle"></i></a>
 									</div>
 									
@@ -142,7 +142,7 @@
 				<div class="col-lg-8 offset-lg-2 text-center">
 					<div class="breadcrumb-text">
 						<p>Fresh and Organic</p>
-						<h1>Cart</h1>
+						<h1>Wishlist</h1>
 					</div>
 				</div>
 			</div>
@@ -156,108 +156,36 @@
 			<div class="row">
 				<div class="col-lg-8 col-md-12">
 					<div class="cart-table-wrap">
-						{{!-- <table class="cart-table">
-							<thead class="cart-table-head">
-								<tr class="table-head-row">
-									<th class="product-remove"></th>
-									<th class="product-image">Product Image</th>
-									<th class="product-name">Name</th>
-									<th class="product-price">Price</th>
-									<th class="product-quantity">Quantity</th>
-									<th class="product-total">Total</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr class="table-body-row">
-									<td class="product-remove"><a href="#"><i class="far fa-window-close"></i></a></td>
-									<td class="product-image"><img src="/assets/img/products/product-img-1.jpg" alt=""></td>
-									<td class="product-name">Strawberry</td>
-									<td class="product-price">$85</td>
-									<td class="product-quantity"><input type="number" placeholder="0"></td>
-									<td class="product-total">1</td>
-								</tr>
-								
-							</tbody>
-						</table> --}}
-<table class="cart-table">
-    <thead class="cart-table-head">
+						
+<table class="wishlist-table">
+    <thead class="wishlist-table-head">
         <tr class="table-head-row">
-			{{!-- <th>dd</th> --}}
             <th class="product-remove"></th>
             <th class="product-image">Product Image</th>
             <th class="product-name">Name</th>
-            <th class="product-quantity">Varient</th>
-			{{!-- <th class="selected-price">Price</th> --}}
-            <th class="product-total">Quantity</th>
-            <th class="product-price">Total</th>
+            <th class="product-quantity">Variant</th>
+            <th class="product-price">Price</th>
         </tr>
     </thead>
     <tbody>
-		
-        {{#each data}}
-        <tr class="table-body-row" id="data-product-id">
-			{{!-- <td>{{productId}}</td> --}}
-            <td class="product-remove"><button onclick="deleteProduct('{{this.productId}}')" style="border: none;"><i class="fas fa-trash-alt"></i></button></td>
-            <td class="product-image"><img src="{{productImage}}" alt=""></td>
+        {{#each wishlistItems}}
+        <tr class="table-body-row" id="wishlist-item-{{productId}}">
+            <td class="product-remove"><button onclick="removeFromWishlist('{{this.productId}}')" style="border: none;"><i class="fas fa-trash-alt"></i></button></td>
+            <td class="product-image"><img src="{{this.productImage}}" alt=""></td>
             <td class="product-name">{{productName}}</td>
-			{{!-- <td></td> --}}
             <td class="product-quantity">{{productVariant}}</td>
-			{{!-- <td class="selected-price">{{selected.productPrice}}</td> --}}
-            <td class="product-total">
-                <button class="quantity-btn" onclick="decrementQuantity('{{this._id}}')">-</button>
-                <span class="quantity" id="quantity_{{this.productId}}">{{quantity}}</span>
-                <button class="quantity-btn" onclick="incrementQuantity('{{this._id}}')">+</button>
-            </td>
-            <td class="product-price" id="totalPrice_{{this.productId}}">{{productPrice}}</td>
+            <td class="product-price">{{productPrice}}</td>
         </tr>
         {{/each}}
     </tbody>
 </table>
+
 {{!-- <i class="fas fa-trash-alt"></i> --}}
 
 					</div>
 				</div>
 
-				<div class="col-lg-4">
-					<div class="total-section">
-						<table class="total-table">
-							<thead class="total-table-head">
-								<tr class="table-total-row">
-									<th>Total</th>
-									<th>Price</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr class="total-data">
-									<td><strong>Subtotal: </strong></td>
-									<td>{{cart.total}}</td>
-								</tr>
-								<tr class="total-data">
-									<td><strong>Shipping: </strong></td>
-									<td>$45</td>
-								</tr>
-								<tr class="total-data">
-									<td><strong>Total: </strong></td>
-									<td>$545</td>
-								</tr>
-							</tbody>
-						</table>
-						<div class="cart-buttons">
-							<a href="/product" class="boxed-btn">Update Cart</a>
-							<a href="checkout.html" class="boxed-btn black">Check Out</a>
-						</div>
-					</div>
-
-					<div class="coupon-section">
-						<h3>Apply Coupon</h3>
-						<div class="coupon-form-wrap">
-							<form action="index.html">
-								<p><input type="text" placeholder="Coupon"></p>
-								<p><input type="submit" value="Apply"></p>
-							</form>
-						</div>
-					</div>
-				</div>
+		
 			</div>
 		</div>
 	</div>
@@ -310,73 +238,3 @@
 	</div>
 	<!-- end footer -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js" integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-	<script>
-	
-		function deleteProduct(productId) {
-			console.log('deleting',productId)
-    		axios.delete(`/cart/delete-product/${productId}`)
-        .then(response => {
-			if(response.status===200){
-
-            console.log('Product deleted successfully');
-			location.reload()
-			}else{
-				console.log('failed deled')
-			}
-        })
-        .catch(error => {
-            console.error('Error deleting product:', error);
-        });
-		}
-    
-
-function incrementQuantity(productId) {
-    axios.post(`/cart/incrementQuantity/${productId}`)
-        .then(async function (response) {
-        window.location.reload()
-
-        })
-        .catch(function (error) {
-            console.error('Error incrementing quantity:', error);
-        });
-}
-
-function decrementQuantity(productId) {
-    axios.post(`/cart/decrementQuantity/${productId}`)
-        .then(async function (response) {
-            window.location.reload()
-        })
-        .catch(function (error) {
-            console.error('Error decrementing quantity:', error);
-        });
-}
-
-
-	
-
-
-	</script>
-	
-	<!-- jquery -->
-	<script src="/assets/js/jquery-1.11.3.min.js"></script>
-	<!-- bootstrap -->
-	<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
-	<!-- count down -->
-	<script src="/assets/js/jquery.countdown.js"></script>
-	<!-- isotope -->
-	<script src="/assets/js/jquery.isotope-3.0.6.min.js"></script>
-	<!-- waypoints -->
-	<script src="/assets/js/waypoints.js"></script>
-	<!-- owl carousel -->
-	<script src="/assets/js/owl.carousel.min.js"></script>
-	<!-- magnific popup -->
-	<script src="/assets/js/jquery.magnific-popup.min.js"></script>
-	<!-- mean menu -->
-	<script src="/assets/js/jquery.meanmenu.min.js"></script>
-	<!-- sticker js -->
-	<script src="/assets/js/sticker.js"></script>
-	<!-- main js -->
-	<script src="/assets/js/main.js"></script>
-
-</body>
-</html>

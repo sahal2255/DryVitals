@@ -7,6 +7,11 @@ const userRoute=require('./routes/userRoute')
 const adminRoute=require('./routes/adminRoute')
 const app=express()
 
+
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store');
+  next();
+});
 app.use(express.static('public'))
 app.use(express.static(path.join(__dirname,'views')))
 app.use(express.urlencoded({extended:true}))

@@ -41,10 +41,30 @@ const userSchema=new mongoose.Schema({
         }],
         total:{
             type:Number,
-            required:true,
+            default:0
         }
-    }
-})
+    },
+    wishlist: {
+        product:[{
+        productId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Product'
+        },
+        productImage: {
+            type: [String]
+        },
+        productName: {
+            type: String
+        },
+        productPrice: {
+            type: Number
+        },
+        productVariant: {
+            type: String
+        }
+    }]
+}
+});
 
 const User=mongoose.model('User',userSchema)
 

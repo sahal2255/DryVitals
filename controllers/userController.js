@@ -92,18 +92,18 @@ let logOut=async(req,res)=>{
 //--------- getting signUpPage ---------
 let signUpPage=async(req,res)=>{
     res.render('user/sign')
+    console.log('user signup page get');
 }
-
-
-
-
-
-// user signing section
 
 
 let signUp=async(req,res)=>{
     try{
         const {userName,email,password,phoneNumber}= req.body;
+
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ error: "User with this email already exists." });
+        }
         
         const hashPassword = await bcrypt.hash(password,10)
         const newUser = new User({
@@ -127,7 +127,7 @@ let signUp=async(req,res)=>{
                 expiresIn: "24h",
               }
         );
-        res.cookie("jwt", token, { httpOnly: true, maxAge: 86400000 }); // 24 hour expiry
+        res.cookie("user_jwt", token, { httpOnly: true, maxAge: 86400000 }); // 24 hour expiry
 
         console.log("New user created:", newUser);
         return res.redirect('/login')
@@ -147,9 +147,12 @@ let productGet=async(req,res)=>{
     
     try{
         
+        
         const admin= await Admin.findOne({})
         const category=admin.categories.map(category=>category.catagoryName)
         // console.log(category);
+
+        
         const products =await Product.find(req.query)
         
         
@@ -192,8 +195,8 @@ let singleProduct=async(req,res)=>{
 let cartAdd = async (req, res) => {
     try {
         const { ...FormData } = req.body;
-        console.log('hai');
-        console.log(FormData);
+        // console.log('hai');
+        console.log("this is form datas", FormData);
         // console.log('req.body',req.body);
 
         const productId = req.params.id;
@@ -210,7 +213,6 @@ let cartAdd = async (req, res) => {
             return res.status(404).send({ error: 'User not found' });
         }
         console.log(user);
-        // const selectedStock = req.body.selectedStock;
 
         const product = await Product.findById(productId);
 
@@ -397,17 +399,16 @@ let decrementQuantity = async (req, res) => {
 
 let filterProducts = async (req, res) => {
     const category = req.query.category;
-    console.log(category)
-
+    console.log(category);
     try {
         let filteredProducts = [];
         if (category === 'all') {
-            filteredProducts = await Product.find();
+            filteredProducts = await Product.find().sort(sort);
         } else {
-            filteredProducts = await Product.find({ category: category });
+            filteredProducts = await Product.find({ category: category }).sort(sort);
         }
 
-        res.render('product', { products: filteredProducts });
+        res.render('user/product', { products: filteredProducts });
     } catch (error) {
         console.error('Error fetching filtered products:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -416,10 +417,11 @@ let filterProducts = async (req, res) => {
 
 
 
+
 let sortProducts = async (req, res) => {
     try {
         // console.log(res.query);
-        const sortOption = req.body.sortBy ;
+        const sortOption = req.body.sortBy || '' ;
         console.log(sortOption);
         let sort = {};
 
@@ -433,6 +435,8 @@ let sortProducts = async (req, res) => {
         const products = await Product.aggregate([
             {$sort:sort}
         ])
+
+        
         console.log('Sorted products:', products);
 
         res.render('user/product', {sort,products }); // Pass sorted products to the view
@@ -440,6 +444,54 @@ let sortProducts = async (req, res) => {
         console.log('error sorting products', error);
     }
 }
+
+let wishlistGet=async(req,res)=>{
+    // res.render('user/wishlist')
+    try{
+        const user = await User.findById(req.user.id);
+        const wishlistItems=user.wishlist.product
+        res.render('user/wishlist',{wishlistItems})
+    }
+    catch(error){
+        console.log('wishlist error',error);
+    }
+}
+
+
+let wishlistAdd = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const { productId, productImage, productName, productPrice, productVariant } = req.body;
+
+        let user = await User.findById(userId);
+
+        if (!user) {
+            throw new Error('User not found');
+        }
+        if (!user.wishlist) {
+            user.wishlist = { product: [] };
+        }
+        user.wishlist.product.push({
+            productId: productId,
+            productImage: productImage,
+            productName: productName,
+            productPrice: productPrice,
+            productVariant: productVariant
+        });
+
+        const wishlistItems=user.wishlist.product
+        console.log('wishlist',wishlistItems);
+        user = await user.save();
+        res.render('user/wishlist', { wishlistItems });
+    } catch (error) {
+        console.error('Error adding product to wishlist:', error);
+        res.status(500).json({ error: 'Failed to add product to wishlist.' });
+    }
+};
+
+
+
 
 
 
@@ -481,5 +533,7 @@ module.exports={
     decrementQuantity,
     filterProducts,
     sortProducts,
+    wishlistAdd,
+    wishlistGet,
     profile
 }
