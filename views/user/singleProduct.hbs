@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
+	<meta name="description"
+		content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
 
 	<!-- title -->
 	<title>Single Product</title>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 	<!-- favicon -->
-	{{!-- <link rel="shortcut icon" type="image/png" href="/assets/img/mainLogo.png"> --}}
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+			<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+
 	<!-- google font -->
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
@@ -32,78 +33,47 @@
 	<link rel="stylesheet" href="/assets/css/main.css">
 	<!-- responsive -->
 	<link rel="stylesheet" href="/assets/css/responsive.css">
-
 <style>
-    /* Form container */
-    form {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        background-color: #f9f9f9;
+	.cart-btn{
+		margin-top: 20px;
+		background-color: rgb(220, 136, 17);
+		width: 200px;
+		height: 40px;
 		border: none;
-    }
-
-    /* Form input fields */
-    input[type="text"],
-    select {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 10px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        box-sizing: border-box;
-        font-size: 16px;
-		border: none;
-    }
-
-    /* Button */
-    button {
-        width: 50%;
-        padding: 10px;
-        background-color: #e07e17;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-		border-radius: 40px;
-    }
-
-    /* Button hover effect */
-    button:hover {
-        background-color: #000000;
 		color: white;
-    }
+		border-radius: 30px;
+	}
+	.cart-btn:hover{
+		background-color: black;
+	}
 	
+
 </style>
-
-
-
 </head>
+
 <body>
-	
+
 	<!--PreLoader-->
-    <div class="loader">
-        <div class="loader-inner">
-            <div class="circle"></div>
-        </div>
-    </div>
-    <!--PreLoader Ends-->
-	
+	<div class="loader">
+		<div class="loader-inner">
+			<div class="circle"></div>
+		</div>
+	</div>
+	<!--PreLoader Ends-->
+
 	<!-- header -->
 	<div class="top-header-area" id="sticker">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12 col-sm-12 text-center">
 					<div class="main-menu-wrap">
-						<!-- logo -->
+						
 						<div class="site-logo">
 							<a href="/">
 								<img src="/assets/img/Mainlogo.png" alt="">
 							</a>
 						</div>
+
 						<!-- logo -->
 
 						<!-- menu start -->
@@ -138,8 +108,8 @@
 									<ul class="sub-menu">
 										<li><a href="/product">Product</a></li>
 										<li><a href="checkout.html">Check Out</a></li>
-										{{!-- <li><a href="/singleProduct">Single Product</a></li> --}}
-										<li><a href="cart.html">Cart</a></li>
+										<li><a href="single-product.html">Single Product</a></li>
+										<li><a href="/cart">Cart</a></li>
 									</ul>
 								</li>
 								<li><a href="#">Login</a>
@@ -152,7 +122,7 @@
 								<li>
 									<div class="header-icons">
 										<a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
-										<a class="shopping-cart" href="cart.html"><i class="fas fa-shopping-cart"></i></a>
+										<a class="shopping-cart" href="/cart"><i class="fas fa-shopping-cart"></i></a>
 										<a class="mobile-hide wishlist-bar-icon" href=""><i class="bi bi-heart-fill"></i></a>
 										<a class="mobile-hide person-bar-icon" href="/profile"><i class="bi bi-person-circle"></i></a>
 									</div>
@@ -188,7 +158,7 @@
 		</div>
 	</div>
 	<!-- end search arewa -->
-	
+
 	<!-- breadcrumb-section -->
 	<div class="breadcrumb-section breadcrumb-bg">
 		<div class="container">
@@ -207,58 +177,38 @@
 	<!-- single product -->
 	<div class="single-product mt-150 mb-150">
 		<div class="container">
-		<form action="/cart/{{product._id}}" method="POST">
 			<div class="row">
 				<div class="col-md-5">
 					<div class="single-product-img">
 						<img src="{{product.imageUrl}}" alt="single image">
 					</div>
-					<div>
-						{{!-- <input type="text" id="description" value="{{product.description}}"> --}}
-							        <p id="fullDescription">{{product.description}}</p>
-
-
-						</div>
 				</div>
 				<div class="col-md-7">
-					
-						<div class="producNamefield">
-    					<input type="text" id="productName" value="{{product.productName}}" readonly>
+					<div class="single-product-content">
+						<h2>{{product.productName}}</h2>
+						<p class="single-product-pricing" id="selected-variant-price">₹ {{product.stock.0.price}}</p>						
+						<p>{{product.description}}</p>
+						<div class="single-product-form">
+							<p><strong>Category : </strong>{{product.category}}</p>
+							{{#each product.stock}}
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="variant" id="{{@index}}" data-price="{{price}}" onchange="updatePrice(this)">
+								<label class="form-check-label" for="{{@index}}">
+									{{variant}}
+								</label>
+							</div>
+								{{/each}}
 						</div>
-						<div>
-    					<input type="text" id="category" value="{{product.category}}" readonly>
-						</div>
-						<div>
-    					<input type="text" id="price" name="selectedPrice" value="{{product.stock.[0].price}}" readonly>
-						</div>
-						
-						<div>
-    					<input type="text" id="selectedVariant" name="selectedVariant" value="{{#if product.stock}}{{product.stock.[0].variant}}{{/if}}" readonly>
-						</div>
-    					<select id="stockSelect{{_id}}" name="stockSelect{{_id}}" onchange="updateProductDetails('{{_id}}', this)" style="width:80px">
-        					{{#each product.stock}}
-            					<option value="{{variant}}" data-price="{{price}}" data-stock="{{stock}}" {{#if @first}} selected{{/if}}>{{variant}}</option>
-        					{{/each}}
-    					</select>
-								
-						<div>
+						<button type="submit" class="cart-btn" id="addToCartBtn"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
 
-						<button type="submit"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
-						
-
-						</div>
-
-						{{!-- <input type="text" value="{{}}"> --}}
-
+					</div>
 				</div>
 			</div>
-			</form>
-						{{!-- <button type="button">Buy Now</button> --}}
 		</div>
 	</div>
 	<!-- end single product -->
 
-
+	
 
 	<!-- footer -->
 	<div class="footer-area">
@@ -267,7 +217,8 @@
 				<div class="col-lg-3 col-md-6">
 					<div class="footer-box about-widget">
 						<h2 class="widget-title">About us</h2>
-						<p>Ut enim ad minim veniam perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae.</p>
+						<p>Ut enim ad minim veniam perspiciatis unde omnis iste natus error sit voluptatem accusantium
+							doloremque laudantium, totam rem aperiam, eaque ipsa quae.</p>
 					</div>
 				</div>
 				<div class="col-lg-3 col-md-6">
@@ -306,13 +257,14 @@
 		</div>
 	</div>
 	<!-- end footer -->
-	
+
 	<!-- copyright -->
 	<div class="copyright">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-6 col-md-12">
-					<p>Copyrights &copy; 2019 - <a href="https://imransdesign.com/">Imran Hossain</a>,  All Rights Reserved.</p>
+					<p>Copyrights &copy; 2019 - <a href="https://imransdesign.com/">Imran Hossain</a>, All Rights
+						Reserved.</p>
 				</div>
 				<div class="col-lg-6 text-right col-md-12">
 					<div class="social-icons">
@@ -329,62 +281,59 @@
 		</div>
 	</div>
 	<!-- end copyright -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js" integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-	<script>
-			
-function updateProductDetails(productId, selectElement) {
-    // Get the selected variant option
-    var selectedOption = selectElement.options[selectElement.selectedIndex];
+	
+<script>
+	
+    function updatePrice(radio) {
+        var price = radio.getAttribute('data-price');
+        document.getElementById('selected-variant-price').innerText = " ₹" +' '+ price;
+    }
+	function getSelectedPrice(){
+		let selectedVariant=document.querySelector('input[name="variant"]:checked')
+		if(selectedVariant){
+			return parseFloat(selectedVariant.getAttribute('data-price'))
+		}
+		return 0
+	}
+	document.getElementById('addToCartBtn').addEventListener('click', async function() {
+        try {
+            const selectedVariant = document.querySelector('input[name="variant"]:checked').nextElementSibling.innerText;
+            const selectedPrice = getSelectedPrice();
 
-    // Get the selected variant details
-    var selectedVariant = selectedOption.value;
-    var selectedPrice = selectedOption.getAttribute('data-price');
-    var selectedStock = selectedOption.getAttribute('data-stock');
+            const productId = '{{product._id}}'; // Use actual product ID here
 
-    // Update the input fields with the selected variant details
-    document.getElementById('productName').value = '{{product.productName}}';
-    document.getElementById('category').value = '{{product.category}}';
-    document.getElementById('price').value =   selectedPrice; // Update the price field with the selected price
-    document.getElementById('selectedVariant').value = selectedVariant;
-
-    // Update the product details displayed on the page
-    var stockElement = document.getElementById('selectedStock');
-
-    stockElement.textContent = 'Available stock: ' + selectedStock;
-}
-
-
-
-window.onload = function() {
-    // Get the select element
-    var selectElement = document.getElementById('stockSelect{{_id}}');
-
-    // Get the default selected option
-    var defaultOption = selectElement.querySelector('option[selected]')|| selectElement.options[0];
-
-    // Get the default selected variant details
-    var defaultVariant = defaultOption.value;
-    var defaultPrice = defaultOption.getAttribute('data-price');
-    var defaultStock = defaultOption.getAttribute('data-stock');
-
-    // Update the product details displayed on the page
-    var priceElement = document.getElementById('selectedPrice');
-    var variantElement = document.getElementById('selectedVariant');
-    var stockElement = document.getElementById('selectedStock');
-
-
-
-    priceElement.textContent =  defaultPrice;
-    variantElement.textContent = 'Variant: ' + defaultVariant;
-    stockElement.textContent = 'Available stock: ' + defaultStock;
-};
-
-
-
-
-
-
+            const response = await axios.post('/cart/' + productId, {
+                selectedVariant: selectedVariant,
+                selectedPrice: selectedPrice
+            });
+           Toastify({
+                text: "Product added to cart!",
+                style: {
+                    background: "green"
+                },
+                duration: 3000,
+                position: "right",
+                className: "toastify-width"
+            }).showToast();
+            console.log('Product added to cart:', response.data);
+            // window.location.href = '/cart';
+        } catch (error) {
+            cToastify({
+                text: "Error adding product to cart",
+                style: {
+                    background: "red"
+                },
+                duration: 3000,
+                position: "right",
+                className: "toastify-width-auto"
+            }).showToast();
+        }
+    });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 	<!-- jquery -->
 	<script src="/assets/js/jquery-1.11.3.min.js"></script>
 	<!-- bootstrap -->
@@ -407,4 +356,5 @@ window.onload = function() {
 	<script src="/assets/js/main.js"></script>
 
 </body>
+
 </html>

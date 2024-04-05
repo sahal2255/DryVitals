@@ -172,11 +172,11 @@ let singleProduct=async(req,res)=>{
 
     try{
 
-   
     let productId=req.params.id;
-    // console.log('product id',productId);
+    // console.log('product id',productId;
     let singlepro=await Product.findById(productId)
     // console.log('single product',singlepro);
+
     if(!singlepro){
         console.log('Product not found');
         return res.status(404).send('product nt found')
@@ -193,14 +193,12 @@ let singleProduct=async(req,res)=>{
 
 let cartAdd = async (req, res) => {
     try {
-        const { ...FormData } = req.body;
-        // console.log('hai');
-        console.log("this is form datas", FormData);
-        // console.log('req.body',req.body);
+        
+        
 
         const productId = req.params.id;
 
-        // console.log(productId);
+        console.log(productId);
         const selectedVariant = req.body.selectedVariant;
 
         const selectedPrice = parseFloat(req.body.selectedPrice);
@@ -242,9 +240,11 @@ let cartAdd = async (req, res) => {
 
 let cart = async (req, res) => {
     try {
-        const user = await User.findById(req.user.id);
+        const user = await User.findById(req.user.id).select('cart');
         const data=user.cart.product
-        res.render('user/cart', { data });
+        const total=user.cart.total
+        console.log('datas',data);
+        res.render('user/cart', { data,total });
     } catch (error) {
         console.error('Error rendering cart:', error);
         res.status(500).send({ error: 'Internal server error' });
@@ -489,7 +489,9 @@ let wishlistAdd = async (req, res) => {
     }
 };
 
-
+let wishlistdelete=async(req,res)=>{
+    
+}
 
 
 

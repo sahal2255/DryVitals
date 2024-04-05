@@ -208,7 +208,7 @@
                 <span class="quantity" id="quantity_{{this.productId}}">{{quantity}}</span>
                 <button class="quantity-btn" onclick="incrementQuantity('{{this._id}}')">+</button>
             </td>
-            <td class="product-price" id="totalPrice_{{this.productId}}">{{productPrice}}</td>
+            <td class="product-price" id="totalPrice_{{this.productId}}">₹{{productPrice}}</td>
         </tr>
         {{/each}}
     </tbody>
@@ -230,16 +230,16 @@
 							<tbody>
 								<tr class="total-data">
 									<td><strong>Subtotal: </strong></td>
-									<td>{{cart.total}}</td>
+									<td>₹{{total}}</td>
 								</tr>
-								<tr class="total-data">
+								{{!-- <tr class="total-data">
 									<td><strong>Shipping: </strong></td>
 									<td>$45</td>
-								</tr>
-								<tr class="total-data">
+								</tr> --}}
+								{{!-- <tr class="total-data">
 									<td><strong>Total: </strong></td>
 									<td>$545</td>
-								</tr>
+								</tr> --}}
 							</tbody>
 						</table>
 						<div class="cart-buttons">
@@ -248,7 +248,7 @@
 						</div>
 					</div>
 
-					<div class="coupon-section">
+					{{!-- <div class="coupon-section">
 						<h3>Apply Coupon</h3>
 						<div class="coupon-form-wrap">
 							<form action="index.html">
@@ -256,7 +256,7 @@
 								<p><input type="submit" value="Apply"></p>
 							</form>
 						</div>
-					</div>
+					</div> --}}
 				</div>
 			</div>
 		</div>
