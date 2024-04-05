@@ -43,41 +43,40 @@ let loginPage = async (req, res) => {
 
 // user login section
 
-let loginPostPage=async(req,res)=>{
-    const {email,password} = req.body
-// console.log(req.body);
-    try{
-        const user = await User.findOne({email})
+let loginPostPage = async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const user = await User.findOne({ email });
         
-        if(!user){
-            return res.status(404).json({error:'user not found'})
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
         }
-        const validPassword = await bcrypt.compare(password,user.password)
-        if(!validPassword){
-            return res.status(401).json({error:'invalid password'})
+        
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (!validPassword) {
+            return res.status(401).json({ error: 'Invalid password' });
         }
+        
         const token = jwt.sign( 
             {
-                id:user._id,
-                name:user.userName,
-                email:user.email
+                id: user._id,
+                name: user.userName,
+                email: user.email
             },
             process.env.JWT_SECRET,
             {
-                expiresIn:'24h'
+                expiresIn: '24h'
             }
         );
-        // console.log(token);
+        
         res.cookie("user_jwt", token, { httpOnly: true, maxAge: 86400000 }); // 24 hour expiry
-
-        // res.status(200).json({ message: "Login successful", token });
-        res.redirect('/')
-        console.log("user logged in with email and password ");
-    }catch (error) {
+        
+        res.status(200).json({ message: "Login successful" });
+    } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Internal server error" });
-      }
-    };
+    }
+};
 
 // user logout section
 
@@ -130,7 +129,7 @@ let signUp=async(req,res)=>{
         res.cookie("user_jwt", token, { httpOnly: true, maxAge: 86400000 }); // 24 hour expiry
 
         console.log("New user created:", newUser);
-        return res.redirect('/login')
+         res.json('ok')
       } 
      catch (error) {
       console.error("Verification failed:", error);

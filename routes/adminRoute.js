@@ -3,6 +3,7 @@ const bodyparser = require('body-parser');
 const router = express.Router();
 const adminController = require('../controllers/adminController');
 const adminAuth = require('../middleware/admin_jwt');
+const adminMiddleware=require('../middleware/adminMiddleware')
 const upload = require('../config/multer');
 const axios = require('axios');
 // const cloudinary=require('../config/cloudinary')
@@ -13,7 +14,7 @@ router.use(bodyparser.urlencoded({ extended: true }));
 
 router.get('/admin/index',adminAuth,adminController.adminDash)
 
-router.get('/admin/login', adminController.adminLogin);
+router.get('/admin/login', adminMiddleware,adminController.adminLogin);
 router.post('/admin/login',adminController.adminLoginPost)
 
 router.get('/admin/addCatagory',adminAuth,adminController.addCatagory)

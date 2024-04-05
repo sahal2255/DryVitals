@@ -82,6 +82,7 @@
 
 <div class="container">
   <h2 class="mb-4">Sign Up</h2>
+  <div class="error-msg" id="signError"></div>
   <form action="/signup" method="POST" id="signupForm">
     <div class="form-group">
       <label for="userName">Name:</label>
@@ -114,72 +115,105 @@
 </div>
 
 <script>
-  document.getElementById("signupForm").addEventListener("submit", function(event) {
-    if (!validateForm()) {
-      event.preventDefault(); // Prevent form submission if validation fails
-    }
-  });
-
-  function validateForm() {
-    var name = document.getElementById("userName").value.trim();
-    var email = document.getElementById("email").value.trim();
-    var phone = document.getElementById("phoneNumber").value.trim();
-    var password = document.getElementById("password").value.trim();
-    var confirmPassword = document.getElementById("confirmPassword").value.trim();
-
-    var nameError = document.getElementById("nameError");
-    var emailError = document.getElementById("emailError");
-    var phoneError = document.getElementById("phoneError");
-    var passwordError = document.getElementById("passwordError");
-    var confirmPasswordError = document.getElementById("confirmPasswordError");
-
-    // Clear previous error messages
-    nameError.textContent = "";
-    emailError.textContent = "";
-    phoneError.textContent = "";
-    passwordError.textContent = "";
-    confirmPasswordError.textContent = "";
-
-    var isValid = true;
-
-    // Validate name
-    if (name === "") {
-      nameError.textContent = "Please enter your name";
-      isValid = false;
-    }
-
-    // Validate email
-    if (email === "") {
-      emailError.textContent = "Please enter your email";
-      isValid = false;
-    }
-
-    // Validate phone number
-    if (!phone.match(/^\d{10}$/)) {
-      phoneError.textContent = "Please enter a valid 10-digit phone number";
-      isValid = false;
-    }
-
-    // Validate password
-    if (password === "") {
-      passwordError.textContent = "Please enter your password";
-      isValid = false;
-    }
-
-    // Validate confirm password
-    if (confirmPassword === "") {
-      confirmPasswordError.textContent = "Please confirm your password";
-      isValid = false;
-    } else if (password !== confirmPassword) {
-      confirmPasswordError.textContent = "Passwords do not match";
-      isValid = false;
-    }
-
-    return isValid;
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("signupForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+            if (!validateForm()) {
+                return;
+            }
     
-  }
-  
+            const userName = document.getElementById("userName").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const phoneNumber = document.getElementById("phoneNumber").value.trim();
+    
+            try {
+                const response = await fetch("/signup", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ userName, email, password, phoneNumber })
+});
+
+const data = await response.json();
+if (response.ok) {
+    window.location.reload()
+} else {
+    if (response.status === 400) {
+        document.getElementById("emailError").textContent = data.error;
+    } else {
+        console.error("Error:", data.error);
+    }
+}
+
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        });
+    
+        function validateForm() {
+            var name = document.getElementById("userName").value.trim();
+            var email = document.getElementById("email").value.trim();
+            var phone = document.getElementById("phoneNumber").value.trim();
+            var password = document.getElementById("password").value.trim();
+            var confirmPassword = document.getElementById("confirmPassword").value.trim();
+    
+            var nameError = document.getElementById("nameError");
+            var emailError = document.getElementById("emailError");
+            var phoneError = document.getElementById("phoneError");
+            var passwordError = document.getElementById("passwordError");
+            var confirmPasswordError = document.getElementById("confirmPasswordError");
+    
+            // Clear previous error messages
+            nameError.textContent = "";
+            emailError.textContent = "";
+            phoneError.textContent = "";
+            passwordError.textContent = "";
+            confirmPasswordError.textContent = "";
+    
+            var isValid = true;
+    
+            // Validate name
+            if (name === "") {
+                nameError.textContent = "Please enter your name";
+                isValid = false;
+            }
+    
+            // Validate email
+            if (email === "") {
+                emailError.textContent = "Please enter your email";
+                isValid = false;
+            }
+    
+            // Validate phone number
+            if (!phone.match(/^\d{10}$/)) {
+                phoneError.textContent = "Please enter a valid 10-digit phone number";
+                isValid = false;
+            }
+    
+            // Validate password
+            if (password === "") {
+                passwordError.textContent = "Please enter your password";
+                isValid = false;
+            }
+    
+            // Validate confirm password
+            if (confirmPassword === "") {
+                confirmPasswordError.textContent = "Please confirm your password";
+                isValid = false;
+            } else if (password !== confirmPassword) {
+                confirmPasswordError.textContent = "Passwords do not match";
+                isValid = false;
+            }
+    
+            return isValid;
+        }
+    });
 </script>
+
+    
+
 
 <!-- Bootstrap JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
