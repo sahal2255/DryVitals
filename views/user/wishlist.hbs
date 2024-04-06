@@ -230,7 +230,7 @@
 								{{#each wishlistItems}}
 								<tr class="table-body-row" id="wishlist-item-{{productId}}">
 									<td class="product-remove"><button
-											onclick="removeFromWishlist('{{this.productId}}')" style="border: none;"><i
+											onclick="deletewishlist('{{this.productId}}')" style="border: none;"><i
 												class="fas fa-trash-alt"></i></button></td>
 									<td class="product-image"><img src="{{this.productImage}}" alt=""></td>
 									<td class="product-name">{{productName}}</td>
@@ -298,7 +298,34 @@
 			</div>
 		</div>
 	</div>
-	<!-- end footer -->
+
+{{!-- axios cdn --}}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js" integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+	function deletewishlist(productId){
+		console.log('deleting wishlist',productId)
+		axios.delete(`/wishlist/delete-wishlist/${productId}`)
+		.then(response =>{
+			if(response.status === 200 ){
+				console.log('remove wishlist success',response)
+				
+				location.reload()
+
+			}else{
+				console.log('failed remove')
+			}
+		}).catch(error =>{
+			console.error('error removing product',error)
+		})
+	}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js"
 		integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg=="
 		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</body>
+</html>

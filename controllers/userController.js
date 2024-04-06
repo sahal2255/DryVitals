@@ -147,11 +147,13 @@ let productGet=async(req,res)=>{
     try{
         
         
+        // console.log(userId);
         const admin= await Admin.findOne({})
         const category=admin.categories.map(category=>category.catagoryName)
         // console.log(category);
 
         
+       
         const products =await Product.find(req.query)
         
         
@@ -419,30 +421,26 @@ let filterProducts = async (req, res) => {
 
 let sortProducts = async (req, res) => {
     try {
-        // console.log(res.query);
-        const sortOption = req.body.sortBy || '' ;
-        console.log(sortOption);
-        let sort = {};
+        const sortBy = req.body.sortBy;
+        console.log(sortBy);
+        let products;
 
-        if (sortOption === 'price-low-high') {
-            sort = { 'stock.0.price': 1 };
-        } else if(sortOption === 'price-high-low') {
-            sort = { 'stock.0.price': -1 };
-        } 
-        console.log('Sorting option:', sortOption);
-        console.log('Sort object:', sort);
-        const products = await Product.aggregate([
-            {$sort:sort}
-        ])
-
-        
-        console.log('Sorted products:', products);
-
-        res.render('user/product', {sort,products }); // Pass sorted products to the view
+        // Sort products based on the selected option
+        if (sortBy === 'price-low-high') {
+            products = await Product.find().sort({ 'stock.0.price': 1 });
+        } else if (sortBy === 'price-high-low') {
+            products = await Product.find().sort({ 'stock.0.price': -1 });
+        }
+console.log(products);
+        res.json({ products });
     } catch (error) {
-        console.log('error sorting products', error);
+        console.error('Error sorting products:', error);
+        res.status(500).json({ error: 'Failed to sort products.' });
     }
-}
+};
+
+// Route for sorting products
+
 
 let wishlistGet=async(req,res)=>{
     // res.render('user/wishlist')
@@ -459,6 +457,10 @@ let wishlistGet=async(req,res)=>{
 
 let wishlistAdd = async (req, res) => {
     try {
+        if (!req.user) {
+            // Redirect the user to the login page or send an error response
+            return res.status(401).json({ error: 'Unauthorized. Please log in.' });
+        }
         const userId = req.user.id;
 
         const { productId, productImage, productName, productPrice, productVariant } = req.body;
@@ -489,9 +491,36 @@ let wishlistAdd = async (req, res) => {
     }
 };
 
-let wishlistdelete=async(req,res)=>{
-    
-}
+let wishlistdelete = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const productId = req.params.id;
+
+        const user = await User.findById(userId);
+        if (!user || !user.wishlist || !user.wishlist.product || user.wishlist.product.length === 0) {
+            return res.status(404).send('User or wishlist data not found');
+        }
+
+        // Find the index of the product with the given ID in the wishlist array
+        const index = user.wishlist.product.findIndex(item => item.productId.toString() === productId);
+        if (index === -1) {
+            return res.status(404).send('Product not found in the wishlist');
+        }
+
+        // Remove the product from the wishlist array
+        user.wishlist.product.splice(index, 1);
+
+        // Save the updated user object
+        await user.save();
+
+        console.log('Product removed from wishlist successfully');
+        return res.status(200).send('Product removed from wishlist successfully');
+    } catch (error) {
+        console.error('Error removing product from wishlist:', error);
+        return res.status(500).send('Internal Server Error');
+    }
+};
+
 
 
 
@@ -536,5 +565,6 @@ module.exports={
     sortProducts,
     wishlistAdd,
     wishlistGet,
+    wishlistdelete,
     profile
 }

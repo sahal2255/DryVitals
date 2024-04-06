@@ -37,10 +37,14 @@ router.post('/cart/decrementQuantity/:id', userAuth, userController.decrementQua
 
 
 router.get('/filteredProducts',userController.filterProducts)
-router.post('/product/sortProducts',userController.sortProducts)
+// router.post('/product/sortProducts',userController.sortProducts)
+
+router.post('/product/sortProducts',userController.sortProducts);
+
 
 router.post('/wishlist/add',userAuth,userController.wishlistAdd)
 router.get('/wishlist',userAuth,userController.wishlistGet)
+router.delete('/wishlist/delete-wishlist/:id',userAuth,userController.wishlistdelete)
 
 router.get('/profile',userAuth,userController.profile)
 
