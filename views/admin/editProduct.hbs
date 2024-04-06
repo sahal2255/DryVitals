@@ -117,6 +117,11 @@
     <input type="number" id="price{{@index}}" name="stock[{{@index}}][price]" value="{{this.price}}"
         class="form-control">
 </div>
+<div class="col-md-6 mb-3">
+    <label for="price{{@index}}" class="form-label">MRP</label>
+    <input type="number" id="price{{@index}}" name="stock[{{@index}}][mrp]" value="{{this.mrp}}"
+        class="form-control">
+</div>
 {{/each}}
     </div>
     {{!-- <button type="button" class="btn btn-primary" style="width:150px;background-color:#7f9280" onclick="addVariantField()">Add Variant</button> --}}

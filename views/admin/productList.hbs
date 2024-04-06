@@ -1144,6 +1144,9 @@
                                                                        Variant
                                                                     </th>
                                                                     <th scope="col" class="p-3 text-xs font-medium tracking-wider text-left text-gray-700 dark:text-gray-400 uppercase">
+                                                                       MRP
+                                                                    </th>
+                                                                    <th scope="col" class="p-3 text-xs font-medium tracking-wider text-left text-gray-700 dark:text-gray-400 uppercase">
                                                                         Price
                                                                     </th>
                                                                     <th scope="col" class="p-3 text-xs font-medium tracking-wider text-left text-gray-700 dark:text-gray-400 uppercase">
@@ -1205,6 +1208,13 @@
                                                                         {{!-- ₹{{price}} <del class="text-slate-500 font-normal"></del> --}}
                                                                         {{#each stock}}
                                                                         <span class="block  font-medium text-slate-500">₹{{price}} </span>
+                                                                        {{/each}}
+
+                                                                    </td>
+                                                                    <td class="p-3 font-semibold text-lg text-gray-800 whitespace-nowrap dark:text-gray-400">
+                                                                        {{!-- ₹{{price}} <del class="text-slate-500 font-normal"></del> --}}
+                                                                        {{#each stock}}
+                                                                        <span class="block  font-medium text-slate-500">₹{{mrp}} </span>
                                                                         {{/each}}
 
                                                                     </td>

@@ -273,6 +273,7 @@ let addProductPost = async (req, res) => {
         const variants = req.body.variant;
         const prices = req.body.price;
         const stocks = req.body.stock;
+        const mrp=req.body.mrp;
 
         // Upload images to cloudinary
         const imageUrl = [];
@@ -285,7 +286,9 @@ let addProductPost = async (req, res) => {
         const stockDetails = variants.map((variant, index) => ({
             variant,
             price: prices[index],
-            stock: stocks[index]
+            stock: stocks[index],
+            mrp:mrp[index]
+
         }));
 
         // Create a new product instance
@@ -503,7 +506,8 @@ let editProductPost = async (req, res) => {
             product.stock = newProduct.stock.map(item => ({
                 variant: item.variant,
                 stock: item.stock,
-                price: item.price
+                price: item.price,
+                mrp:item.mrp
             }));
         }
 
