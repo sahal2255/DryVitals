@@ -29,15 +29,29 @@ let homepage=async(req,res)=>{
 
 
 //-------- getting loginPage ---------
+// let loginPage = async (req, res) => {
+//     if (req.user) {
+//         return res.redirect('/');
+//     }
+//     console.log('user login page get');
+//     res.render('user/login', { error: '' });
+// }
+
+
+
 let loginPage = async (req, res) => {
     if (req.user) {
-        // User is already logged in, redirect to another page or the homepage
         return res.redirect('/');
     }
+
+    const { error } = req.query;
+    if (error === 'disabled') {
+        return res.render('user/login', { error: 'Your account has been disabled. Please contact the administrator.' });
+    }
+
     console.log('user login page get');
     res.render('user/login', { error: '' });
-}
-
+};
 
 
 
@@ -51,7 +65,9 @@ let loginPostPage = async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
-        
+        if (user.isDisabled) {
+            return res.status(403).json({ error: 'Your account has been blocked. Please contact the administrator.' });
+        }
         const validPassword = await bcrypt.compare(password, user.password);
         if (!validPassword) {
             return res.status(401).json({ error: 'Invalid password' });
@@ -155,7 +171,11 @@ let productGet=async(req,res)=>{
         
        
         const products =await Product.find(req.query)
-        
+        // products.forEach(product => {
+        //     if (product.isDisabled) {
+        //         product.stock = [{ variant: 'Out of Stock', price: 0, stock: 0 }]; // Modify stock to show as "Out of Stock"
+        //     }
+        // });
         
         res.render('user/product',{products,category})
     }
@@ -431,7 +451,7 @@ let sortProducts = async (req, res) => {
         } else if (sortBy === 'price-high-low') {
             products = await Product.find().sort({ 'stock.0.price': -1 });
         }
-console.log(products);
+// console.log(products);
         res.json({ products });
     } catch (error) {
         console.error('Error sorting products:', error);

@@ -39,6 +39,9 @@ router.get('/admin/productList',adminAuth,adminController.productList)
 router.get('/admin/deleteProduct/:id',adminAuth,adminController.deleteProduct)
 router.post('/admin/deleteProduct/:id',adminController.deleteProduct)
 
+router.get('/admin/userList', adminAuth, adminController.userList);
+router.post('/admin/disableUser', adminController.disableUser);
+
 router.get('/admin/editProduct/:id',adminAuth,adminController.editProduct)
 router.post('/admin/editProduct/:id',upload.array('image',3),adminAuth,adminController.editProductPost)
 

@@ -17,6 +17,10 @@ const userSchema=new mongoose.Schema({
     phoneNumber:{
         type:String
     },
+    isDisabled:{
+        type:Boolean,
+        default:false
+    },
     cart:{
         product:[{
             productId:{

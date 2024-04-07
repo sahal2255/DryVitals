@@ -1,5 +1,6 @@
 const Admin = require('../models/admin');
 const Product=require('../models/products')
+const User=require('../models/user')
 const bcrypt = require('bcrypt');
 const { application } = require('express')
 const cloudinary=require('../config/cloudinary')
@@ -227,43 +228,6 @@ let addProduct = async (req, res) => {
 
 
 
-// adding product details on the database
-
-// let addProductPost = async (req, res) => {
-//     try {
-//         const { productName, category, description, variant, price,stock } = req.body;
-//         const image = req.files; // Access uploaded files via req.files
-//         console.log("req.files :",image);  
-//         const imageUrl = []; 
-
-        
-//         for (const file of image) {
-//             const result = await cloudinary.uploader.upload(file.path);
-//             imageUrl.push(result.secure_url);
-//           }
-//           console.log(imageUrl);
-//             const newProduct = new Product({
-//             productName,
-//             category,
-//             description,
-//             variant,
-//             price,
-//             stock,
-//             imageUrl: imageUrl,
-            
-//         });
-//         // console.log(imageUrl);
-//         // console.log(newProduct);
-//         await newProduct.save();
-//         console.log('Product added successfully');
-//         res.redirect('/admin/productList')
-//         // res.status(201).json({ message: 'Image uploaded successfully' });
-//     } catch (error) {
-//         console.error('Error uploading image:', error);
-//         res.status(500).render('admin/addProduct', { error: 'Error adding product', categories: [] });
-//     }
-// };
-
 
 
 let addProductPost = async (req, res) => {
@@ -346,52 +310,6 @@ let deleteProduct = async (req, res) => {
 }
 
 
-// const enableProduct = async (req, res) => {
-//     const productId = req.params.id;
-//     try {
-//         let product = await Product.findById(productId);
-//         if (!product) {
-//             return res.status(404).send('Product not found');
-//         }
-//         product.enabled = true; 
-        
-//         // Update the stock status based on the product's stock
-//         product.stockStatus = product.stock > 0 ? `${product.stock} ` : 'Out of stock';
-//         console.log(product.stockStatus);
-//         await product.save();
-//         console.log('Product enabled successfully');
-
-//         return res.redirect('/admin/productList');
-        
-//     } catch (error) {
-//         console.log('Error enabling product:', error);
-//         return res.status(500).send('Internal server error');
-//     }
-// };
-
-
-// let disableProduct = async (req, res) => {
-//     const productId = req.params.id; // Get product id from route parameters
-//     console.log(productId);
-//     try {
-//         const product = await Product.findById(productId);
-//         console.log(product);
-//         if (!product) {
-//             return res.status(404).send('Product not found');
-//         }
-//         console.log('isDisabled:', product.isDisabled); 
-//         // Toggle the isDisabled field
-//         product.isDisabled = !product.isDisabled;
-//         await product.save(); // Save the changes
-
-//         // Redirect back to the product list page
-//         res.redirect('/admin/productList');
-//     } catch (error) {
-//         console.error('Error while checking status:', error);
-//         res.status(500).send('Internal Server Error');
-//     }
-// }
-
 
 
 let disableProduct = async (req, res) => {
@@ -441,40 +359,6 @@ let editProduct = async (req, res) => {
 
 
 
-// let editProductPost = async (req, res) => {
-//     try {
-//         let productId = req.params.id;
-//         let newProduct = req.body;
-
-//         let product = await Product.findOne({ _id: productId });
-
-//         if (!product) {
-//             console.log('Product not found');
-//             return res.status(404).send('Product not found');
-//         }
-//         product.productName = newProduct.productName;
-//         product.category = newProduct.category;
-//         product.description = newProduct.description;
-//         product.variant = newProduct.variant;
-//         product.stock=newProduct.stock;
-//         product.price = newProduct.price;
-
-        
-
-        
-//         if (req.files && req.files.length > 0) {
-//             const file = req.files[0]; 
-//             const result = await cloudinary.uploader.upload(file.path); 
-//             product.imageUrl = result.secure_url; 
-//         }
-//         await product.save();
-
-//         return res.redirect('/admin/productList');
-//     } catch (error) {
-//         console.log('Error updating product:', error);
-//         return res.status(500).send('Internal server error');
-//     }
-// }
 
 
 let editProductPost = async (req, res) => {
@@ -521,9 +405,59 @@ let editProductPost = async (req, res) => {
 
 
 
+let userList=async (req,res)=>{
+    try{
+        const user=await User.find({})
+        res.render('admin/userList',{user})
+    }
+    catch(error){
+        console.log('user list error',error);
+    }
+}
+// let disableUser=async(req,res)=>{
+//     const userId=req.body.userid;
+//     // console.log(userId);
+//     try{
+//         const user=await User.findById(userId)
+//         if(!user){
+//             return res.status(404).send('user not found')
+//         }
+//         if(user.isDisabled){
+//             user.isDisabled=!user.isDisabled
+//         }else{
+//             user.isDisabled=true;
+//         }
+//         await user.save()
+//         return res.redirect('/admin/userList')
+//     }
+//     catch(error){
+//         console.log('error toggling user status',error);
+//     }
+// }
 
 
+let disableUser = async (req, res) => {
+    const userId = req.body.userid;
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
 
+        if (user.isDisabled && req.user && req.user.id === user._id.toString()) {
+            // If the user is logged in and the user being disabled is the same user, redirect to login page with error
+            return res.redirect('/login?error=disabled');
+        }
+
+        // Toggle user's isDisabled status
+        user.isDisabled = !user.isDisabled;
+        await user.save();
+        return res.redirect('/admin/userList');
+    } catch (error) {
+        console.log('Error toggling user status', error);
+        res.status(500).json({ error: 'Failed to toggle user status' });
+    }
+};
 
 
 
@@ -566,7 +500,8 @@ module.exports = {
     productList,
     deleteProduct,
     disableProduct,
-    // enableProduct,
+    userList,
+    disableUser,
     editProduct,
     editProductPost,
     adminLogOut

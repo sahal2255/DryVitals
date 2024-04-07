@@ -286,7 +286,6 @@
 	{{!-- ----product section starting --}}
 	<div class="product-section mt-150 mb-150">
 		<div class="container">
-
 			<div class="products-lists">
 				<div class="row product-lists">
 
@@ -300,7 +299,13 @@
 
 							</div>
 							<h3>{{productName}}</h3>
+							{{#if isDisabled}}
+							<h5 style="color: red;">Out of stock</h5>
+							{{/if}}
+							
 							<p class="product-price"> ₹{{stock.[0].price}}</p>
+							<del class="product-mrp">₹{{stock.[0].mrp}}</del>
+
 							<p class="product-variant"> {{stock.[0].variant}}</p>
 							<p class="product-category"> {{category}}</p>
 							<div class="stock-details">
@@ -308,7 +313,7 @@
 								<select id="stockSelect{{_id}}" name="stockSelect{{_id}}"
 									onchange="updateProductDetails('{{_id}}', this)" style="width:80px">
 									{{#each stock}}
-									<option value="{{variant}}" data-price="{{price}}" data-stock="{{stock}}" {{#if
+									<option value="{{variant}}" data-price="{{price}}" data-stock="{{stock}}" data-mrp="{{mrp}}" {{#if
 										@first}} selected{{/if}}>{{variant}}</option>
 									{{/each}}
 								</select>
@@ -328,7 +333,8 @@
 				</div>
 
 			</div>
-
+</div>
+</div>
 
 
 
@@ -418,14 +424,20 @@
 					// Get the selected variant details
 					var selectedVariant = selectedOption.getAttribute('value');
 					var selectedPrice = selectedOption.getAttribute('data-price');
+					var selectedmrp = selectedOption.getAttribute('data-mrp');
+
 					//var selectedStock = selectedOption.getAttribute('data-stock');
 
 					// Update the product details displayed on the page
 					var priceElement = selectElement.parentElement.parentElement.querySelector('.product-price');
 					var variantElement = selectElement.parentElement.parentElement.querySelector('.product-variant');
+					var mrpElement = selectElement.parentElement.parentElement.querySelector('.product-mrp');
+
 					//var stockElement = selectElement.parentElement.parentElement.querySelector('.product-stock');
 
 					priceElement.textContent = '₹' + selectedPrice;
+					mrpElement.textContent = '₹' + selectedmrp;
+
 					variantElement.textContent = ' ' + selectedVariant;
 					//stockElement.textContent =' ' + selectedStock;
 				}
@@ -439,30 +451,43 @@ function renderProducts(products) {
     productsContainer.innerHTML = '';
 
     // Render each product
-    products.forEach(product => {
+    products.forEach((product, index) => {
+        // Open a new row for every second product
+        if (index % 2 === 0) {
+            productsContainer.insertAdjacentHTML('beforeend', '<div class="row mb-4 "></div>');
+        }
+        const outOfStockMessage = product.isDisabled ? '<h5 style="color: red;">Out of stock</h5>' : '';
+
         const productHTML = `
-            <div class="col-lg-4 col-md-6 text-center">
+            <div class="col-lg-4 col-md-6 mb-4">
                 <div class="single-product-item" data-filter="${product.category}">
                     <div class="product-image">
-                        <a href="/singleProduct/${product._id}"><img src="${product.imageUrl}" alt="productimage" style="width: 200px; height: 200px;"></a>
+                        <a href="/singleProduct/${product._id}">
+                            <img src="${product.imageUrl}" alt="productimage" style="width: 200px; height: 200px;">
+                        </a>
                     </div>
-                    <h3>${product.productName}</h3>
-                    <p class="product-price"> ₹${product.stock[0].price}</p>
-                    <p class="product-variant">${product.stock[0].variant}</p>
-                    <p class="product-category">${product.category}</p>
-                    <div class="stock-details">
-                        <label for="stockSelect${product._id}">Choose</label>
-                        <select id="stockSelect${product._id}" name="stockSelect${product._id}" onchange="updateProductDetails('${product._id}', this)" style="width:80px">
-                            ${product.stock.map(stockItem => `
-                                <option value="${stockItem.variant}" data-price="${stockItem.price}" data-stock="${stockItem.stock}" ${stockItem === product.stock[0] ? 'selected' : ''}>${stockItem.variant}</option>
-                            `).join('')}
-                        </select>
+                    <div class="product-details text-center">
+                        <h3>${product.productName}</h3>
+						${outOfStockMessage}
+                        <p class="product-price"> ₹${product.stock[0].price}</p>
+						<del class="product-price"><h3> ₹${product.stock[0].mrp}</h3></del>
+
+                        <p class="product-variant">${product.stock[0].variant}</p>
+                        <p class="product-category">${product.category}</p>
+                        <div class="stock-details">
+                            <label for="stockSelect${product._id}">Choose</label>
+                            <select id="stockSelect${product._id}" name="stockSelect${product._id}" onchange="updateProductDetails('${product._id}', this)" style="width:80px">
+                                ${product.stock.map(stockItem => `
+                                    <option value="${stockItem.variant}" data-price="${stockItem.price}" data-stock="${stockItem.stock}" ${stockItem === product.stock[0] ? 'selected' : ''}>${stockItem.variant}</option>
+                                `).join('')}
+                            </select>
+                        </div>
                     </div>
-                    
                 </div>
-            </div>
-        `;
-        productsContainer.insertAdjacentHTML('beforeend', productHTML);
+            </div>`;
+        // Append product HTML to the current row
+        const currentRow = productsContainer.lastElementChild;
+        currentRow.insertAdjacentHTML('beforeend', productHTML);
     });
 }
 

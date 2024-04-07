@@ -36,7 +36,7 @@ router.post('/cart/incrementQuantity/:id',userAuth,userController.incrementQuant
 router.post('/cart/decrementQuantity/:id', userAuth, userController.decrementQuantity);
 
 
-router.get('/filteredProducts',userController.filterProducts)
+// router.get('/filteredProducts',userController.filterProducts)
 // router.post('/product/sortProducts',userController.sortProducts)
 
 router.post('/product/sortProducts',userController.sortProducts);
