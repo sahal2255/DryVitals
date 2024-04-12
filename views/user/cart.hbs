@@ -187,6 +187,8 @@
             <th class="product-image">Product Image</th>
             <th class="product-name">Name</th>
             <th class="product-quantity">Varient</th>
+			<th class="product-mrp">MRP</th>
+
 			{{!-- <th class="selected-price">Price</th> --}}
             <th class="product-total">Quantity</th>
             <th class="product-price">Total</th>
@@ -202,6 +204,7 @@
             <td class="product-name">{{productName}}</td>
 			{{!-- <td></td> --}}
             <td class="product-quantity">{{productVariant}}</td>
+			<td class="product-mrp"><del>₹{{productmrp}}</del></td>
 			{{!-- <td class="selected-price">{{selected.productPrice}}</td> --}}
             <td class="product-total">
                 <button class="quantity-btn" onclick="decrementQuantity('{{this._id}}')">-</button>
@@ -229,13 +232,13 @@
 							</thead>
 							<tbody>
 								<tr class="total-data">
+									<td><strong>Total MRP</strong></td>
+									<td><del>₹{{totalmrp}}</del></td>
+								</tr>
+								<tr class="total-data">
 									<td><strong>Subtotal: </strong></td>
 									<td>₹{{total}}</td>
 								</tr>
-								{{!-- <tr class="total-data">
-									<td><strong>Shipping: </strong></td>
-									<td>$45</td>
-								</tr> --}}
 								{{!-- <tr class="total-data">
 									<td><strong>Total: </strong></td>
 									<td>$545</td>
@@ -243,8 +246,9 @@
 							</tbody>
 						</table>
 						<div class="cart-buttons">
-							<a href="/product" class="boxed-btn">Update Cart</a>
-							<a href="checkout.html" class="boxed-btn black">Check Out</a>
+							<a href="/product" class="boxed-btn">Add More Item</a>
+							<a href="/checkOut" class="boxed-btn black">Buy Now</a>
+							{{!-- <button onclick="checkOut('{{cartItems}}')">Buy Now</button> --}}
 						</div>
 					</div>
 
@@ -351,8 +355,6 @@ function decrementQuantity(productId) {
         });
 }
 
-
-	
 
 
 	</script>

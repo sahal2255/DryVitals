@@ -13,6 +13,7 @@
 
 	<!-- favicon -->
 			<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
 	<!-- google font -->
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
@@ -46,7 +47,18 @@
 	.cart-btn:hover{
 		background-color: black;
 	}
-	
+	.bynow{
+		background-color: rgb(3, 3, 3);
+		color: white;
+		width: 200px;
+		height: 40px;
+		border-radius: 40px;
+		margin-left: 100px;
+		border: none;
+	}
+	.bynow:hover{
+		background-color: rgb(204, 138, 15);
+	}
 
 </style>
 </head>
@@ -178,32 +190,34 @@
 	<div class="single-product mt-150 mb-150">
 		<div class="container">
 			<div class="row">
-				<div class="col-md-5">
-					<div class="single-product-img">
-						<img src="{{product.imageUrl}}" alt="single image">
-					</div>
-				</div>
-				<div class="col-md-7">
-					<div class="single-product-content">
-						<h2>{{product.productName}}</h2>
-						<p class="single-product-pricing" id="selected-variant-price">₹ {{product.stock.0.price}}</p>						
-						<p>{{product.description}}</p>
-						<div class="single-product-form">
-							<p><strong>Category : </strong>{{product.category}}</p>
-							{{#each product.stock}}
-							<div class="form-check">
-								<input class="form-check-input" type="radio" name="variant" id="{{@index}}" data-price="{{price}}" onchange="updatePrice(this)">
-								<label class="form-check-label" for="{{@index}}">
-									{{variant}}
-								</label>
-							</div>
-								{{/each}}
-						</div>
-						<button type="submit" class="cart-btn" id="addToCartBtn"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+    <div class="col-md-5">
+        <div class="single-product-img">
+            <img src="{{product.imageUrl}}" alt="single image">
+        </div>
+    </div>
+    <div class="col-md-7">
+        <div class="single-product-content">
+            <h2>{{product.productName}}</h2>
+            <p class="single-product-pricing" id="selected-variant-price">₹ {{product.stock.0.price}}</p>
+            <del><h6 id="selected-variant-mrp">₹{{product.stock.0.mrp}}</h6></del>                  
+            <p>{{product.description}}</p>
+            <div class="single-product-form">
+                <p><strong>Category : </strong>{{product.category}}</p>
+                {{#each product.stock}}
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="variant" id="{{@index}}" data-price="{{price}}" data-mrp="{{mrp}}" onchange="updatePrice(this)" {{#if @index}} {{else}} checked {{/if}}>
+                    <label class="form-check-label" for="{{@index}}">
+                        {{variant}}
+                    </label>
+                </div>
+                {{/each}}
+            </div>
+            <button type="submit" class="cart-btn" id="addToCartBtn"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+        </div>
+    </div>
+	{{!-- <button type="submit"  class="bynow" onclick="storeSelected()">Buy Now</button> --}}
+</div>
 
-					</div>
-				</div>
-			</div>
 		</div>
 	</div>
 	<!-- end single product -->
@@ -286,7 +300,9 @@
 	
     function updatePrice(radio) {
         var price = radio.getAttribute('data-price');
+		var mrp=radio.getAttribute('data-mrp')
         document.getElementById('selected-variant-price').innerText = " ₹" +' '+ price;
+		document.getElementById('selected-variant-mrp').innerHTML="₹"+mrp;
     }
 	function getSelectedPrice(){
 		let selectedVariant=document.querySelector('input[name="variant"]:checked')
@@ -296,40 +312,96 @@
 		return 0
 	}
 	document.getElementById('addToCartBtn').addEventListener('click', async function() {
-        try {
-            const selectedVariant = document.querySelector('input[name="variant"]:checked').nextElementSibling.innerText;
-            const selectedPrice = getSelectedPrice();
+    try {
+        const selectedVariant = document.querySelector('input[name="variant"]:checked').nextElementSibling.innerText;
+        const selectedPrice = getSelectedPrice();
+	 	const selectedmrp = parseFloat(document.querySelector('input[name="variant"]:checked').getAttribute('data-mrp'));
 
-            const productId = '{{product._id}}'; // Use actual product ID here
+        const productId = '{{product._id}}'; 
 
-            const response = await axios.post('/cart/' + productId, {
-                selectedVariant: selectedVariant,
-                selectedPrice: selectedPrice
+        const response = await axios.post('/cart/' + productId, {
+            selectedVariant: selectedVariant,
+            selectedPrice: selectedPrice,
+			selectedmrp:selectedmrp
+        });
+
+        const data = response.data.data;
+		if (data) {
+			Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Product added to cart!',
+            showConfirmButton: false,
+            timer: 2000
+        });
+		} else {
+			window.location.href = '/login'
+		}
+
+        console.log('Product added to cart:', response.data.data);
+        // window.location.href = '/cart';
+    } catch (error) {
+        if (error.response && error.response.status === 401) {
+            // Redirect to login page if user is not authenticated
+            window.location.href = '/login';
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Error adding product to cart!',
+                showConfirmButton: false,
+                timer: 2000
             });
-           Toastify({
-                text: "Product added to cart!",
-                style: {
-                    background: "green"
-                },
-                duration: 3000,
-                position: "right",
-                className: "toastify-width"
-            }).showToast();
-            console.log('Product added to cart:', response.data);
-            // window.location.href = '/cart';
-        } catch (error) {
-            cToastify({
-                text: "Error adding product to cart",
-                style: {
-                    background: "red"
-                },
-                duration: 3000,
-                position: "right",
-                className: "toastify-width-auto"
-            }).showToast();
+            console.log('Error adding product to cart:', error);
         }
-    });
+    }
+})
+
+
+// Function to handle the Buy Now button click
+async function storeSelected() {
+    try {
+        // Get the selected variant details
+        const selectedVariantElement = document.querySelector('input[name="variant"]:checked').nextElementSibling;
+        const selectedVariant = selectedVariantElement.innerText;
+		const variantPrice = getSelectedPrice();
+	 	const variantMRP = parseFloat(document.querySelector('input[name="variant"]:checked').getAttribute('data-mrp'));
+        // Prepare the data to send to the server
+		if (!variantPrice || !variantMRP) {
+            throw new Error('Price or MRP is missing.');
+        }
+        const requestData = {
+			productName:'{{product.productName}}',
+            selectedVariant: selectedVariant,
+            price: variantPrice,
+            mrp: variantMRP
+        };
+	console.log('requestdata',requestData)
+        axios.post('/checkOut', requestData)
+		.then(response=>{
+
+        console.log('response', response.data);
+        window.location.href = '/checkOut'; 
+		})
+		.catch(error => {
+            console.error("Error storing variant details:", error);
+            // Handle errors
+        });
+    } catch (error) {
+        console.error("Error storing variant details:", error);
+        // Handle errors
+    }
+}
+
+document.querySelector('.bynow').addEventListener('click', storeSelected);
+
 </script>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

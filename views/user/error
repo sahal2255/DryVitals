@@ -326,9 +326,9 @@
 							</button> --}}
 
 {{#if inWishlist}}
-		<a href="#" class="wishlist-btn" style="color: red;"><i class="bi bi-heart-fill"></i> A</a>
+		<a href="#" class="wishlist-btn" style="color: red;"><i class="bi bi-heart-fill"></i> Added to Wishlist</a>
 		{{else}}
-            <a href="#" class="wishlist-btn" onclick="addToWishlist('{{_id}}', '{{productName}}', '{{imageUrl}}', '{{stock.[0].price}}', '{{stock.[0].variant}}', this,event)"><i class="bi bi-heart"></i> A</a>
+		<a href="#" class="wishlist-btn" onclick="addToWishlist('{{_id}}', this)"><i class="bi bi-heart"></i> Add to Wishlist</a>
 		{{/if}}
 						</div>
 					</div>
@@ -505,160 +505,60 @@ function renderProducts(products) {
 }
 
 
-// Function to add a product to the wishlist
-async function addToWishlist(productId, productName, productImage, productPrice, productVariant, button, event) {
-    event.preventDefault();
 
-    console.log('Adding product to wishlist:', productId);
 
-    if (button.classList.contains('added-to-wishlist')) {
-        removeFromWishlist(productId, button);
-        return;
-    }
+const wishlistItems = JSON.parse(localStorage.getItem('wishlist')) || {};
+const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+					wishlistButtons.forEach(button => {
+						button.addEventListener('click', function (event) {
+							const productId = button.dataset.productId;
+							const productImage = button.dataset.productImage;
+							const productName = button.dataset.productName;
+							const productPrice = button.dataset.productPrice;
+							const productVariant = button.dataset.productVariant;
+							//console.log('productId', productId);
+							//console.log('productImage', productImage);
+							// console.log('productName', productName);
+							//console.log('productPrice', productPrice);
+							//console.log('productVariant', productVariant);
+							addToWishlist(productId, productImage, productName, productPrice, productVariant);
+						});
+					});
+			
 
-    try {
-        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+				function addToWishlist(productId, productImage, productName, productPrice, productVariant) {
+					axios.post('/wishlist/add', {
+						productId: productId,
+						productImage: productImage,
+						productName: productName,
+						productPrice: productPrice,
+						productVariant: productVariant
+					})
+						.then(response => {
+							console.log('Product added to wishlist:', response.data);
+							document.querySelector(`.wishlist-btn[data-product-id="${productId}"]`).classList.add('added-to-wishlist');
+							const wishlistItems = JSON.parse(localStorage.getItem('wishlist')) || {};
+							wishlistItems[productId] = true;
+							localStorage.setItem('wishlist', JSON.stringify(wishlistItems));
+							Toastify({
+								text: 'Product added to wishlist',
+								duration: 3000,
+								gravity: 'bottom',
+								backgroundColor: 'green',
+							}).showToast();
+						})
+						.catch(error => {
+							console.error('Error adding product to wishlist:', error);
+							// Show error toast
+							Toastify({
+								text: 'Error adding product to wishlist',
+								duration: 3000,
+								gravity: 'bottom',
+								backgroundColor: 'red',
+							}).showToast();
+						});
+				}
 
-        if (!Array.isArray(wishlist)) {
-            wishlist = [];
-        }
-
-        // Add productId to wishlist array
-        wishlist.push(productId);
-
-        // Update localStorage with the updated wishlist
-        localStorage.setItem('wishlist', JSON.stringify(wishlist));
-
-        // Set wishlist icon color for the added product
-        setWishlistIconColor(productId);
-
-        // Update button style
-        button.innerHTML = '<i class="bi bi-heart-fill"></i>';
-        button.style.color = 'red';
-        button.classList.add('added-to-wishlist');
-
-        // Send request to server to add product to wishlist
-        const response = await axios.post('/wishlist/add', {
-            productId,
-            productName,
-            productImage,
-            productPrice,
-            productVariant
-        });
-
-        if (response.data.success) {
-            // Display success toast
-            Toastify({
-                text: 'Product added to wishlist successfully',
-                backgroundColor: 'green',
-                className: 'toastify-success'
-            }).showToast();
-        } else {
-            console.error('Failed to add product to wishlist');
-            // Display error toast
-            Toastify({
-                text: 'Failed to add product to wishlist',
-                backgroundColor: 'red',
-                className: 'toastify-error'
-            }).showToast();
-        }
-    } catch (error) {
-        console.error('Error adding product to wishlist:', error);
-        // Display error toast
-        Toastify({
-            text: 'Error adding product to wishlist',
-            backgroundColor: 'red',
-            className: 'toastify-error'
-        }).showToast();
-    }
-}
-
-// Function to remove a product from the wishlist
-async function removeFromWishlist(productId, button) {
-    console.log('Removing the product from the wishlist');
-
-    try {
-        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-        const index = wishlist.indexOf(productId);
-        if (index !== -1) {
-            wishlist.splice(index, 1);
-            localStorage.setItem('wishlist', JSON.stringify(wishlist));
-        }
-
-        // Remove red color and other styles from the button
-        button.innerHTML = '<i class="bi bi-heart"></i>';
-        button.style.color = ''; // Reset color to default
-        button.classList.remove('added-to-wishlist');
-
-        // Set wishlist icon color for all products
-        setWishlistIconColor();
-
-        // Send request to server to remove product from wishlist
-        const response = await axios.delete(`/wishlist/delete-wishlist/${productId}`);
-        if (response.status === 200) {
-            // Display success toast
-            Toastify({
-                text: 'Product removed from wishlist successfully',
-                backgroundColor: 'green',
-                className: 'toastify-success'
-            }).showToast();
-        } else {
-            console.error('Failed to remove product from wishlist');
-            // Display error toast
-            Toastify({
-                text: 'Failed to remove product from wishlist',
-                backgroundColor: 'red',
-                className: 'toastify-error'
-            }).showToast();
-        }
-    } catch (error) {
-        console.error('Error removing product from wishlist:', error);
-        // Display error toast
-        Toastify({
-            text: 'Error removing product from wishlist',
-            backgroundColor: 'red',
-            className: 'toastify-error'
-        }).showToast();
-    }
-}
-
-function setWishlistIconColor() {
-    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-    wishlist.forEach(productId => {
-        setWishlistIconColor(productId);
-    });
-}
-
-function setWishlistIconColor(productId) {
-    let productButtons = document.querySelectorAll(`[data-product-id="${productId}"]`);
-    productButtons.forEach(button => {
-        if (button) {
-            button.innerHTML = '<i class="bi bi-heart-fill"></i>';
-            button.style.color = 'red';
-            button.classList.add('added-to-wishlist');
-        }
-    });
-}
-
-async function fetchAndUpdateWishlist() {
-    try {
-        const response = await axios.get('/wishlist');
-        const wishlistItems = response.data.wishlistItems;
-        const wishlistProductIds = wishlistItems.map(item => item.productId);
-        updateIconColors(wishlistProductIds);
-    } catch (error) {
-        console.error('Error fetching wishlist:', error);
-    }
-}
-
-// Function to update icon colors based on wishlist productIds
-function updateIconColors(wishlistProductIds) {
-    wishlistProductIds.forEach(productId => {
-        setWishlistIconColor(productId);
-    });
-}
-
-window.addEventListener('load', fetchAndUpdateWishlist);
 
 
 

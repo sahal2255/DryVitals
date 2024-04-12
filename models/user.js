@@ -1,3 +1,4 @@
+const { type } = require('jquery');
 const mongoose=require('mongoose')
 
 const userSchema=new mongoose.Schema({
@@ -33,6 +34,10 @@ const userSchema=new mongoose.Schema({
             productName:{
                 type:String
             },
+            productmrp:{
+                type:Number,
+                required: true
+            },
             productPrice:{
                 type:Number
             },
@@ -44,6 +49,10 @@ const userSchema=new mongoose.Schema({
             }
         }],
         total:{
+            type:Number,
+            default:0
+        },
+        totalmrp:{
             type:Number,
             default:0
         }

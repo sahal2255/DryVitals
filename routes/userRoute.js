@@ -46,7 +46,16 @@ router.post('/wishlist/add',userAuth,userController.wishlistAdd)
 router.get('/wishlist',userAuth,userController.wishlistGet)
 router.delete('/wishlist/delete-wishlist/:id',userAuth,userController.wishlistdelete)
 
+
+//single product checkout
+
+// router.post('/checkOut',userAuth,userController.checkOut)
+// router.get('/checkOut',userAuth,userController.checkOut)
+
 router.get('/profile',userAuth,userController.profile)
+
+
+router.get('/checkOut',userAuth,userController.checkOut)
 
 
 

@@ -263,8 +263,9 @@
             				</div>
             				<h3>{{productName}}</h3>
             				<p class="product-price"><span>Per Kg</span> ₹{{stock.0.price}} </p>
+							<del>₹{{stock.0.mrp}}</del>
 							<p>{{category}}</p>
-            				<a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> Add to Cart</a>
+            				{{!-- <a href="cart.html" class="cart-btn"><i class="fas fa-shopping-cart"></i> </a> --}}
         				</div>
     				</div>
     			{{/each}}
