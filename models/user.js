@@ -62,19 +62,8 @@ const userSchema=new mongoose.Schema({
         productId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Product'
-        },
-        productImage: {
-            type: [String]
-        },
-        productName: {
-            type: String
-        },
-        productPrice: {
-            type: Number
-        },
-        productVariant: {
-            type: String
         }
+        
     }]
 }
 });

@@ -21,5 +21,22 @@ let userAuth = async (req, res, next) => {
         }
     }
 };
+const middleware = async (req, res, next) => {
+    if (req.cookies.user_jwt) {
+        const token = req.cookies.user_jwt;
+        jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
+            if (err) {
+                return res.redirect('/login');
+            } else {
+                req.user = decodedToken;
+                next();
+            }
+        });
+    } else {
+        // If token is not available, proceed to the next middleware or route handler
+        next();
+    }
+}
 
-module.exports = userAuth;
+
+module.exports = {userAuth,middleware};

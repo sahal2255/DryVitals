@@ -4,7 +4,7 @@ const bodyparser=require('body-parser')
 const userController=require('../controllers/userController')
 const userMiddleware=require('../middleware/userMiddleware')
 router.use(bodyparser.urlencoded({extended:true}))
-const userAuth=require('../middleware/user_jwt')
+const  {userAuth,middleware}=require('../middleware/user_jwt')
 const axios = require('axios');
 // const { route } = require('./adminRoute')
 
@@ -23,7 +23,7 @@ router.get('/logOut',userAuth,userController.logOut)
 router.get('/sign',userMiddleware,userController.signUpPage)
 router.post('/signup',userController.signUp)
 
-router.get('/product',userController.productGet)
+router.get('/product',middleware,userController.productGet)
 
 router.get('/singleProduct/:id', userController.singleProduct);
 

@@ -227,15 +227,16 @@
 								</tr>
 							</thead>
 							<tbody>
+								{{!-- {{this.wishlistItems}} --}}
 								{{#each wishlistItems}}
 								<tr class="table-body-row" id="wishlist-item-{{productId}}">
 									<td class="product-remove"><button
 											onclick="deletewishlist('{{this.productId}}')" style="border: none;"><i
 												class="fas fa-trash-alt"></i></button></td>
-									<td class="product-image"><img src="{{this.productImage}}" alt=""></td>
-									<td class="product-name">{{productName}}</td>
-									<td class="product-quantity">{{productVariant}}</td>
-									<td class="product-price">{{productPrice}}</td>
+									<td class="product-image"><img src="{{this.product.productImage}}" alt=""></td>
+									<td class="product-name">{{this.product.productName}}</td>
+									<td class="product-quantity">{{this.product.productVariant}}</td>
+									<td class="product-price">{{this.product.productPrice}}</td>
 								</tr>
 								{{/each}}
 							</tbody>

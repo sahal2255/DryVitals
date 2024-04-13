@@ -159,27 +159,35 @@ let signUp=async(req,res)=>{
 
 // product page get section
 
-let productGet=async(req,res)=>{
-    
-    try{
-        const admin= await Admin.findOne({})
-        const category=admin.categories.map(category=>category.catagoryName)
-        // console.log(category);
-        const products =await Product.find(req.query)
-        const wishlistProducts = await Promise.all(products.map(async (product) => {
-            const wishlistItem = await User.findOne({ 'wishlist.product.productId': product._id });
-            const inWishlist = wishlistItem ? true : false;
-            return { ...product.toObject(), inWishlist };
-        }));
-        // console.log(wishlistProducts);
+let productGet = async (req, res) => {
+    try {
+        const admin = await Admin.findOne({});
+        const category = admin.categories.map(category => category.catagoryName);
         
-        res.render('user/product',{products,category,wishlistProducts})
-    }
-    catch(error){
-        console.log('product page error',error);
-        res.status(201).json({message:'error showing product'})
+        const products = await Product.find(req.query);
+        let userId;
+        let wishlistItems = []; // Array to store wishlist product IDs if user is logged in
+        if (req.user) {
+            userId = req.user.id;
+            let user = await User.findOne({ _id: userId });
+            wishlistItems = user.wishlist.product.map(item => item.productId.toString()); // Convert ObjectIds to strings for comparison
+        }
+        
+        // Passing wishlist status of each product to the template
+        const productsWithWishlistStatus = products.map(product => ({
+            ...product.toObject(),
+            inWishlist: wishlistItems.includes(product._id.toString()) // Convert ObjectId to string for comparison
+        }));
+
+        return res.render('user/product', { products: productsWithWishlistStatus, category });
+    } catch (error) {
+        console.log('product page error', error);
+        res.status(500).json({ message: 'Error showing product' });
     }
 }
+
+
+
 
 
 
@@ -570,22 +578,44 @@ let sortProducts = async (req, res) => {
 //     }
 // };
 
-
-let wishlistGet = async (req, res) => {
+const wishlistGet = async (req, res) => {
     try {
         const userId = req.user.id;
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+        const {productId}=req.body
+        console.log(productId);
+        const wishlistItems = await User.aggregate([
+            { $match: { _id: productId(userId) } },
+            { $unwind: '$wishlist.product' },
+            { 
+                $lookup: {
+                    from: 'products', // Name of the product collection
+                    localField: 'wishlist.product.productId',
+                    foreignField: '_id',
+                    as: 'productDetails'
+                }
+            },
+            { $unwind: '$productDetails' },
+            { 
+                $group: {
+                    _id: '$_id',
+                    wishlistItems: { $push: '$productDetails' }
+                }
+            },
+            { $project: { wishlistItems: 1, _id: 0 } }
+        ]);
+
+        if (!wishlistItems || wishlistItems.length === 0) {
+            return res.status(404).json({ message: 'Wishlist is empty' });
         }
-        // Assuming wishlist is an array of objects with productId field
-        const wishlistItems = user.wishlist;
-        res.json({ wishlistItems });
+
+        res.render('user/wishlist', { wishlistItems: wishlistItems[0].wishlistItems });
     } catch (error) {
         console.error('Error fetching wishlist:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
-}
+};
+
+
 
 
 // Server-side code
@@ -594,8 +624,10 @@ const wishlistAdd = async (req, res) => {
         if (!req.user) {
             return res.status(401).json({ error: 'Unauthorized. Please log in.' });
         }
+        const {productId} = req.body
+        const product = await Product.findById(productId)
 
-        const { productId, productName, productImage, productPrice, productVariant } = req.body;
+        console.log(productId);
         const userId = req.user.id;
         let user = await User.findById(userId);
         if (!user) {
@@ -605,11 +637,8 @@ const wishlistAdd = async (req, res) => {
             user.wishlist = { product: [] };
         }
         user.wishlist.product.push({
-            productId,
-            productName,
-            productImage,
-            productPrice,
-            productVariant
+            productId :product._id
+            
         });
         user = await user.save();
         console.log('wishlist added');
