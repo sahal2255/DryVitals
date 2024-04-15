@@ -299,7 +299,7 @@
 
 							</div>
 							<h3>{{productName}}</h3>
-							{{_id}}
+							{{!-- {{_id}} --}}
 
 							{{#if isDisabled}}
 							<h5 style="color: red;">Out of stock</h5>
@@ -328,7 +328,7 @@
 							</button> --}}
 
 {{#if inWishlist}}
-    <a href="#" class="wishlist-btn" style="color: red;"><i class="bi bi-heart-fill"></i> </a>
+        <a href="#" class="wishlist-btn" style="color: red;" data-product-id="{{_id}}"><i class="bi bi-heart-fill"></i></a>
 {{else}}
 
 <a  class="wishlist-btn" id="addToWishlist" data-product-id="{{_id}}"><i class="bi bi-heart"></i></a>
@@ -519,25 +519,31 @@ wishlistButtons.forEach(wishlistButton => {
 
         try {
             const productId = wishlistButton.getAttribute('data-product-id');
+			console.log('product id',productId)
             if (!productId) {
                 console.error('Product ID is empty.');
                 return;
             }
-            const response = await axios.post('/wishlist/add', {
-                productId: productId
-            });
-            const isItemAddedToWishlist = response.data.success;
-            if (isItemAddedToWishlist) {
-                wishlistButton.innerHTML = '<i class="bi bi-heart-fill"></i>';
-                window.location.reload(); // Reloading the page might not be necessary. Consider updating the UI dynamically instead.
-            } else {
-                wishlistButton.innerHTML = '<i class="bi bi-heart"></i>';
+
+            // Determine if the item is already in the wishlist
+            else {
+                // Item is not in the wishlist, add it
+                const response = await axios.post('/wishlist/add', {
+                    productId: productId
+                });
+				console.log(productId)
+                const isItemAddedToWishlist = response.data.success;
+				if(isItemAddedToWishlist){
+					window.location.reload()
+				}
+                
             }
         } catch (error) {
-            console.error('Error adding item to wishlist:', error);
+            console.error('Error:', error);
         }
     });
 });
+
 
 
 async function setWishlistIconColor(productId) {
@@ -554,6 +560,7 @@ async function setWishlistIconColor(productId) {
                 button.innerHTML = '<i class="bi bi-heart"></i>';
                 button.style.color = '';
                 button.classList.remove('added-to-wishlist');
+				
             }
             // Add event listener to the wishlist icon
             button.addEventListener('click', event => {

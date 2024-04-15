@@ -57,7 +57,7 @@
 		border: none;
 	}
 	.bynow:hover{
-		background-color: rgb(204, 138, 15);
+		background-color: rgb(215, 120, 31);
 	}
 
 </style>
@@ -215,7 +215,7 @@
             <button type="submit" class="cart-btn" id="addToCartBtn"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
         </div>
     </div>
-	{{!-- <button type="submit"  class="bynow" onclick="storeSelected()">Buy Now</button> --}}
+<button type="submit" class="bynow" id="buyNow" >Buy Now</button>
 </div>
 
 		</div>
@@ -357,43 +357,39 @@
     }
 })
 
-
-// Function to handle the Buy Now button click
-async function storeSelected() {
+document.getElementById('buyNow').addEventListener('click', async function () {
     try {
         // Get the selected variant details
         const selectedVariantElement = document.querySelector('input[name="variant"]:checked').nextElementSibling;
         const selectedVariant = selectedVariantElement.innerText;
-		const variantPrice = getSelectedPrice();
-	 	const variantMRP = parseFloat(document.querySelector('input[name="variant"]:checked').getAttribute('data-mrp'));
+        const variantPrice = getSelectedPrice();
+        const variantMRP = parseFloat(document.querySelector('input[name="variant"]:checked').getAttribute('data-mrp'));
+
+
         // Prepare the data to send to the server
-		if (!variantPrice || !variantMRP) {
+        if (!variantPrice || !variantMRP) {
             throw new Error('Price or MRP is missing.');
         }
         const requestData = {
-			productName:'{{product.productName}}',
+            productName: '{{product.productName}}',
             selectedVariant: selectedVariant,
             price: variantPrice,
             mrp: variantMRP
         };
-	console.log('requestdata',requestData)
-        axios.post('/checkOut', requestData)
-		.then(response=>{
 
+        console.log('requestdata', requestData);
+
+        // Send data to the server
+        const response = await axios.post('/singleCheckOut', requestData);
         console.log('response', response.data);
-        window.location.href = '/checkOut'; 
-		})
-		.catch(error => {
-            console.error("Error storing variant details:", error);
-            // Handle errors
-        });
+
+        // Redirect to checkout page
+        window.location.href = '/singleCheckOut?' + new URLSearchParams(requestData).toString();
     } catch (error) {
         console.error("Error storing variant details:", error);
-        // Handle errors
     }
-}
+});
 
-document.querySelector('.bynow').addEventListener('click', storeSelected);
 
 </script>
 

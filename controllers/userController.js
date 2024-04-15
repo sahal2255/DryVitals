@@ -330,7 +330,6 @@ let deleteCart = async (req, res) => {
     }
 }
 
-
 let incrementQuantity = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -496,6 +495,10 @@ let sortProducts = async (req, res) => {
 };
 
 
+
+
+
+
 // Route for sorting products
 
 
@@ -512,79 +515,16 @@ let sortProducts = async (req, res) => {
 // }
 
 
-// let wishlistAdd = async (req, res) => {
-//     try {
-//         if (!req.user) {
-//             return res.status(401).json({ error: 'Unauthorized. Please log in.' });
-//         }
-//         const userId = req.user.id;
-
-//         const { productId, productImage, productName, productPrice, productVariant } = req.body;
-
-//         let user = await User.findById(userId);
-
-//         if (!user) {
-//             throw new Error('User not found');
-//         }
-//         if (!user.wishlist) {
-//             user.wishlist = { product: [] };
-//         }
-//         user.wishlist.product.push({
-//             productId: productId,
-//             productImage: productImage,
-//             productName: productName,
-//             productPrice: productPrice,
-//             productVariant: productVariant
-//         });
-
-//         const wishlistItems=user.wishlist.product
-//         console.log('wishlist',wishlistItems);
-//         user = await user.save();
-//         res.render('user/wishlist', { wishlistItems });
-//     } catch (error) {
-//         console.error('Error adding product to wishlist:', error);
-//         res.status(500).json({ error: 'Failed to add product to wishlist.' });
-//     }
-// };
-
-// let wishlistdelete = async (req, res) => {
-//     try {
-//         const userId = req.user.id;
-//         const productId = req.params.id;
-
-//         const user = await User.findById(userId);
-//         if (!user || !user.wishlist || !user.wishlist.product || user.wishlist.product.length === 0) {
-//             return res.status(404).send('User or wishlist data not found');
-//         }
-
-//         // Find the index of the product with the given ID in the wishlist array
-//         const index = user.wishlist.product.findIndex(item => item.productId.toString() === productId);
-//         if (index === -1) {
-//             return res.status(404).send('Product not found in the wishlist');
-//         }
-
-//         // Remove the product from the wishlist array
-//         user.wishlist.product.splice(index, 1);
-
-//         // Save the updated user object
-//         await user.save();
-        
-
-//         console.log('Product removed from wishlist successfully');
-//         return res.status(200).send('Product removed from wishlist successfully');
-//     } catch (error) {
-//         console.error('Error removing product from wishlist:', error);
-//         return res.status(500).send('Internal Server Error');
-//     }
-// };
 
 const wishlistGet = async (req, res) => {
     try {
         const userId = req.user.id;
-        const {productId}=req.body
-        console.log(productId);
+        console.log(userId);
+        const objectId=new mongoose.Types.ObjectId(userId)
+        console.log(objectId);
+        // Fetch wishlist items with product details using aggregation
         const wishlistItems = await User.aggregate([
-            { $match: { _id: productId(userId) } },
+            { $match: { _id: objectId } },
             { $unwind: '$wishlist.product' },
             { 
                 $lookup: {
@@ -598,22 +538,34 @@ const wishlistGet = async (req, res) => {
             { 
                 $group: {
                     _id: '$_id',
-                    wishlistItems: { $push: '$productDetails' }
+                    wishlistItems: { 
+                        $push: { 
+                            productId:'$wishlist.product.productId',
+                            productName: '$productDetails.productName',
+                            productImage: '$productDetails.imageUrl',
+                            price: { $arrayElemAt: ['$productDetails.stock.price', 0] },
+                            variant: { $arrayElemAt: ['$productDetails.stock.variant', 0] },
+                            stock: { $arrayElemAt: ['$productDetails.stock.stock', 0] },
+                            mrp:{$arrayElemAt:['$productDetails.stock.mrp',0]}
+                        } 
+                    }
                 }
             },
-            { $project: { wishlistItems: 1, _id: 0 } }
+            { $project: { wishlistItems: 1, _id: 1 } }
         ]);
+        
+        const extractedWishlistItems = wishlistItems.length > 0 ? wishlistItems[0].wishlistItems : [];
 
-        if (!wishlistItems || wishlistItems.length === 0) {
-            return res.status(404).json({ message: 'Wishlist is empty' });
-        }
-
-        res.render('user/wishlist', { wishlistItems: wishlistItems[0].wishlistItems });
+        // console.log(extractedWishlistItems);
+        const productIds = extractedWishlistItems.map(item => item.productId);
+        console.log('Product IDs:', productIds)        // Render the wishlist items in your view
+        res.render('user/wishlist', { wishlistItems: extractedWishlistItems });
     } catch (error) {
         console.error('Error fetching wishlist:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
 
 
 
@@ -624,12 +576,26 @@ const wishlistAdd = async (req, res) => {
         if (!req.user) {
             return res.status(401).json({ error: 'Unauthorized. Please log in.' });
         }
+    
         const {productId} = req.body
         const product = await Product.findById(productId)
-
-        console.log(productId);
+        
+        // console.log(productId);
         const userId = req.user.id;
         let user = await User.findById(userId);
+        // console.log(user.wishlist.product)
+
+        const existingProductIndex = user.wishlist.product.findIndex(item => item.productId.toString() === productId);
+        if (existingProductIndex !== -1) {
+            console.log('Product already exists in the wishlist');
+            user.wishlist.product = user.wishlist.product.filter(item => item.productId.toString() !== productId);
+            user = await user.save();
+            console.log('Existing product removed from the wishlist', );
+             return res.status(200).json({ success: true, });
+        
+        }
+        
+        
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
@@ -666,7 +632,7 @@ const wishlistdelete = async (req, res) => {
             return res.status(404).send('Product not found in the wishlist');
         }
 
-        // Remove the product from the wishlist array
+        
         user.wishlist.product.splice(index, 1);
 
         // Save the updated user object
@@ -680,6 +646,74 @@ const wishlistdelete = async (req, res) => {
     }
 };
 
+
+
+
+//  wihlist to cart
+
+
+const wishlisttoCart=async(req,res)=>{
+    try{
+        const productId=req.params.id
+        console.log(productId);
+        const selectedVariant=req.body.variant
+        const selectedPrice=req.body.price
+        const selectedmrp=req.body.mrp
+       
+
+
+        if (!req.user) {
+            return res.status(401).send({ error: 'User not authenticated' });
+        }
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(404).send({ error: 'User not found' });
+        }
+        // console.log(user)
+
+        const product =await Product.findById(productId)
+        // console.log(product);
+        
+        const existingProductIndex = user.cart.product.findIndex(item =>
+            item.productId.toString() === productId && item.productVariant === selectedVariant
+        );
+
+        if (existingProductIndex !== -1) {
+            // Variant already exists, increase quantity
+            user.cart.product[existingProductIndex].quantity += 1;
+            user.cart.product[existingProductIndex].productPrice = selectedPrice * user.cart.product[existingProductIndex].quantity;
+            user.cart.product[existingProductIndex].productmrp += selectedmrp; // Add the MRP of one more quantity
+
+        } else {
+            user.cart.product.push({
+                productId: product._id,
+                productImage: product.imageUrl,
+                productName: product.productName,
+                productPrice: selectedPrice,
+                productmrp:selectedmrp,
+                productVariant: selectedVariant,
+                quantity: 1 
+            });
+            // user.cart.total += selectedPrice
+        }
+        // user.cart.total = user.cart.total + selectedPrice
+        user.cart.total = user.cart.product.reduce((total, item) => {
+            return total + item.productPrice 
+        }, 0);
+        user.cart.totalmrp = user.cart.product.reduce((totalmrp, item) => {
+            return totalmrp + item.productmrp; // Calculate the total MRP
+        }, 0);
+        await user.save();
+        console.log('Product added to cart');
+        // console.log(user.cart.product);
+        const data=user.cart.product
+        // console.log('datas',data);
+        res.status(200).json({ data });
+    } catch (error) {
+        console.error('Error adding product to cart:', error);
+        res.status(500).send({ error: 'Internal server error' });
+    }
+};
 //single product checkout
 
 // let checkOut = async (req, res) => {
@@ -706,21 +740,85 @@ const wishlistdelete = async (req, res) => {
 let checkOut = async (req, res) => {
     try {
         // Assuming you have a User model
-        const user = await User.findById(req.user.id).select('cart');
-        const cartItems = user.cart;
-        const total=user.cart.total;
-        const totalmrp=user.cart.totalmrp
-        console.log(cartItems);
-        const shipping=60
+        
 
-        const totalAmount=total+shipping
-        res.render('user/checkOut', { cartItems,total,totalmrp,shipping,totalAmount });
+            const user = await User.findById(req.user.id).select('cart');
+            const cartItems = user.cart;
+            const total=user.cart.total;
+            const totalmrp=user.cart.totalmrp
+            console.log(cartItems);
+            const shipping=60
+            
+            const totalAmount=total+shipping
+            res.render('user/checkOut', { cartItems,total,totalmrp,shipping,totalAmount });
+        
     } catch (error) {
         console.error('Error during checkout:', error);
         res.status(500).send('Internal Server Error');
     }
 }
 
+
+
+
+// let checkOut = async (req, res) => {
+//     try {
+//         const { productName, selectedVariant, price, mrp } = req.body;
+//         const result = req.body;
+//         console.log('result', result);
+        
+//         if (productName && selectedVariant && price && mrp) {
+//             res.render('user/checkOut', { result });
+//         } else {
+//             // Fetch user's cart
+//             const user = await User.findById(req.user.id).select('cart');
+//             const cartItems = user.cart;
+//             const total = cartItems.total;
+//             const totalmrp = cartItems.totalmrp;
+//             const shipping = 60; // Assuming shipping cost is fixed
+//             const totalAmount = total + shipping;
+
+//             // Render checkout page with cart items
+//             res.render('user/checkOut', { cartItems, total, totalmrp, shipping, totalAmount });
+//         }
+//     } catch (error) {
+//         console.error('Error during checkout:', error);
+//         res.status(500).send('Internal Server Error');
+//     }
+// }
+
+
+
+let singleCheckOut=async(req,res)=>{
+    try {
+        const { productName, selectedVariant, price, mrp } = req.body;
+        console.log('checkout page adding',req.body);
+        if (productName && selectedVariant && price && mrp) {
+            // Render the singleCheckOut view and pass the data to it
+            res.render('user/singleCheckOut', { productName, selectedVariant, price, mrp });
+        } else {
+            throw new Error('Missing required data.');
+        }
+    } catch (error) {
+        console.log('Error in singleCheckOut:', error);
+        res.status(400).send('Bad Request');
+    }
+}
+
+let singleCheckOutget = async (req, res) => {
+    try {
+        const { productName, selectedVariant, price, mrp } = req.query;
+        const result = { productName, selectedVariant, price, mrp };
+        console.log('checkout page getting', req.query);
+        const shipping=60
+        const totalamount=+result.price+shipping
+        res.render('user/singleCheckOut', { result,shipping,totalamount });
+         
+    } catch (error) {
+        console.log('Error in singleCheckOutget:', error);
+        
+    }
+}
 
 
 
@@ -769,6 +867,9 @@ module.exports={
     wishlistAdd,
     wishlistGet,
     wishlistdelete,
+    wishlisttoCart,
     checkOut,
+    singleCheckOut,
+    singleCheckOutget,
     profile
 }

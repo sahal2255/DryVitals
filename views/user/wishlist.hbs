@@ -223,26 +223,33 @@
 									<th class="product-image">Product Image</th>
 									<th class="product-name">Name</th>
 									<th class="product-quantity">Variant</th>
+									<th class="product-mrp">MRP</th>
 									<th class="product-price">Price</th>
+									<th class="add-to-cart">Add to cart</th>
 								</tr>
 							</thead>
 							<tbody>
-								{{!-- {{this.wishlistItems}} --}}
+								{{!-- {{wishlistItems}} --}}
 								{{#each wishlistItems}}
 								<tr class="table-body-row" id="wishlist-item-{{productId}}">
+								{{!-- {{this.productId}} --}}
 									<td class="product-remove"><button
-											onclick="deletewishlist('{{this.productId}}')" style="border: none;"><i
+											onclick="deletewishlist('{{this.productId}}')" style="border: none; " ><i
 												class="fas fa-trash-alt"></i></button></td>
-									<td class="product-image"><img src="{{this.product.productImage}}" alt=""></td>
-									<td class="product-name">{{this.product.productName}}</td>
-									<td class="product-quantity">{{this.product.productVariant}}</td>
-									<td class="product-price">{{this.product.productPrice}}</td>
+									<td class="product-image"><img src="{{productImage}}" alt="" style="width: 100px;"></td>
+									<td class="product-name">{{productName}}</td>
+
+									<td class="product-quantity">{{variant}}</td>
+									<td class="product-mrp"><del>{{mrp}}</del></td>
+									<td class="product-price">{{price}}</td>
+						
+									<td class="add-to-cart" >  <button class="wishlist-to-cart" onclick="wishlistToCart('{{this.productId}}', '{{productName}}', '{{productImage}}', '{{variant}}', '{{mrp}}', '{{price}}')">
+										Add to Cart</button></td>
 								</tr>
 								{{/each}}
 							</tbody>
 						</table>
 
-						{{!-- <i class="fas fa-trash-alt"></i> --}}
 
 					</div>
 				</div>
@@ -305,21 +312,65 @@
 
 <script>
 	function deletewishlist(productId){
-		console.log('deleting wishlist',productId)
-		axios.delete(`/wishlist/delete-wishlist/${productId}`)
-		.then(response =>{
-			if(response.status === 200 ){
-				console.log('remove wishlist success',response)
-				
-				location.reload()
+	
+    console.log('deleting wishlist', productId);
+    axios.delete(`/wishlist/delete-wishlist/${productId}`)
+    .then(response => {
+        if(response.status === 200 ){
+            console.log('remove wishlist success', response);
+            location.reload();
+        } else {
+            console.log('failed remove');
+        }
+    }).catch(error => {
+        console.error('error removing product', error);
+    });
+}
 
-			}else{
-				console.log('failed remove')
-			}
-		}).catch(error =>{
-			console.error('error removing product',error)
-		})
-	}
+
+function wishlistToCart(productId, productName, productImage, variant, mrp, price) {
+    console.log('addto wishlist product id', productId);
+    // Make a POST request to the cart endpoint with product details in the request body
+    axios.post(`/cart/wishlist-cart/${productId}`, {
+        productName: productName,
+        productImage: productImage,
+        variant: variant,
+        mrp: mrp,
+        price: price
+    })
+    .then(response => {
+        if (response.status === 200) {
+            // Show SweetAlert success message
+            Swal.fire({
+                icon: 'success',
+                title: 'Added to Cart!',
+                showConfirmButton: false,
+                timer: 2000
+            }).then(() => {
+                // Reload the page after adding to cart
+                location.reload();
+            });
+        } else {
+            // Show SweetAlert error message
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Error adding to cart!'
+            });
+        }
+    })
+    .catch(error => {
+        // Show SweetAlert error message
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Error adding to cart!'
+        });
+        console.log('error adding to cart:', error);
+    });
+}
+
+
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
