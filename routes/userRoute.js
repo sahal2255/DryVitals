@@ -39,7 +39,7 @@ router.post('/cart/decrementQuantity/:id', userAuth, userController.decrementQua
 // router.get('/filteredProducts',userController.filterProducts)
 // router.post('/product/sortProducts',userController.sortProducts)
 
-router.post('/product/sortProducts',userController.sortProducts);
+// router.post('/product/sortProducts',userController.sortProducts);
 
 
 router.post('/wishlist/add',userAuth,userController.wishlistAdd)
@@ -53,6 +53,8 @@ router.post('/singleCheckOut',userAuth,userController.singleCheckOut)
 router.get('/singleCheckOut',userAuth,userController.singleCheckOutget)
 
 
+router.post('/product/sortAndFilterProducts',userController.sortAndFilterProducts)
+// router.post('/session/setCategory',userController.sortAndFilterProducts)
 
 //single product checkout
 

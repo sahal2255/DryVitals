@@ -191,11 +191,11 @@
                                     <div class="card-body">
                                         <div class="billing-address-form">
                                             <form action="" id="myForm" >
-                                                <p><input type="text" placeholder="Name"></p>
+                                                <p><input type="text" placeholder="Name" id="Name"></p>
                                                 <p id="nameError"></p>
-                                                <p><input type="email" placeholder="Email"></p>
+                                                <p><input type="email" placeholder="Email" id="Email"></p>
                                                 <p id="emailError"></p>
-                                                <p><input type="tel" placeholder="Phone"></p>
+                                                <p><input type="tel" placeholder="Phone" id="Phone"></p>
                                                 <p id="phoenError"></p>
                                                 <p>
                                                     <select name="district" id="district">
@@ -217,14 +217,14 @@
                                                     </select>
                                                 </p>
                                                 <p id="selectError"></p>
-                                                <p><input type="text" placeholder="Place"></p>
+                                                <p><input type="text" placeholder="Place" id="Place"></p>
                                                 <p id="placeError"></p>
-                                                <p><textarea placeholder="Address"></textarea></p>
+                                                <p><textarea placeholder="Address"  id="Address"></textarea></p>
                                                 <p id="addressError"></p>
-                                                <p><input type="text" placeholder="Pincode"></p>
+                                                <p><input type="text" placeholder="Pincode" id="Pincode"></p>
                                                 <p id="pincodeError"></p>
 
-                                                    <p><button type="submit" class="boxed-btn" onclick="validateForm()">Place Order</button></p>
+                                                    <button type="button" class="boxed-btn" onclick="validateForm()">Place Order</button>
                                             </form>
                                         </div>
                                     </div>
@@ -429,7 +429,19 @@
             }
         }
 
-        // Phone validation - You can add more specific validation if needed
+        // Phone validation
+        if (!phone.trim()) {
+            phoneError.textContent = "Phone number is required";
+            isValid = false;
+        } else {
+            var phonePattern = /^\d{10}$/; // Assuming a 10-digit phone number
+            if (!phonePattern.test(phone)) {
+                phoneError.textContent = "Invalid phone number";
+                isValid = false;
+            } else {
+                phoneError.textContent = "";
+            }
+        }
 
         // District validation
         if (district === "") {
@@ -460,7 +472,7 @@
             pincodeError.textContent = "Pincode is required";
             isValid = false;
         } else {
-            var pincodePattern = /^\d{6}$/;
+            var pincodePattern = /^\d{6}$/; // Assuming a 6-digit pincode
             if (!pincodePattern.test(pincode)) {
                 pincodeError.textContent = "Invalid pincode";
                 isValid = false;
@@ -471,7 +483,7 @@
 
         if (isValid) {
             // If all fields are valid, you can submit the form or proceed with further actions
-            document.getElementById('myForm').submit(); // Submit the form
+            document.getElementById('myForm').button(); // Submit the form
         }
     }
 </script>

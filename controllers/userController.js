@@ -453,67 +453,40 @@ let decrementQuantity = async (req, res) => {
     }
 };
 
-let filterProducts = async (req, res) => {
-    const category = req.query.category;
-    console.log(category);
-    try {
-        let filteredProducts = [];
-        if (category === 'all') {
-            filteredProducts = await Product.find().sort(sort);
-        } else {
-            filteredProducts = await Product.find({ category: category }).sort(sort);
-        }
 
-        res.render('user/product', { products: filteredProducts });
-    } catch (error) {
-        console.error('Error fetching filtered products:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-};
+//sorting and filtering 
 
-
-
-
-let sortProducts = async (req, res) => {
+let sortAndFilterProducts = async (req, res) => {
     try {
         const sortBy = req.body.sortBy;
-        console.log(sortBy);
+        const category = req.body.category;
+        console.log(sortBy, category);
+
+        let query = {};
+
+        // Apply category filter
+        if (category && category !== 'all') {
+            query.category = category;
+        }
+
         let products;
 
-        // Sort products based on the selected option
+        // Apply sorting based on the selected criteria
         if (sortBy === 'price-low-high') {
-            products = await Product.find().sort({ 'stock.0.price': 1 });
+            products = await Product.find(query).sort({ 'stock.0.price': 1 });
         } else if (sortBy === 'price-high-low') {
-            products = await Product.find().sort({ 'stock.0.price': -1 });
+            products = await Product.find(query).sort({ 'stock.0.price': -1 });
+        } else {
+            products = await Product.find(query);
         }
-// console.log(products);
+
+        console.log(products);
         res.json({ products });
     } catch (error) {
-        console.error('Error sorting products:', error);
-        res.status(500).json({ error: 'Failed to sort products.' });
+        console.error('Error sorting and filtering products:', error);
+        res.status(500).json({ error: 'Failed to sort and filter products.' });
     }
 };
-
-
-
-
-
-
-// Route for sorting products
-
-
-// let wishlistGet=async(req,res)=>{
-//     // res.render('user/wishlist')
-//     try{
-//         const user = await User.findById(req.user.id);
-//         const wishlistItems=user.wishlist.product
-//         res.render('user/wishlist',{wishlistItems})
-//     }
-//     catch(error){
-//         console.log('wishlist error',error);
-//     }
-// }
-
 
 
 const wishlistGet = async (req, res) => {
@@ -714,27 +687,7 @@ const wishlisttoCart=async(req,res)=>{
         res.status(500).send({ error: 'Internal server error' });
     }
 };
-//single product checkout
 
-// let checkOut = async (req, res) => {
-//     try {
-//         const userId = req.user.id;
-//         const user = await User.findById(userId);
-//         // console.log(user);
-//         if (!user) {
-//             return res.status(404).json({ message: 'User not found' });
-//         }
-//         const { requestData} = req.body; 
-
-//         console.log('request ',req.body);
-        
-//          res.json('ok');
-//     } catch (error) {
-//         // Handle any errors that occur during the process
-//         console.error('Error in checkout:', error);
-//         return res.status(500).json({ message: 'Internal server error' });
-//     }
-// }
 
 
 let checkOut = async (req, res) => {
@@ -757,37 +710,6 @@ let checkOut = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 }
-
-
-
-
-// let checkOut = async (req, res) => {
-//     try {
-//         const { productName, selectedVariant, price, mrp } = req.body;
-//         const result = req.body;
-//         console.log('result', result);
-        
-//         if (productName && selectedVariant && price && mrp) {
-//             res.render('user/checkOut', { result });
-//         } else {
-//             // Fetch user's cart
-//             const user = await User.findById(req.user.id).select('cart');
-//             const cartItems = user.cart;
-//             const total = cartItems.total;
-//             const totalmrp = cartItems.totalmrp;
-//             const shipping = 60; // Assuming shipping cost is fixed
-//             const totalAmount = total + shipping;
-
-//             // Render checkout page with cart items
-//             res.render('user/checkOut', { cartItems, total, totalmrp, shipping, totalAmount });
-//         }
-//     } catch (error) {
-//         console.error('Error during checkout:', error);
-//         res.status(500).send('Internal Server Error');
-//     }
-// }
-
-
 
 let singleCheckOut=async(req,res)=>{
     try {
@@ -819,11 +741,6 @@ let singleCheckOutget = async (req, res) => {
         
     }
 }
-
-
-
-
-
 
 
 //   get user profile page
@@ -862,8 +779,10 @@ module.exports={
     deleteCart,
     incrementQuantity,
     decrementQuantity,
-    filterProducts,
-    sortProducts,
+    // filterProducts,
+    // sortProducts,
+    sortAndFilterProducts,
+
     wishlistAdd,
     wishlistGet,
     wishlistdelete,
@@ -871,5 +790,6 @@ module.exports={
     checkOut,
     singleCheckOut,
     singleCheckOutget,
+    // price,
     profile
 }
