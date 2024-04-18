@@ -65,7 +65,44 @@ const userSchema=new mongoose.Schema({
         }
         
     }]
+},
+
+userAddress:{
+    name:{
+        type:String,
+        required:true
+    },
+    email:{
+        type:String,
+        required:true
+    },
+    phoneNumber:{
+        type:String,
+        required:true
+    },
+    district:{
+        type:String,
+        required:true
+    },
+    place:{
+        type:String,
+        required:true
+    },
+    address:{
+        type:String,
+        required:true
+    },
+    pincode:{
+        type:String,
+        required:true
+    },
+    hasAddress:{
+        type:Boolean,
+        default:false
+    }
 }
+
+
 });
 
 const User=mongoose.model('User',userSchema)

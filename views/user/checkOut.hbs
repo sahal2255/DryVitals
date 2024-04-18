@@ -12,7 +12,8 @@
 	<title>Check Out</title>
 
 	<!-- favicon -->
-	{{!-- <link rel="shortcut icon" type="image/png" href="/assets/img/favicon.png"> --}}
+	{{!--
+	<link rel="shortcut icon" type="image/png" href="/assets/img/favicon.png"> --}}
 	<!-- google font -->
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
@@ -50,6 +51,51 @@
 			vertical-align: middle;
 			margin-right: 100px;
 		}
+
+		.error {
+			color: red;
+			font-size: 14px;
+		}
+
+		.select-container {
+			position: relative;
+			width: 200px;
+		}
+
+		/* Style the select box */
+		.select-box {
+			width: 100%;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			background-color: #fff;
+			font-size: 16px;
+		}
+
+		/* Style the arrow */
+		.select-arrow {
+			position: absolute;
+			top: 50%;
+			right: 10px;
+			transform: translateY(-50%);
+		}
+
+		/* Style the options */
+		.select-box option {
+			background-color: #fff;
+			color: #000;
+		}
+
+		/* Hover effect */
+		.select-box:hover {
+			border-color: #666;
+		}
+
+		/* Focus effect */
+		.select-box:focus {
+			outline: none;
+			border-color: #333;
+		}
 	</style>
 
 </head>
@@ -57,11 +103,11 @@
 <body>
 
 	<!--PreLoader-->
-	<div class="loader">
+	{{!-- <div class="loader">
 		<div class="loader-inner">
 			<div class="circle"></div>
 		</div>
-	</div>
+	</div> --}}
 	<!--PreLoader Ends-->
 
 	<!-- header -->
@@ -189,12 +235,22 @@
 									data-parent="#accordionExample">
 									<div class="card-body">
 										<div class="billing-address-form">
-											<form action="index.html">
-												<p><input type="text" placeholder="Name"></p>
-												<p><input type="email" placeholder="Email"></p>
-												<p><input type="tel" placeholder="Phone"></p>
+											<form action="/saveAddress" method="POST"
+												onsubmit="return saveAddress(event)">
+												<p><input type="text" placeholder="Name" id="name" name="Name"
+														value="{{name}}"></p>
+												<p id="nameError" class="error"></p>
+												<p><input type="email" placeholder="Email" id="email" name="email"
+														value="{{email}}"></p>
+												<p id="emailError" class="error"></p>
+												<p><input type="number" placeholder="Phone" id="phone"
+														name="phoneNumber" value="{{phoneNumber}}"></p>
+												<p id="phoneError" class="error"></p>
+												{{#if district}}
+												<p><input type="text" value="{{district}}"></p>
+												{{else}}
 												<p>
-													<select name="district" id="district">
+													<select name="district" id="district" name="district">
 														<option value="" selected disabled>Select District</option>
 														<option value="Thiruvananthapuram">Thiruvananthapuram</option>
 														<option value="Kollam">Kollam</option>
@@ -212,207 +268,227 @@
 														<option value="Kasaragod">Kasaragod</option>
 													</select>
 												</p>
-												<p><input type="text" placeholder="Place"></p>
-												<p><textarea placeholder="Address"></textarea></p>
-												<p><input type="text" placeholder="Pincode"></p>
-												<p class="radio">Delivery Type
-													<input type="radio" id="home" name="address_type" value="home">
-													<label for="home" class="labelfor">Home</label>
-													<input type="radio" id="office" name="address_type" value="office">
-													<label for="office" class="labelfor">Office </label>
-												</p>
+												{{/if}}
+												<p id="selectError" class="error"></p>
+												<p><input type="text" placeholder="Place" id="place" name="place"
+														value="{{place}}"></p>
+												<p id="placeError" class="error"></p>
+												{{#if address}}
+												<p><input type="text " style="height: 100px;" value="{{address}}"></p>
+												{{else}}
+												<p><textarea placeholder="Address" id="address"
+														name="address"></textarea></p>
+												<p id="addressError" class="error"></p>
+												{{/if}}
+												<p><input type="number" placeholder="Pincode" id="pincode"
+														name="pincode" value="{{pincode}}"></p>
+												<p id="pincodeError" class="error"></p>
+												<button type="submit" id="submitAddress">Save Adress</button>
+
 											</form>
 										</div>
 									</div>
-								</div>
-								<div class="card single-accordion">
-									<div class="card-header" id="headingThree">
-										<h5 class="mb-0">
-											<button class="btn btn-link collapsed" type="button" data-toggle="collapse"
-												data-target="#collapseThree" aria-expanded="false"
-												aria-controls="collapseThree">
-												Payment Details
-											</button>
-										</h5>
-									</div>
-									{{!-- <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
-										data-parent="#accordionExample">
-										<div class="card-body">
-											<div class="payment-details-form">
-												<form action="paymen" method="post">
-													<p><input type="text" placeholder="Card Number" name="card_number">
-													</p>
-													<p><input type="text" placeholder="Cardholder Name"
-															name="cardholder_name"></p>
-													<p><input type="text" placeholder="Expiration Date"
-															name="expiration_date"></p>
-													<p><input type="text" placeholder="CVV" name="cvv"></p>
-													<button type="submit" class="btn btn-primary">Submit
-														Payment</button>
-												</form>
-											</div>
-										</div>
-									</div> --}}
 								</div>
 
 							</div>
 
 						</div>
 
+						<div class="select-container">
+							<select class="select-box" name="payment-method" id="payment-method">
+								<option value="defult" selected>Delivery</option>
+								<option value="cash-on-delivery">Cash On Delivery</option>
+								<option value="razorpay">RazorPay</option>
+							</select>
+						</div>
 					</div>
+
 				</div>
+			</div>
 
-				<div class="col-lg-4">
-					<div class="order-details-wrap">
-						<table class="order-details">
-							<thead>
-								<tr>
-									<th>Product</th>
-									<th>Price</th>
-									<th>MRP</th>
-									<th>Variant</th>
-								</tr>
-							</thead>
+			<div class="col-lg-4">
+				<div class="order-details-wrap">
+					<table class="order-details">
+						<thead>
+							<tr>
+								<th>Product</th>
+								<th>Price</th>
+								<th>MRP</th>
+								<th>Variant</th>
+								<th>qnty</th>
+							</tr>
+						</thead>
 
-							<tbody class="order-details-body">
-								{{#each cartItems.product}}
-								<tr>
-									<td>{{productName}}</td>
-									<td>₹{{productPrice}}</td>
-									<td><del>₹{{productmrp}}</del></td>
-									<td>{{productVariant}}</td>
-								</tr>
-								{{/each}}
-							</tbody>
+						<tbody class="order-details-body">
+							{{#each cartItems.product}}
+							<tr>
+								<td>{{productName}}</td>
+								<td>₹{{productPrice}}</td>
+								<td><del>₹{{productmrp}}</del></td>
+								<td>{{productVariant}}</td>
+								<td>{{quantity}}</td>
+							</tr>
+							{{/each}}
+						</tbody>
 
 
-							<tbody class="checkout-details">
-								<tr>
-									<td>MRP</td>
-									<td>₹ <del>{{totalmrp}}</del></td>
-								</tr>
-								<tr>
-									<td>Subtotal</td>
-									<td>₹{{total}}</td>
-								</tr>
-								<tr>
-									<td>Shipping</td>
-									<td>₹{{shipping}}</td>
-								</tr>
-								<tr>
-									<td>Total</td>
-									<td>₹{{totalAmount}}</td>
-								</tr>
-							</tbody>
-						</table>
-						<a href="#" class="boxed-btn">Place Order</a>
-					</div>
+						<tbody class="checkout-details">
+							<tr>
+								<td>MRP</td>
+								<td>₹ <del>{{totalmrp}}</del></td>
+							</tr>
+							<tr>
+								<td>Subtotal</td>
+								<td>₹{{total}}</td>
+							</tr>
+							<tr>
+								<td>Shipping</td>
+								<td>₹{{shipping}}</td>
+							</tr>
+							<tr>
+								<td>Total</td>
+								<td>₹{{totalAmount}}</td>
+							</tr>
+						</tbody>
+					</table>
+					<button id="placeOrderBtn" >Place Order</button>
 				</div>
 			</div>
 		</div>
 	</div>
+	</div>
+
 	<!-- end check out section -->
 
-	<!-- logo carousel -->
-	<div class="logo-carousel-section">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="logo-carousel-inner">
-						<div class="single-logo-item">
-							<img src="/assets/img/company-logos/1.png" alt="">
-						</div>
-						<div class="single-logo-item">
-							<img src="/assets/img/company-logos/2.png" alt="">
-						</div>
-						<div class="single-logo-item">
-							<img src="/assets/img/company-logos/3.png" alt="">
-						</div>
-						<div class="single-logo-item">
-							<img src="/assets/img/company-logos/4.png" alt="">
-						</div>
-						<div class="single-logo-item">
-							<img src="/assets/img/company-logos/5.png" alt="">
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end logo carousel -->
 
-	<!-- footer -->
-	<div class="footer-area">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-3 col-md-6">
-					<div class="footer-box about-widget">
-						<h2 class="widget-title">About us</h2>
-						<p>Ut enim ad minim veniam perspiciatis unde omnis iste natus error sit voluptatem accusantium
-							doloremque laudantium, totam rem aperiam, eaque ipsa quae.</p>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6">
-					<div class="footer-box get-in-touch">
-						<h2 class="widget-title">Get in Touch</h2>
-						<ul>
-							<li>34/8, East Hukupara, Gifirtok, Sadan.</li>
-							<li>support@fruitkha.com</li>
-							<li>+00 111 222 3333</li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6">
-					<div class="footer-box pages">
-						<h2 class="widget-title">Pages</h2>
-						<ul>
-							<li><a href="index.html">Home</a></li>
-							<li><a href="about.html">About</a></li>
-							<li><a href="services.html">Shop</a></li>
-							<li><a href="news.html">News</a></li>
-							<li><a href="contact.html">Contact</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6">
-					<div class="footer-box subscribe">
-						<h2 class="widget-title">Subscribe</h2>
-						<p>Subscribe to our mailing list to get the latest updates.</p>
-						<form action="index.html">
-							<input type="email" placeholder="Email">
-							<button type="submit"><i class="fas fa-paper-plane"></i></button>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end footer -->
 
-	<!-- copyright -->
-	<div class="copyright">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-6 col-md-12">
-					<p>Copyrights &copy; 2019 - <a href="https://imransdesign.com/">Imran Hossain</a>, All Rights
-						Reserved.</p>
-				</div>
-				<div class="col-lg-6 text-right col-md-12">
-					<div class="social-icons">
-						<ul>
-							<li><a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
-							<li><a href="#" target="_blank"><i class="fab fa-twitter"></i></a></li>
-							<li><a href="#" target="_blank"><i class="fab fa-instagram"></i></a></li>
-							<li><a href="#" target="_blank"><i class="fab fa-linkedin"></i></a></li>
-							<li><a href="#" target="_blank"><i class="fab fa-dribbble"></i></a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end copyright -->
+	<script>
+		function saveAddress(event) {
+			event.preventDefault();
+			console.log("Save Address button clicked");
+			// Get form input values
+			var name = document.getElementById("name").value.trim();
+			var email = document.getElementById("email").value.trim();
+			var phone = document.getElementById("phone").value.trim();
+			var district = document.getElementById("district").value;
+			var place = document.getElementById("place").value.trim();
+			var address = document.getElementById("address").value.trim();
+			var pincode = document.getElementById("pincode").value.trim();
 
+			// Reset error messages
+			document.getElementById("nameError").innerText = "";
+			document.getElementById("emailError").innerText = "";
+			document.getElementById("phoneError").innerText = "";
+			document.getElementById("selectError").innerText = "";
+			document.getElementById("placeError").innerText = "";
+			document.getElementById("addressError").innerText = "";
+			document.getElementById("pincodeError").innerText = "";
+
+			// Validation
+			var isValid = true;
+
+			if (name === "") {
+				document.getElementById("nameError").innerText = "Please enter your name";
+				isValid = false;
+			}
+
+			if (email === "") {
+				document.getElementById("emailError").innerText = "Please enter your email";
+				isValid = false;
+			} else if (!isValidEmail(email)) {
+				document.getElementById("emailError").innerText = "Please enter a valid email address";
+				isValid = false;
+			}
+
+			if (phone === "") {
+				document.getElementById("phoneError").innerText = "Please enter your phone number";
+				isValid = false;
+			} else if (!isValidPhone(phone)) {
+				document.getElementById("phoneError").innerText = "Phone Number Must Be 10 digits";
+				isValid = false;
+			}
+
+			if (district === "") {
+				document.getElementById("selectError").innerText = "Please select a district";
+				isValid = false;
+			}
+
+			if (place === "") {
+				document.getElementById("placeError").innerText = "Please enter your place";
+				isValid = false;
+			}
+
+			if (address === "") {
+				document.getElementById("addressError").innerText = "Please enter your address";
+				isValid = false;
+			}
+
+			if (pincode === "") {
+				document.getElementById("pincodeError").innerText = "Please enter your pincode";
+				isValid = false;
+			} else if (!isValidPincode(pincode)) {
+				document.getElementById("pincodeError").innerText = "Pincode should be exactly 6 digits";
+				isValid = false;
+			}
+
+			if (isValid) {
+				// Send form data to the server using Axios
+				axios.post('/saveAddress', {
+					Name: name,
+					email: email,
+					phoneNumber: phone,
+					district: district,
+					place: place,
+					address: address,
+					pincode: pincode
+				})
+					.then(function (response) {
+						console.log('Form data saved successfully:', response.data);
+						// Show SweetAlert notification
+						Swal.fire({
+							icon: 'success',
+							title: 'Success',
+							text: 'Your address has been saved successfully!',
+							confirmButtonText: 'OK'
+						});
+					})
+					.catch(function (error) {
+						console.error('Error saving form data:', error);
+						// Show SweetAlert for error
+						Swal.fire({
+							icon: 'error',
+							title: 'Oops...',
+							text: 'Something went wrong! Please try again later.',
+							confirmButtonText: 'OK'
+						});
+					});
+			}
+		}
+
+		function isValidEmail(email) {
+			// Basic email validation
+			var emailRegex = /\S+@\S+\.\S+/;
+			return emailRegex.test(email);
+		}
+		function isValidPhone(phone) {
+			// Phone number validation (10 digits)
+			var phoneRegex = /^\d{10}$/;
+			return phoneRegex.test(phone);
+		}
+
+		function isValidPincode(pincode) {
+			// Pincode validation (6 digits)
+			var pincodeRegex = /^\d{6}$/;
+			return pincodeRegex.test(pincode);
+		}
+
+
+	
+	</script>
+
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<!-- jquery -->
 	<script src="/assets/js/jquery-1.11.3.min.js"></script>
 	<!-- bootstrap -->

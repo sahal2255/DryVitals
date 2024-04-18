@@ -305,38 +305,17 @@
 							<div class="product-image">
 								<a href="/singleProduct/{{_id}}"><img src="{{imageUrl}}" alt="productimage"
 										style="width: 200px ;height: 200px;;"></a>
-								{{!-- <a href="#" class="wishlist-btn"><i class="bi bi-heart-fill"></i></a> --}}
-
 							</div>
 							<h3>{{productName}}</h3>
-							{{!-- {{_id}} --}}
-
 							{{#if isDisabled}}
 							<h5 style="color: red;">Out of stock</h5>
 							{{/if}}
-
 							<p class="product-price"> ₹{{stock.[0].price}}</p>
 							<del class="product-mrp">₹{{stock.[0].mrp}}</del>
-
 							<p class="product-variant"> {{stock.[0].variant}}</p>
 							<p class="product-category"> {{category}}</p>
 							<div class="stock-details">
-								{{!-- <label for="stockSelect{{_id}}">Choose</label>
-								<select id="stockSelect{{_id}}" name="stockSelect{{_id}}"
-									onchange="updateProductDetails('{{_id}}', this)" style="width:80px">
-									{{#each stock}}
-									<option value="{{variant}}" data-price="{{price}}" data-stock="{{stock}}"
-										data-mrp="{{mrp}}" {{#if @first}} selected{{/if}}>{{variant}}</option>
-									{{/each}}
-								</select> --}}
 							</div>
-							{{!-- <button class="wishlist-btn{{#if inWishlist}} added-to-wishlist{{/if}}"
-								data-product-id="{{_id}}" data-product-image="{{imageUrl}}"
-								data-product-name="{{productName}}" data-product-price="{{stock.[0].price}}"
-								data-product-variant="{{stock.[0].variant}}">
-								<i class="bi bi-heart-fill"></i>
-							</button> --}}
-
 							{{#if inWishlist}}
 							<a href="#" class="wishlist-btn" style="color: red;" data-product-id="{{_id}}"><i
 									class="bi bi-heart-fill"></i></a>
@@ -451,13 +430,15 @@ const productHTML = `
             <div class="stock-details">
                 <!-- Any additional details you want to display -->
             </div>
-            ${product.inWishlist ? '<a href="#" class="wishlist-btn" style="color: red;" data-product-id="${product._id}"><i class="bi bi-heart-fill"></i></a>' : '<a class="wishlist-btn" id="addToWishlist" data-product-id="${product._id}"><i class="bi bi-heart"></i></a>'}
+${product.inWishlist ? `<a href="#" class="wishlist-btn" style="color: red;" data-product-id="${product._id}"><i class="bi bi-heart-fill"></i></a>` : `<a class="wishlist-btn" id="addToWishlist" data-product-id="${product._id}"><i class="bi bi-heart"></i></a>`}
         </div>
     </div>
 `;
 
 
 				productsContainer.insertAdjacentHTML('beforeend', productHTML);
+				setWishlistIconColor(product._id);
+
 			});
 		}
 

@@ -6,6 +6,7 @@ const Product=require('../models/products')
 const axios = require('axios');
 const mongoose = require('mongoose');
 const Admin = require('../models/admin')
+const Order =require('../models/order')
 const { error } = require('jquery')
 const { ObjectId } = mongoose.Types;
 
@@ -567,8 +568,6 @@ const wishlistAdd = async (req, res) => {
              return res.status(200).json({ success: true, });
         
         }
-        
-        
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
@@ -690,31 +689,59 @@ const wishlisttoCart=async(req,res)=>{
 
 
 
+
+
+
+
 let checkOut = async (req, res) => {
     try {
-        // Assuming you have a User model
-        
+        // Retrieve user data including userAddress and cart
+        const user = await User.findById(req.user.id);
+        const userId=req.user.id
+        console.log('userId',userId)
+        // Check if the user has a stored address
+        if (user.userAddress) {
+            const { name, email, phoneNumber, district, place, address, pincode } = user.userAddress;
+            let userAddress=user.userAddress
+            const userId=req.user.id
+            console.log('userId',userId)
 
-            const user = await User.findById(req.user.id).select('cart');
-            const cartItems = user.cart;
-            const total=user.cart.total;
-            const totalmrp=user.cart.totalmrp
-            console.log(cartItems);
-            const shipping=60
-            
-            const totalAmount=total+shipping
-            res.render('user/checkOut', { cartItems,total,totalmrp,shipping,totalAmount });
-        
+            res.render('user/checkOut', {
+                // userAddress,
+                userId,
+                name, email, phoneNumber, district, place, address, pincode,
+                userAddress,
+                cartItems: user.cart,
+                total: user.cart.total,
+                totalmrp: user.cart.totalmrp,
+                shipping: 60,
+                totalAmount: user.cart.total + 60 ,
+                
+            });
+        } else {
+            res.render('user/checkOut', {
+                cartItems: user.cart,
+                total: user.cart.total,
+                totalmrp: user.cart.totalmrp,
+                shipping: 60,
+                totalAmount: user.cart.total + 60 ,
+               
+            });
+        }
     } catch (error) {
         console.error('Error during checkout:', error);
         res.status(500).send('Internal Server Error');
     }
-}
+};
+
+
+
+
 
 let singleCheckOut=async(req,res)=>{
     try {
         const { productName, selectedVariant, price, mrp } = req.body;
-        console.log('checkout page adding',req.body);
+        // console.log('checkout page adding',req.body);
         if (productName && selectedVariant && price && mrp) {
             // Render the singleCheckOut view and pass the data to it
             res.render('user/singleCheckOut', { productName, selectedVariant, price, mrp });
@@ -739,6 +766,74 @@ let singleCheckOutget = async (req, res) => {
     } catch (error) {
         console.log('Error in singleCheckOutget:', error);
         
+    }
+}
+
+let saveAddress = async (req, res) => {
+    try {
+        const { Name, email, phoneNumber, district, place, address, pincode } = req.body;
+        const userId = req.user.id; // Assuming you have the user ID in the request object
+        
+        // Construct the user address object
+        const userAddress = {
+            name: Name,
+            email: email,
+            phoneNumber: phoneNumber,
+            district: district,
+            place: place,
+            address: address,
+            pincode: pincode
+        };
+
+        // Update the user document with the new address
+        const updatedUser = await User.findByIdAndUpdate(userId, { userAddress: userAddress }, { new: true });
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        console.log('User address updated:', updatedUser);
+        
+        // Redirect the user to the checkout page after address update
+        res.redirect('/checkOut');
+    } catch (error) {
+        console.log('Error:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+
+
+const placeOrder = async (req, res) => {
+    try {
+        const { user, body } = req;
+
+        // Extract checkout details from the request body
+        const { userAddress, paymentMethod } = body;
+
+        // Extract items from the user's cart
+        const items = user.cart.map(item => ({
+            product: item.product, // Assuming product is an ObjectId
+            quantity: item.quantity,
+            variant: item.variant,
+            price: item.productPrice // Assuming productPrice is the price of the item
+        }));
+
+        // Create a new order using the extracted data
+        const newOrder = new Order({
+            user: user.id,
+            items,
+            userAddress,
+            paymentMethod
+        });
+
+        // Save the order to the database
+        const savedOrder = await newOrder.save();
+
+        res.status(201).json(savedOrder);
+    } catch (err) {
+        console.error('Error placing order:', err);
+        res.status(500).json({ error: 'Failed to place order' });
     }
 }
 
@@ -779,8 +874,7 @@ module.exports={
     deleteCart,
     incrementQuantity,
     decrementQuantity,
-    // filterProducts,
-    // sortProducts,
+   
     sortAndFilterProducts,
 
     wishlistAdd,
@@ -790,6 +884,7 @@ module.exports={
     checkOut,
     singleCheckOut,
     singleCheckOutget,
-    // price,
+    saveAddress,
+    placeOrder,
     profile
 }

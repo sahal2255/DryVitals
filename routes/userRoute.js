@@ -54,18 +54,19 @@ router.get('/singleCheckOut',userAuth,userController.singleCheckOutget)
 
 
 router.post('/product/sortAndFilterProducts',userController.sortAndFilterProducts)
-// router.post('/session/setCategory',userController.sortAndFilterProducts)
 
-//single product checkout
 
-// router.post('/checkOut',userAuth,userController.checkOut)
-// router.get('/checkOut',userAuth,userController.checkOut)
+router.post('/saveAddress',userAuth,userController.saveAddress)
+router.get('/saveAddress',userAuth,userController.saveAddress)
+
 
 router.get('/profile',userAuth,userController.profile)
 
 
 router.get('/checkOut',userAuth,userController.checkOut)
+router.get('/orders',userAuth,userController.saveAddress)
 
+router.post('/placeOrder',userAuth,userController.placeOrder)
 
 
 
