@@ -804,38 +804,188 @@ let saveAddress = async (req, res) => {
 
 
 
+
+
 const placeOrder = async (req, res) => {
     try {
-        const { user, body } = req;
+        const userId = req.user.id;
+        console.log(userId);
+        const selectedPaymentMethod = req.body.selectedPaymentMethod;
+console.log(selectedPaymentMethod);
+        // Retrieve the user document including userAddress and cart fields
+        const user = await User.findById(userId, 'userAddress cart');
 
-        // Extract checkout details from the request body
-        const { userAddress, paymentMethod } = body;
+        // Extract userAddress and cart from the retrieved user document
+        const { userAddress, cart } = user;
 
-        // Extract items from the user's cart
-        const items = user.cart.map(item => ({
-            product: item.product, // Assuming product is an ObjectId
-            quantity: item.quantity,
-            variant: item.variant,
-            price: item.productPrice // Assuming productPrice is the price of the item
-        }));
-
-        // Create a new order using the extracted data
         const newOrder = new Order({
-            user: user.id,
-            items,
-            userAddress,
-            paymentMethod
+            userId: userId, 
+            items: cart.product.map(item => ({
+                product: item.productId, 
+                quantity: item.quantity,
+                productVariant: item.productVariant, // Assuming variant is stored in variant field
+                productPrice: item.productPrice
+            })),
+            userAddress: { 
+                ...userAddress
+            },
+            selectedPaymentMethod: selectedPaymentMethod, // Set the payment method
+            cart: cart, // Include the entire cart data if needed
         });
 
         // Save the order to the database
         const savedOrder = await newOrder.save();
+        console.log('Order saved successfully:', savedOrder);
 
-        res.status(201).json(savedOrder);
+        // Respond with success message or saved order details
+        res.status(200).json({ message: 'Order placed successfully', order: savedOrder });
     } catch (err) {
         console.error('Error placing order:', err);
         res.status(500).json({ error: 'Failed to place order' });
     }
 }
+
+
+
+// let order = async (req, res) => {
+//     const userId = req.user.id;
+//     console.log('Order page for user:', userId);
+
+//     try {
+//         // Assuming you have a model named Order for storing order details
+//         const orderDetails = await Order.aggregate([
+//             {
+//                 $match: {
+//                     userId:new mongoose.Types.ObjectId(userId) // Assuming userId is stored as ObjectId
+//                 }
+//             },
+//             // Additional stages if needed
+//         ]);
+
+//         console.log('Order details:', orderDetails);
+
+//         // Render the order page with order details
+//         res.render('user/order', { orderDetails });
+//     } catch (error) {
+//         console.error('Error fetching order details:', error);
+//         res.status(500).send('Internal Server Error');
+//     }
+// }
+
+// let order = async (req, res) => {
+//     const userId = req.user.id;
+//     console.log('Order page for user:', userId);
+
+//     try {
+//         // Assuming you have a model named Order for storing order details
+//         const orderDetails = await Order.aggregate([
+//             {
+//                 $match: {
+//                     userId: new mongoose.Types.ObjectId(userId)
+//                 }
+//             },
+//             {
+//                 $project: {
+//                     _id: 1, // Include the order ID
+//                     userId: 1, // Include the user ID
+//                     userAddress: { $objectToArray: '$userAddress' }, 
+//                     selectedPaymentMethod: 1,
+//                     cart: 1 
+//                 }
+//             },
+//             {
+//                 $unwind: '$userAddress' // Unwind the userAddress array
+//             },
+//             {
+//                 $group: {
+//                     _id: '$_id',
+//                     userId: { $first: '$userId' },
+//                     userAddress: {
+//                         $push: {
+//                             k: '$userAddress.k',
+//                             v: '$userAddress.v'
+//                         }
+//                     },
+//                     cart: { $first: '$cart' }
+//                 }
+//             },
+//             {
+//                 $addFields: {
+//                     userAddress: { $arrayToObject: '$userAddress' }
+//                 }
+//             }
+//         ]);
+
+//         console.log(orderDetails);
+
+//         // Render the order page with order details
+//         res.render('user/order', { orderDetails });
+//     } catch (error) {
+//         console.error('Error fetching order details:', error);
+//         res.status(500).send('Internal Server Error');
+//     }
+// }
+
+
+
+let order = async (req, res) => {
+    const userId = req.user.id;
+    console.log('Order page for user:', userId);
+
+    try {
+        // Assuming you have a model named Order for storing order details
+        const orderDetails = await Order.aggregate([
+            {
+                $match: {
+                    userId: new mongoose.Types.ObjectId(userId)
+                }
+            },
+            {
+                $project: {
+                    _id: 1, // Include the order ID
+                    userId: 1, // Include the user ID
+                    userAddress: { $objectToArray: '$userAddress' }, 
+                    selectedPaymentMethod: 1,
+                    cart: 1 
+                }
+            },
+            {
+                $unwind: '$userAddress' // Unwind the userAddress array
+            },
+            {
+                $group: {
+                    _id: '$_id',
+                    userId: { $first: '$userId' },
+                    userAddress: {
+                        $push: {
+                            k: '$userAddress.k',
+                            v: '$userAddress.v'
+                        }
+                    },
+                    selectedPaymentMethod: { $first: '$selectedPaymentMethod' },
+                    cart: { $first: '$cart' }
+                }
+            },
+            {
+                $addFields: {
+                    userAddress: { $arrayToObject: '$userAddress' }
+                }
+            }
+        ]);
+
+        console.log(orderDetails);
+
+        // Render the order page with order details
+        res.render('user/order', { orderDetails });
+    } catch (error) {
+        console.error('Error fetching order details:', error);
+        res.status(500).send('Internal Server Error');
+    }
+}
+
+
+
+
 
 
 //   get user profile page
@@ -886,5 +1036,6 @@ module.exports={
     singleCheckOutget,
     saveAddress,
     placeOrder,
+    order,
     profile
 }

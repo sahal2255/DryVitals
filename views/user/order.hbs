@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Include your custom CSS file -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Custom CSS styles */
+        body {
+            background-color: #acc3db;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+
+        .container {
+            margin-top: 70px;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background-color: #582c00;
+            color: #fff;
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .order-summary {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .order-summary table {
+            width: 100%;
+            margin-bottom: 0;
+            border-collapse: collapse;
+        }
+
+        .order-summary th,
+        .order-summary td {
+            padding: 10px;
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid #dee2e6;
+        }
+
+        .order-summary th {
+            background-color: #f8f9fa;
+            color: #495057;
+        }
+
+        .order-total {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+            border-radius: 0 0 10px 10px;
+            text-align: end;
+        }
+
+        .delivery-details {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            /* padding: 20px; */
+
+        }
+
+        .delivery-details p {
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background-color: #22364b;
+            border-color: #007bff;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        /* Additional styling */
+        .btn-primary {
+            width: 100%;
+        }
+
+        .order-summary th:first-child,
+        .order-summary td:first-child {
+            text-align: left;
+        }
+
+        .order-summary th:last-child,
+        .order-summary td:last-child {
+            text-align: right;
+        }
+
+        .order-total {
+            text-align: right;
+        }
+
+        .delivery-details p {
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">Order Details</h1>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card order-summary">
+                    <div class="card-header">
+                        <h2 class="mb-0">Order Summary</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Image</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+            {{#each orderDetails.cart.product}}
+                <tr>
+                    <td>{{this.productVariant}}</td>
+                    <td><img src="{{this.product.image}}" alt="{{this.product.name}}" style="width: 50px; height: auto;"></td>
+                    <td>${{this.productPrice}}</td>
+                    <td>{{this.quantity}}</td>
+                    <td>${{this.quantity this.productPrice}}</td>
+                </tr>
+            {{/each}}
+        {{!-- {{/each}} --}}
+    </tbody>
+</table>
+
+                        </div>
+                        <div class="order-total">
+                            <h3 class="mb-0">Total Amount: <span id="total-amount"></span></h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card delivery-details">
+                    <div class="card-header">
+                        <h2 class="mb-0">Delivery Address</h2>
+                    </div>
+                    {{!-- {{orderDetails.userAddress.name}} --}}
+                    <div class="card-body">
+                        <p><strong>Name:</strong> <span id="name">{{#if orderDetails.[0].userAddress}}
+                                {{orderDetails.[0].userAddress.name}} {{/if}}</span></p>
+                        <p><strong>Email:</strong> <span id="email">{{#if orderDetails.[0].userAddress}}
+                                {{orderDetails.[0].userAddress.email}} {{/if}}</span></p>
+                        <p><strong>Phone:</strong> <span id="phone">{{#if orderDetails.[0].userAddress}}
+                                {{orderDetails.[0].userAddress.phoneNumber}} {{/if}}</span></p>
+                        <p><strong>Address:</strong> <span id="address">{{#if orderDetails.[0].userAddress}}
+                                {{orderDetails.[0].userAddress.address}} {{/if}}</span></p>
+                        <p><strong>Pincode:</strong> <span id="pincode">{{#if orderDetails.[0].userAddress}}
+                                {{orderDetails.[0].userAddress.pincode}} {{/if}}</span></p>
+                    </div>
+
+                    {{#each orderDetails}}
+                    <div class="card-body">
+                        <p><strong>Payment Method:</strong> <span id="payment-method">{{selectedPaymentMethod}}</span>
+                        </p>
+                        <button class="btn btn-primary mt-3">Track Order</button>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Include Axios and SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <!-- Include your custom JavaScript file -->
+    <script src="scripts.js"></script>
+</body>
+
+</html>

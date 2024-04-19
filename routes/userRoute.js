@@ -68,6 +68,7 @@ router.get('/orders',userAuth,userController.saveAddress)
 
 router.post('/placeOrder',userAuth,userController.placeOrder)
 
+router.get('/order',userAuth,userController.order)
 
 
 module.exports=router

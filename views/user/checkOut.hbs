@@ -351,7 +351,7 @@
 							</tr>
 						</tbody>
 					</table>
-					<button id="placeOrderBtn" >Place Order</button>
+					<button id="placeOrderBtn" onclick="placeOrder()">Place Order</button>
 				</div>
 			</div>
 		</div>
@@ -483,12 +483,48 @@
 		}
 
 
-	
+window.placeOrder = function () {
+    var selectedPaymentMethod = document.getElementById('payment-method').value;
+    if (selectedPaymentMethod === "defult") {
+        alert("Please select a payment method.");
+        return;
+    }
+
+    axios.post('/placeOrder', {
+        selectedPaymentMethod: selectedPaymentMethod
+    })
+    .then(function (response) {
+        console.log('Order placed successfully!');
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Order placed successfully!',
+        })
+		.then((result)=>{
+			if(result.isConfirmed){
+				window.location.href='/order'
+			}
+		})
+    })
+    .catch(function (error) {
+        console.error('Error placing order:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Failed to place order. Please try again later.',
+        });
+    });
+}
+
+
+
+
+
 	</script>
 
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<!-- jquery -->
 	<script src="/assets/js/jquery-1.11.3.min.js"></script>
 	<!-- bootstrap -->
