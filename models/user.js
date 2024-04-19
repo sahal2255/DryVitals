@@ -67,7 +67,7 @@ const userSchema=new mongoose.Schema({
     }]
 },
 
-userAddress:{
+userAddress:[{
     name:{
         type:String,
         required:true
@@ -100,7 +100,8 @@ userAddress:{
         type:Boolean,
         default:false
     }
-}
+
+}]
 
 
 });

@@ -237,6 +237,9 @@
 										<div class="billing-address-form">
 											<form action="/saveAddress" method="POST"
 												onsubmit="return saveAddress(event)">
+												{{#if userAddress}}
+												{{#with userAddress.[0]}}
+												<!-- Access the first address object if exists -->
 												<p><input type="text" placeholder="Name" id="name" name="Name"
 														value="{{name}}"></p>
 												<p id="nameError" class="error"></p>
@@ -246,35 +249,12 @@
 												<p><input type="number" placeholder="Phone" id="phone"
 														name="phoneNumber" value="{{phoneNumber}}"></p>
 												<p id="phoneError" class="error"></p>
-												{{#if district}}
 												<p><input type="text" value="{{district}}"></p>
-												{{else}}
-												<p>
-													<select name="district" id="district" name="district">
-														<option value="" selected disabled>Select District</option>
-														<option value="Thiruvananthapuram">Thiruvananthapuram</option>
-														<option value="Kollam">Kollam</option>
-														<option value="Pathanamthitta">Pathanamthitta</option>
-														<option value="Alappuzha">Alappuzha</option>
-														<option value="Kottayam">Kottayam</option>
-														<option value="Idukki">Idukki</option>
-														<option value="Ernakulam">Ernakulam</option>
-														<option value="Thrissur">Thrissur</option>
-														<option value="Palakkad">Palakkad</option>
-														<option value="Malappuram">Malappuram</option>
-														<option value="Kozhikode">Kozhikode</option>
-														<option value="Wayanad">Wayanad</option>
-														<option value="Kannur">Kannur</option>
-														<option value="Kasaragod">Kasaragod</option>
-													</select>
-												</p>
-												{{/if}}
-												<p id="selectError" class="error"></p>
 												<p><input type="text" placeholder="Place" id="place" name="place"
 														value="{{place}}"></p>
 												<p id="placeError" class="error"></p>
 												{{#if address}}
-												<p><input type="text " style="height: 100px;" value="{{address}}"></p>
+												<p><input type="text" style="height: 100px;" value="{{address}}"></p>
 												{{else}}
 												<p><textarea placeholder="Address" id="address"
 														name="address"></textarea></p>
@@ -283,11 +263,43 @@
 												<p><input type="number" placeholder="Pincode" id="pincode"
 														name="pincode" value="{{pincode}}"></p>
 												<p id="pincodeError" class="error"></p>
-												<button type="submit" id="submitAddress">Save Adress</button>
-
+												{{/with}}
+												{{else}}
+												<!-- If no userAddress exists, display form fields to input a new address -->
+												<p><input type="text" placeholder="Name" id="name" name="Name"></p>
+												<p id="nameError" class="error"></p>
+												<p><input type="email" placeholder="Email" id="email" name="email"></p>
+												<p id="emailError" class="error"></p>
+												<p><input type="number" placeholder="Phone" id="phone"
+														name="phoneNumber"></p>
+												<p id="phoneError" class="error"></p>
+												<p>
+													<select name="district" id="district" name="district">
+														<option value="" selected disabled>Select District</option>
+														<option value="Thiruvananthapuram">Thiruvananthapuram</option>
+														<option value="Kollam">Kollam</option>
+														<!-- Add other district options here -->
+													</select>
+												</p>
+												<p id="selectError" class="error"></p>
+												<p><input type="text" placeholder="Place" id="place" name="place"></p>
+												<p id="placeError" class="error"></p>
+												<p><textarea placeholder="Address" id="address"
+														name="address"></textarea></p>
+												<p id="addressError" class="error"></p>
+												<p><input type="number" placeholder="Pincode" id="pincode"
+														name="pincode"></p>
+												<p id="pincodeError" class="error"></p>
+												{{/if}}
+												{{#if userAddress}}
+												<p>hello</p>
+												{{else}}
+												<button type="submit" id="submitAddress">Save Address</button>
+												{{/if}}
 											</form>
 										</div>
 									</div>
+
 								</div>
 
 							</div>
@@ -484,6 +496,13 @@
 
 
 window.placeOrder = function () {
+    var hasAddress = {{#if userAddress}}true{{else}}false{{/if}};
+    if (!hasAddress) {
+        // User does not have a saved address, show message and return
+        alert("Please save your address before placing the order.");
+        return;
+    }
+
     var selectedPaymentMethod = document.getElementById('payment-method').value;
     if (selectedPaymentMethod === "defult") {
         alert("Please select a payment method.");
@@ -500,11 +519,11 @@ window.placeOrder = function () {
             title: 'Success!',
             text: 'Order placed successfully!',
         })
-		.then((result)=>{
-			if(result.isConfirmed){
-				window.location.href='/order'
-			}
-		})
+        .then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/order';
+            }
+        });
     })
     .catch(function (error) {
         console.error('Error placing order:', error);
@@ -514,7 +533,7 @@ window.placeOrder = function () {
             text: 'Failed to place order. Please try again later.',
         });
     });
-}
+};
 
 
 

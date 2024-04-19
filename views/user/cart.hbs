@@ -195,7 +195,7 @@
         </tr>
     </thead>
     <tbody>
-		
+		{{#if data}}
         {{#each data}}
         <tr class="table-body-row" id="data-product-id">
 			{{!-- <td>{{productId}}</td> --}}
@@ -214,6 +214,9 @@
             <td class="product-price" id="totalPrice_{{this.productId}}">₹{{productPrice}}</td>
         </tr>
         {{/each}}
+		{{else}}
+		<p>no orders</p>
+		{{/if}}
     </tbody>
 </table>
 {{!-- <i class="fas fa-trash-alt"></i> --}}
