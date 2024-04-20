@@ -8,24 +8,20 @@ const userRoute=require('./routes/userRoute')
 const adminRoute=require('./routes/adminRoute')
 const app=express()
 const session = require('express-session');
+const Razorpay=require('razorpay')
 
 
 app.use((req, res, next) => {
   res.setHeader('Cache-Control', 'no-store');
   next();
 });
-// app.use(session({
-//   secret: 'your-secret-key',
-//   resave: false,
-//   saveUninitialized: true
-// }));
 
-// app.post('/session/setCategory', (req, res) => {
-//   const { category } = req.body;
-//   req.session.selectedCategory = category;
-//   console.log(req.body);
-//   res.sendStatus(200);
+// const razorpay = new Razorpay({
+//   key_id: 'rzp_test_1bD9cj9uL4sy4Y',
+//   key_secret: '7tMWK4GYRa7UuOOqSHmgsao3'
 // });
+
+
 
 app.use(express.static('public'))
 app.use(express.static(path.join(__dirname,'views')))
@@ -52,7 +48,7 @@ mongoose.connect('mongodb://localhost:27017/DryVitals')
 })
 
 
-const PORT = process.env.PORT || 4251;
+const PORT = process.env.PORT ||4251 ;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

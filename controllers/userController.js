@@ -9,6 +9,8 @@ const Admin = require('../models/admin')
 const Order =require('../models/order')
 const { error } = require('jquery')
 const { ObjectId } = mongoose.Types;
+const razorpay = require('../config/razorpay')
+// const Razorpay = require('razorpay')
 
 
 require('dotenv').config()
@@ -870,85 +872,6 @@ const placeOrder = async (req, res) => {
 
 
 
-
-
-
-// const order = async (req, res) => {
-//     const userId = req.user.id;
-//     console.log('Order page for user:', userId);
-
-//     try {
-//         const orderDetails = await Order.aggregate([
-//             {
-//                 $match: {
-//                     userId: new mongoose.Types.ObjectId(userId)
-//                 }
-//             },
-//             {
-//                 $lookup: {
-//                     from: 'users',
-//                     localField: 'userId',
-//                     foreignField: '_id',
-//                     as: 'userData'
-//                 }
-//             },
-//             {
-//                 $unwind: '$userData'
-//             },
-//             {
-//                 $unwind: '$userData.userAddress'
-//             },
-//             {
-//                 $project: {
-//                     _id: 1,
-//                     userId: 1,
-//                     userAddress: '$userData.userAddress',
-//                     selectedPaymentMethod: 1,
-//                     totalAmount: 1,
-//                     cart: 1,
-//                     cartProducts: '$cart.product' // Rename to cartProducts to avoid confusion
-//                 }
-//             },
-//             {
-//                 $unwind: '$cartProducts'
-//             },
-//             {
-//                 $lookup: {
-//                     from: 'products',
-//                     localField: 'cartProducts.productId',
-//                     foreignField: '_id',
-//                     as: 'productDetails'
-//                 }
-//             },
-//             {
-//                 $addFields: {
-//                     'cartProducts.productImage': { 
-//                         $arrayElemAt: ['$productDetails.imageUrl', 0] 
-//                     }
-//                 }
-//             },
-//             {
-//                 $group: {
-//                     _id: '$_id',
-//                     userId: { $first: '$userId' },
-//                     userAddress: { $push: '$userAddress' },
-//                     selectedPaymentMethod: { $first: '$selectedPaymentMethod' },
-//                     totalAmount: { $first: '$totalAmount' },
-//                     cart: { $first: '$cart' },
-//                     cartProducts: { $push: '$cartProducts' }
-//                 }
-//             }
-//         ]);
-
-//         console.log(orderDetails);
-
-//         res.render('user/order', { orderDetails });
-//     } catch (error) {
-//         console.error('Error fetching order details:', error);
-//         res.status(500).send('Internal Server Error');
-//     }
-// }
-
 const order = async (req, res) => {
     const userId = req.user.id;
     console.log('Order page for user:', userId);
@@ -1012,6 +935,9 @@ const order = async (req, res) => {
                     cart: { $first: '$cart' },
                     cartProducts: { $push: '$cartProducts' }
                 }
+            },
+            {
+                $sort: { createdAt: 1 } // Sort by createdAt field in descending order (most recent first)
             }
         ]);
 
@@ -1044,6 +970,63 @@ const order = async (req, res) => {
 
 
 
+// const razorpaypayment=async(req,res)=>{
+//     const {amount}=req.body;
+//     const razorpay=new Razorpay({
+//         key_id:'rzp_test_1bD9cj9uL4sy4Y',
+//         key_secret:'7tMWK4GYRa7UuOOqSHmgsao3'
+//     }) 
+//     res.json({ok:'ok'})
+    
+// }
+
+
+const razorpaypayment = async (req, res) => {
+    try {
+        const { totalAmount } = req.body;
+
+        console.log('raz amount', req.body);
+        const options = {
+            amount: totalAmount * 100, // amount in paise (1 INR = 100 paise)
+            currency: 'INR',
+            receipt: 'order_rcptid_' + Date.now(),
+            
+            
+        };
+
+        const order = await razorpay.orders.create(options);
+        console.log(order);
+        console.log('raz amount',order.amount);
+        res.json({ orderId: order.id, amount: order.amount });
+    } catch (error) {
+        console.error('Error creating Razorpay order:', error);
+        res.status(500).json({ error: 'Failed to create Razorpay order' });
+    }
+};
+
+
+let singleOrderDetails = async (req, res) => {
+    try {
+        const userId = req.user.id; 
+        console.log(userId);
+        const orderId = req.params.orderId; // Assuming order ID is passed as a route parameter
+
+        console.log('User ID:', userId);
+        console.log('Order ID:', orderId);
+
+        const order = await Order.findOne({ _id: orderId, userId: userId });
+
+        if (!order) {
+            return res.status(404).json({ error: 'Order not found' });
+        }
+
+        // If order is found, return it
+        res.json(order);
+    } catch (error) {
+        console.error('Error fetching order details:', error);
+        res.status(500).json({ error: 'Failed to fetch order details' });
+    }
+};
 
 
 
@@ -1075,5 +1058,7 @@ module.exports={
     saveAddress,
     placeOrder,
     order,
-    profile
+    profile,
+    razorpaypayment,
+    singleOrderDetails
 }

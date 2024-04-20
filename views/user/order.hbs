@@ -8,7 +8,7 @@
     <!-- Include Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Include your custom CSS file -->
-    <link rel="stylesheet" href="styles.css">
+    
     <style>
         /* Custom CSS styles */
         body {
@@ -122,7 +122,7 @@
 </head>
 
 <body>
-    
+
     <div class="container">
         <h1 class="text-center mb-4">Order Details</h1>
         <div class="row">
@@ -150,27 +150,28 @@
                                 <tbody>
                                     {{#each this.cartProducts}}
                                     <tr>
-                                        <td>{{./createdAt}}</td>
-                                        {{!-- <td>{{this._id}}</td> --}}
-                                        {{!-- <td><img src="{{this.productImage}}" alt="Product Image" style="width: 100px;"> --}}
-                                        {{!-- </td> --}}
-                                        {{!-- <td>{{this.quantity}}</td>
-                                        <td>{{this.productVariant}}</td> --}}
+                                        <td>
+                                            {{#with createdAt}}
+                                            {{../createdAt}}
+                                            {{/with}}
+                                        </td>
+                                        
                                         <td>{{../selectedPaymentMethod}}</td>
-                                        {{!-- <td>₹{{this.productPrice}}</td> --}}
-                                        <td>{{../totalAmount}}</td>
-<td><button class="btn btn-primary view-btn" data-toggle="modal" data-target="#productModal">View</button></td>
-                                        </tr>
+                                        <td>{{../totalAmount}}</td> 
+                                        <td><button class="viewOrderDetails" data-toggle="modal"
+                                                data-target="#productModal" data-product-id="{{this._id}}" type="button">View</button></td>
+                                    </tr>
                                     {{/each}}
-                                   
+
                                 </tbody>
                             </table>
                         </div>
                         <div class="order-total">
-                            {{!-- <h3 class="mb-0">Total Amount: <span id="total-amount">₹{{this.totalAmount}}</span></h3> --}}
+                            {{!-- <h3 class="mb-0">Total Amount: <span id="total-amount">₹{{this.totalAmount}}</span>
+                            </h3> --}}
                         </div>
                     </div>
-                        {{/each}}
+                    {{/each}}
                 </div>
             </div>
             <div class="col-md-12">
@@ -178,30 +179,23 @@
                     <div class="card-header">
                         <h2 class="mb-0">Delivery Address</h2>
                     </div>
-  
-{{#if orderDetails.length}}
-    <div class="card-body">
-        <p><strong>Name:</strong> <span id="name">{{orderDetails.[0].userAddress.name}}</span></p>
-        <p><strong>Email:</strong> <span id="email">{{orderDetails.[0].userAddress.email}}</span></p>
-        <p><strong>Phone:</strong> <span id="phone">{{orderDetails.[0].userAddress.phoneNumber}}</span></p>
-        <p><strong>District:</strong> <span id="district">{{orderDetails.[0].userAddress.district}}</span></p>
-        <p><strong>Place:</strong> <span id="place">{{orderDetails.[0].userAddress.place}}</span></p>
-        <p><strong>Address:</strong> <span id="address">{{orderDetails.[0].userAddress.address}}</span></p>
-        <p><strong>Pincode:</strong> <span id="pincode">{{orderDetails.[0].userAddress.pincode}}</span></p>
-    </div>
-{{/if}}
 
-
-
-
-
-
-                    {{!-- {{#each orderDetails}}
+                    {{#if orderDetails.length}}
                     <div class="card-body">
-                        <p><strong>Payment Method:</strong> <span
-                                id="payment-method">{{this.selectedPaymentMethod}}</span></p>
+                        <p><strong>Name:</strong> <span id="name">{{orderDetails.[0].userAddress.name}}</span></p>
+                        <p><strong>Email:</strong> <span id="email">{{orderDetails.[0].userAddress.email}}</span></p>
+                        <p><strong>Phone:</strong> <span id="phone">{{orderDetails.[0].userAddress.phoneNumber}}</span>
+                        </p>
+                        <p><strong>District:</strong> <span
+                                id="district">{{orderDetails.[0].userAddress.district}}</span></p>
+                        <p><strong>Place:</strong> <span id="place">{{orderDetails.[0].userAddress.place}}</span></p>
+                        <p><strong>Address:</strong> <span id="address">{{orderDetails.[0].userAddress.address}}</span>
+                        </p>
+                        <p><strong>Pincode:</strong> <span id="pincode">{{orderDetails.[0].userAddress.pincode}}</span>
+                        </p>
                     </div>
-                    {{/each}} --}}
+                    {{/if}}
+                    
 
 
                 </div>
@@ -209,7 +203,7 @@
         </div>
     </div>
 
-<div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -219,8 +213,16 @@
                 </button>
             </div>
             <div class="modal-body">
-                <!-- Your product details content goes here -->
-                <!-- Example: <p>Product Name: XYZ</p> -->
+               <div id="modalOrderDetails">
+    {{!-- {{#each orderDetails}}
+    {{this.cartProducts.[0].productName}}
+        {{#each this.cartProducts}}
+            <p>{{this._id}}</p>
+            <p>{{this.productName}}</p>
+        {{/each}}
+    {{/each}} --}}
+</div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -228,8 +230,61 @@
         </div>
     </div>
 </div>
-<!-- jQuery -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+
+    <script>
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            const day = date.getDate();
+            const month = getMonthName(date.getMonth());
+            const year = date.getFullYear();
+            return `${day} ${month} ${year}`;
+        }
+
+        function getMonthName(monthIndex) {
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            return monthNames[monthIndex];
+        }
+// Add a click event listener to the button that triggers the modal
+document.querySelectorAll('.viewOrderDetails').forEach(button => {
+    button.addEventListener('click', async function() {
+        try {
+            // Extract the order ID from the button's data attribute
+            const orderId = this.dataset.orderId;
+
+            const response = await axios.get(`/singleOrderDetails/${orderId}`);
+
+            // Check if the request was successful
+            if (response.status === 200) {
+                const orderDetails = response.data;
+
+                // Populate the modal with the received order details
+                document.getElementById('modalOrderDetails').innerHTML = `
+                    <p>Order ID: ${orderDetails._id}</p>
+                    <p>User ID: ${orderDetails.userId}</p>
+                    <!-- Add more order details here -->
+                `;
+
+                // Show the modal
+                $('#productModal').modal('show');
+            } else {
+                // Handle error responses
+                console.error('Failed to fetch order details:', response.data.error);
+                // Display an error message to the user
+            }
+        } catch (error) {
+            console.error('Error fetching order details:', error);
+            // Handle errors (e.g., display an error message to the user)
+        }
+    });
+});
+    
+        
+    </script>
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <!-- Include Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -237,8 +292,7 @@
     <!-- Include Axios and SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <!-- Include your custom JavaScript file -->
-    <script src="scripts.js"></script>
+    
 </body>
 
 </html>

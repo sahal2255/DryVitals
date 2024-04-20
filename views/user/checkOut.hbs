@@ -359,7 +359,8 @@
 							</tr>
 							<tr>
 								<td>Total</td>
-								<td>₹{{totalAmount}}</td>
+								<td >₹{{totalAmount}}</td>
+								<input type="hidden" id="total-amount" value="{{totalAmount}}">
 							</tr>
 						</tbody>
 					</table>
@@ -509,6 +510,8 @@ window.placeOrder = function () {
         return;
     }
 
+	if(selectedPaymentMethod==='cash-on-delivery'){
+
     axios.post('/placeOrder', {
         selectedPaymentMethod: selectedPaymentMethod
     })
@@ -533,13 +536,76 @@ window.placeOrder = function () {
             text: 'Failed to place order. Please try again later.',
         });
     });
-};
+}
+else if (selectedPaymentMethod === 'razorpay') {
+        // Handle Razorpay payment method
+        const totalAmount = document.getElementById('total-amount').value;
 
+        axios.post('/razorpay/placeOrder', { 
+            totalAmount: totalAmount
+        })
+        .then(response => {
+            console.log("Response from server:", response);
+            // Extract Razorpay order details from the server response
+            const { orderId, amount } = response.data;
 
+            // Initialize Razorpay payment
+            var options = {
+                key: '',
+                amount: amount, // amount in the smallest currency unit
+                currency: "INR",
+                order_id: orderId,
+                name: "Your Company Name",
+                description: "Description of the payment",
+                handler: function (response) {
+                    // Handle successful payment response
+                    console.log("Razorpay response:", response);
+                    // Call the server to store the order
+                    axios.post('/placeOrder', {
+                        selectedPaymentMethod: selectedPaymentMethod,
+                        razorpayOrderId: orderId,
+                        razorpayPaymentId: response.razorpay_payment_id
+                    })
+                    .then(orderResponse => {
+                        console.log('Order placed successfully!', orderResponse.data.order);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Order placed successfully!',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/order';
+                            }
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error placing order:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Failed to place order. Please try again later.',
+                        });
+                    });
+                }
+            };
 
-
-
+            var rzp = new Razorpay(options);
+            rzp.open();
+        })
+        .catch(error => {
+            console.error("Error while placing order with Razorpay:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Failed to place order with Razorpay. Please try again later.',
+            });
+        });
+    }
+}
 	</script>
+
+
+	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

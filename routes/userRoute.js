@@ -70,5 +70,8 @@ router.post('/placeOrder',userAuth,userController.placeOrder)
 
 router.get('/order',userAuth,userController.order)
 
+router.post('/razorpay/placeOrder',userAuth,userController.razorpaypayment)
+router.get('/singleOrderDetails',userAuth,userController.singleOrderDetails)
+
 
 module.exports=router
