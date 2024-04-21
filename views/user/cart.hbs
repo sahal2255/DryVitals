@@ -316,25 +316,38 @@
 		</div>
 	</div>
 	<!-- end footer -->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js" integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script>
 	
 		function deleteProduct(productId) {
-			console.log('deleting',productId)
-    		axios.delete(`/cart/delete-product/${productId}`)
-        .then(response => {
-			if(response.status===200){
+    // Display confirmation dialog using SweetAlert
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'Once deleted, you will not be able to recover this product!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, keep it'
+    }).then((result) => {
+        // Check if user confirmed the action
+        if (result.isConfirmed) {
+            // User confirmed, proceed with deletion
+            console.log('deleting', productId);
+            axios.delete(`/cart/delete-product/${productId}`)
+                .then(response => {
+                    if (response.status === 200) {
+                        console.log('Product deleted successfully');
+                        location.reload(); // Reload the page after deletion
+                    } else {
+                        console.log('Failed to delete product');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting product:', error);
+                });
+        }
+    });
+}
 
-            console.log('Product deleted successfully');
-			location.reload()
-			}else{
-				console.log('failed deled')
-			}
-        })
-        .catch(error => {
-            console.error('Error deleting product:', error);
-        });
-		}
     
 
 function incrementQuantity(productId) {
@@ -362,6 +375,10 @@ function decrementQuantity(productId) {
 
 	</script>
 	
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js" integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 	<!-- jquery -->
 	<script src="/assets/js/jquery-1.11.3.min.js"></script>
 	<!-- bootstrap -->

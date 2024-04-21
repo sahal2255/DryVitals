@@ -51,6 +51,50 @@
             vertical-align: middle;
             margin-right: 100px;
         }
+        .error {
+			color: red;
+			font-size: 14px;
+		}
+
+		.select-container {
+			position: relative;
+			width: 200px;
+		}
+
+		/* Style the select box */
+		.select-box {
+			width: 100%;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			background-color: #fff;
+			font-size: 16px;
+		}
+
+		/* Style the arrow */
+		.select-arrow {
+			position: absolute;
+			top: 50%;
+			right: 10px;
+			transform: translateY(-50%);
+		}
+
+		/* Style the options */
+		.select-box option {
+			background-color: #fff;
+			color: #000;
+		}
+
+		/* Hover effect */
+		.select-box:hover {
+			border-color: #666;
+		}
+
+		/* Focus effect */
+		.select-box:focus {
+			outline: none;
+			border-color: #333;
+		}
     </style>
 
 </head>
@@ -58,11 +102,11 @@
 <body>
 
     <!--PreLoader-->
-    <div class="loader">
+    {{!-- <div class="loader">
         <div class="loader-inner">
             <div class="circle"></div>
         </div>
-    </div>
+    </div> --}}
     <!--PreLoader Ends-->
 
     <!-- header -->
@@ -190,42 +234,79 @@
                                     data-parent="#accordionExample">
                                     <div class="card-body">
                                         <div class="billing-address-form">
-                                            <form action="" id="myForm" >
-                                                <p><input type="text" placeholder="Name" id="Name"></p>
-                                                <p id="nameError"></p>
-                                                <p><input type="email" placeholder="Email" id="Email"></p>
-                                                <p id="emailError"></p>
-                                                <p><input type="tel" placeholder="Phone" id="Phone"></p>
-                                                <p id="phoenError"></p>
-                                                <p>
-                                                    <select name="district" id="district">
-                                                        <option value="" selected disabled>Select District</option>
-                                                        <option value="Thiruvananthapuram">Thiruvananthapuram</option>
-                                                        <option value="Kollam">Kollam</option>
-                                                        <option value="Pathanamthitta">Pathanamthitta</option>
-                                                        <option value="Alappuzha">Alappuzha</option>
-                                                        <option value="Kottayam">Kottayam</option>
-                                                        <option value="Idukki">Idukki</option>
-                                                        <option value="Ernakulam">Ernakulam</option>
-                                                        <option value="Thrissur">Thrissur</option>
-                                                        <option value="Palakkad">Palakkad</option>
-                                                        <option value="Malappuram">Malappuram</option>
-                                                        <option value="Kozhikode">Kozhikode</option>
-                                                        <option value="Wayanad">Wayanad</option>
-                                                        <option value="Kannur">Kannur</option>
-                                                        <option value="Kasaragod">Kasaragod</option>
-                                                    </select>
-                                                </p>
-                                                <p id="selectError"></p>
-                                                <p><input type="text" placeholder="Place" id="Place"></p>
-                                                <p id="placeError"></p>
-                                                <p><textarea placeholder="Address"  id="Address"></textarea></p>
-                                                <p id="addressError"></p>
-                                                <p><input type="text" placeholder="Pincode" id="Pincode"></p>
-                                                <p id="pincodeError"></p>
-
-                                                    <button type="button" class="boxed-btn" onclick="validateForm()">Place Order</button>
-                                            </form>
+                                            <form action="/saveAddress" method="POST"
+												onsubmit="return saveAddress(event)">
+												{{#if userAddress}}
+												{{#with userAddress.[0]}}
+												<!-- Access the first address object if exists -->
+												<p><input type="text" placeholder="Name" id="name" name="Name"
+														value="{{name}}"></p>
+												<p id="nameError" class="error"></p>
+												<p><input type="email" placeholder="Email" id="email" name="email"
+														value="{{email}}"></p>
+												<p id="emailError" class="error"></p>
+												<p><input type="number" placeholder="Phone" id="phone"
+														name="phoneNumber" value="{{phoneNumber}}"></p>
+												<p id="phoneError" class="error"></p>
+												<p><input type="text" value="{{district}}"></p>
+												<p><input type="text" placeholder="Place" id="place" name="place"
+														value="{{place}}"></p>
+												<p id="placeError" class="error"></p>
+												{{#if address}}
+												<p><input type="text" style="height: 100px;" value="{{address}}"></p>
+												{{else}}
+												<p><textarea placeholder="Address" id="address"
+														name="address"></textarea></p>
+												<p id="addressError" class="error"></p>
+												{{/if}}
+												<p><input type="number" placeholder="Pincode" id="pincode"
+														name="pincode" value="{{pincode}}"></p>
+												<p id="pincodeError" class="error"></p>
+												{{/with}}
+												{{else}}
+												<!-- If no userAddress exists, display form fields to input a new address -->
+												<p><input type="text" placeholder="Name" id="name" name="Name"></p>
+												<p id="nameError" class="error"></p>
+												<p><input type="email" placeholder="Email" id="email" name="email"></p>
+												<p id="emailError" class="error"></p>
+												<p><input type="number" placeholder="Phone" id="phone"
+														name="phoneNumber"></p>
+												<p id="phoneError" class="error"></p>
+												<p>
+													<select name="district" id="district" name="district">
+														<option value="" selected disabled>Select District</option>
+														<option value="Thiruvananthapuram">Thiruvananthapuram</option>
+														<option value="Kollam">Kollam</option>
+														<option value="Alappuzha">Alappuzha</option>
+														<option value="Pathanamthitta">Pathanamthitta</option>
+														<option value="Kottayam">Kottayam</option>
+														<option value="Idukki">Idukki</option>
+														<option value="Ernakulam">Ernakulam</option>
+														<option value="Thrissur">Thrissur</option>
+														<option value="Palakkad">Palakkad</option>
+														<option value="Malappuram">Malappuram</option>
+														<option value="Kozhikode">Kozhikode</option>
+														<option value="Wayanad">Wayanad</option>
+														<option value="Kannur">Kannur</option>
+														<option value="Kasaragod">Kasaragod</option>
+													</select>
+												</p>
+												<p id="selectError" class="error"></p>
+												<p><input type="text" placeholder="Place" id="place" name="place"></p>
+												<p id="placeError" class="error"></p>
+												<p><textarea placeholder="Address" id="address"
+														name="address"></textarea></p>
+												<p id="addressError" class="error"></p>
+												<p><input type="number" placeholder="Pincode" id="pincode"
+														name="pincode"></p>
+												<p id="pincodeError" class="error"></p>
+												{{/if}}
+												{{#if userAddress}}
+												<p>hello</p>
+												{{else}}
+												<button type="submit" id="submitAddress">Save Address</button>
+												{{/if}}
+											</form>
                                         </div>
                                     </div>
                                 </div>
@@ -235,7 +316,13 @@
 
                     </div>
                 </div>
-
+<div class="select-container">
+							<select class="select-box" name="payment-method" id="payment-method">
+								<option value="defult" selected>Delivery</option>
+								<option value="cash-on-delivery">Cash On Delivery</option>
+								<option value="razorpay">RazorPay</option>
+							</select>
+						</div>
                 <div class="col-lg-4">
                     <div class="order-details-wrap">
                         <table class="order-details">
@@ -277,215 +364,245 @@
                                 <tr>
                                     <td>Total</td>
                                     <td>₹{{totalamount}}</td>
+                                    
+                                    <input type="hidden" id="total-amount" value="{{totalamount}}">
+
                                 </tr>
                             </tbody>
                         </table>
-                        <a href="#" class="boxed-btn">Place Order</a>
-                    </div>
+                    <button id="placeOrderBtn" onclick="placeOrder()">Place Order</button>                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- end check out section -->
-
-    <!-- logo carousel -->
-    <div class="logo-carousel-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="logo-carousel-inner">
-                        <div class="single-logo-item">
-                            <img src="/assets/img/company-logos/1.png" alt="">
-                        </div>
-                        <div class="single-logo-item">
-                            <img src="/assets/img/company-logos/2.png" alt="">
-                        </div>
-                        <div class="single-logo-item">
-                            <img src="/assets/img/company-logos/3.png" alt="">
-                        </div>
-                        <div class="single-logo-item">
-                            <img src="/assets/img/company-logos/4.png" alt="">
-                        </div>
-                        <div class="single-logo-item">
-                            <img src="/assets/img/company-logos/5.png" alt="">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- end logo carousel -->
-
-    <!-- footer -->
-    <div class="footer-area">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6">
-                    <div class="footer-box about-widget">
-                        <h2 class="widget-title">About us</h2>
-                        <p>Ut enim ad minim veniam perspiciatis unde omnis iste natus error sit voluptatem accusantium
-                            doloremque laudantium, totam rem aperiam, eaque ipsa quae.</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="footer-box get-in-touch">
-                        <h2 class="widget-title">Get in Touch</h2>
-                        <ul>
-                            <li>34/8, East Hukupara, Gifirtok, Sadan.</li>
-                            <li>support@fruitkha.com</li>
-                            <li>+00 111 222 3333</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="footer-box pages">
-                        <h2 class="widget-title">Pages</h2>
-                        <ul>
-                            <li><a href="index.html">Home</a></li>
-                            <li><a href="about.html">About</a></li>
-                            <li><a href="services.html">Shop</a></li>
-                            <li><a href="news.html">News</a></li>
-                            <li><a href="contact.html">Contact</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="footer-box subscribe">
-                        <h2 class="widget-title">Subscribe</h2>
-                        <p>Subscribe to our mailing list to get the latest updates.</p>
-                        <form action="index.html">
-                            <input type="email" placeholder="Email">
-                            <button type="submit"><i class="fas fa-paper-plane"></i></button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- end footer -->
-
-    <!-- copyright -->
-    <div class="copyright">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6 col-md-12">
-                    <p>Copyrights &copy; 2019 - <a href="https://imransdesign.com/">Imran Hossain</a>, All Rights
-                        Reserved.</p>
-                </div>
-                <div class="col-lg-6 text-right col-md-12">
-                    <div class="social-icons">
-                        <ul>
-                            <li><a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
-                            <li><a href="#" target="_blank"><i class="fab fa-twitter"></i></a></li>
-                            <li><a href="#" target="_blank"><i class="fab fa-instagram"></i></a></li>
-                            <li><a href="#" target="_blank"><i class="fab fa-linkedin"></i></a></li>
-                            <li><a href="#" target="_blank"><i class="fab fa-dribbble"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- end copyright -->
+    
 <script>
-    function validateForm() {
-        var name = document.getElementById('nameInput').value;
-        var email = document.getElementById('emailInput').value;
-        var phone = document.getElementById('phoneInput').value;
-        var district = document.getElementById('district').value;
-        var place = document.getElementById('placeInput').value;
-        var address = document.getElementById('addressInput').value;
-        var pincode = document.getElementById('pincodeInput').value;
+    		function saveAddress(event) {
+			event.preventDefault();
+			console.log("Save Address button clicked");
+			// Get form input values
+			var name = document.getElementById("name").value.trim();
+			var email = document.getElementById("email").value.trim();
+			var phone = document.getElementById("phone").value.trim();
+			var district = document.getElementById("district").value;
+			var place = document.getElementById("place").value.trim();
+			var address = document.getElementById("address").value.trim();
+			var pincode = document.getElementById("pincode").value.trim();
 
-        var nameError = document.getElementById('nameError');
-        var emailError = document.getElementById('emailError');
-        var phoneError = document.getElementById('phoneError');
-        var districtError = document.getElementById('districtError');
-        var placeError = document.getElementById('placeError');
-        var addressError = document.getElementById('addressError');
-        var pincodeError = document.getElementById('pincodeError');
+			// Reset error messages
+			document.getElementById("nameError").innerText = "";
+			document.getElementById("emailError").innerText = "";
+			document.getElementById("phoneError").innerText = "";
+			document.getElementById("selectError").innerText = "";
+			document.getElementById("placeError").innerText = "";
+			document.getElementById("addressError").innerText = "";
+			document.getElementById("pincodeError").innerText = "";
 
-        var isValid = true;
+			// Validation
+			var isValid = true;
 
-        // Name validation
-        if (!name.trim()) {
-            nameError.textContent = "Name is required";
-            isValid = false;
-        } else {
-            nameError.textContent = "";
-        }
+			if (name === "") {
+				document.getElementById("nameError").innerText = "Please enter your name";
+				isValid = false;
+			}
 
-        // Email validation
-        if (!email.trim()) {
-            emailError.textContent = "Email is required";
-            isValid = false;
-        } else {
-            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailPattern.test(email)) {
-                emailError.textContent = "Invalid email address";
-                isValid = false;
-            } else {
-                emailError.textContent = "";
-            }
-        }
+			if (email === "") {
+				document.getElementById("emailError").innerText = "Please enter your email";
+				isValid = false;
+			} else if (!isValidEmail(email)) {
+				document.getElementById("emailError").innerText = "Please enter a valid email address";
+				isValid = false;
+			}
 
-        // Phone validation
-        if (!phone.trim()) {
-            phoneError.textContent = "Phone number is required";
-            isValid = false;
-        } else {
-            var phonePattern = /^\d{10}$/; // Assuming a 10-digit phone number
-            if (!phonePattern.test(phone)) {
-                phoneError.textContent = "Invalid phone number";
-                isValid = false;
-            } else {
-                phoneError.textContent = "";
-            }
-        }
+			if (phone === "") {
+				document.getElementById("phoneError").innerText = "Please enter your phone number";
+				isValid = false;
+			} else if (!isValidPhone(phone)) {
+				document.getElementById("phoneError").innerText = "Phone Number Must Be 10 digits";
+				isValid = false;
+			}
 
-        // District validation
-        if (district === "") {
-            districtError.textContent = "Please select a district";
-            isValid = false;
-        } else {
-            districtError.textContent = "";
-        }
+			if (district === "") {
+				document.getElementById("selectError").innerText = "Please select a district";
+				isValid = false;
+			}
 
-        // Place validation
-        if (!place.trim()) {
-            placeError.textContent = "Place is required";
-            isValid = false;
-        } else {
-            placeError.textContent = "";
-        }
+			if (place === "") {
+				document.getElementById("placeError").innerText = "Please enter your place";
+				isValid = false;
+			}
 
-        // Address validation
-        if (!address.trim()) {
-            addressError.textContent = "Address is required";
-            isValid = false;
-        } else {
-            addressError.textContent = "";
-        }
+			if (address === "") {
+				document.getElementById("addressError").innerText = "Please enter your address";
+				isValid = false;
+			}
 
-        // Pincode validation
-        if (!pincode.trim()) {
-            pincodeError.textContent = "Pincode is required";
-            isValid = false;
-        } else {
-            var pincodePattern = /^\d{6}$/; // Assuming a 6-digit pincode
-            if (!pincodePattern.test(pincode)) {
-                pincodeError.textContent = "Invalid pincode";
-                isValid = false;
-            } else {
-                pincodeError.textContent = "";
-            }
-        }
+			if (pincode === "") {
+				document.getElementById("pincodeError").innerText = "Please enter your pincode";
+				isValid = false;
+			} else if (!isValidPincode(pincode)) {
+				document.getElementById("pincodeError").innerText = "Pincode should be exactly 6 digits";
+				isValid = false;
+			}
 
-        if (isValid) {
-            // If all fields are valid, you can submit the form or proceed with further actions
-            document.getElementById('myForm').button(); // Submit the form
-        }
+			if (isValid) {
+				// Send form data to the server using Axios
+				axios.post('/saveAddress', {
+					Name: name,
+					email: email,
+					phoneNumber: phone,
+					district: district,
+					place: place,
+					address: address,
+					pincode: pincode
+				})
+					.then(function (response) {
+						console.log('Form data saved successfully:', response.data);
+						// Show SweetAlert notification
+						Swal.fire({
+							icon: 'success',
+							title: 'Success',
+							text: 'Your address has been saved successfully!',
+							confirmButtonText: 'OK'
+						});
+					})
+					.catch(function (error) {
+						console.error('Error saving form data:', error);
+						// Show SweetAlert for error
+						Swal.fire({
+							icon: 'error',
+							title: 'Oops...',
+							text: 'Something went wrong! Please try again later.',
+							confirmButtonText: 'OK'
+						});
+					});
+			}
+		}
+
+		function isValidEmail(email) {
+			// Basic email validation
+			var emailRegex = /\S+@\S+\.\S+/;
+			return emailRegex.test(email);
+		}
+		function isValidPhone(phone) {
+			// Phone number validation (10 digits)
+			var phoneRegex = /^\d{10}$/;
+			return phoneRegex.test(phone);
+		}
+
+		function isValidPincode(pincode) {
+			// Pincode validation (6 digits)
+			var pincodeRegex = /^\d{6}$/;
+			return pincodeRegex.test(pincode);
+		}
+
+
+window.placeOrder = function () {
+    var hasAddress = {{#if userAddress}}true{{else}}false{{/if}};
+    if (!hasAddress) {
+        // User does not have a saved address, show message and return
+        alert("Please save your address before placing the order.");
+        return;
     }
+
+    var selectedPaymentMethod = document.getElementById('payment-method').value;
+    if (selectedPaymentMethod === "defult") {
+        alert("Please select a payment method.");
+        return;
+    }
+
+	if(selectedPaymentMethod==='cash-on-delivery'){
+
+    axios.post('/placeOrder', {
+        selectedPaymentMethod: selectedPaymentMethod
+    })
+    .then(function (response) {
+        console.log('Order placed successfully!');
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Order placed successfully!',
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/order';
+            }
+        });
+    })
+    .catch(function (error) {
+        console.error('Error placing order:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Failed to place order. Please try again later.',
+        });
+    });
+}
+else if (selectedPaymentMethod === 'razorpay') {
+        // Handle Razorpay payment method
+        const totalAmount = document.getElementById('total-amount').value;
+
+        axios.post('/razorpay/placeOrder', { 
+            totalAmount: totalAmount
+        })
+        .then(response => {
+            console.log("Response from server:", response);
+            // Extract Razorpay order details from the server response
+            const { orderId, amount } = response.data;
+
+            // Initialize Razorpay payment
+            var options = {
+                key: '',
+                amount: amount, // amount in the smallest currency unit
+                currency: "INR",
+                order_id: orderId,
+                name: "Your Company Name",
+                description: "Description of the payment",
+                handler: function (response) {
+                    // Handle successful payment response
+                    console.log("Razorpay response:", response);
+                    // Call the server to store the order
+                    axios.post('/placeOrder', {
+                        selectedPaymentMethod: selectedPaymentMethod,
+                        razorpayOrderId: orderId,
+                        razorpayPaymentId: response.razorpay_payment_id
+                    })
+                    .then(orderResponse => {
+                        console.log('Order placed successfully!', orderResponse.data.order);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Order placed successfully!',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/order';
+                            }
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error placing order:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Failed to place order. Please try again later.',
+                        });
+                    });
+                }
+            };
+
+            var rzp = new Razorpay(options);
+            rzp.open();
+        })
+        .catch(error => {
+            console.error("Error while placing order with Razorpay:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Failed to place order with Razorpay. Please try again later.',
+            });
+        });
+    }
+}
 </script>
 
     <!-- jquery -->

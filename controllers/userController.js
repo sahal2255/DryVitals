@@ -727,11 +727,19 @@ const checkOut = async (req, res) => {
 
 let singleCheckOut=async(req,res)=>{
     try {
+        const userId=req.user.id
+        console.log('hello',userId);
+        const user=await User.findById(userId)
         const { productName, selectedVariant, price, mrp } = req.body;
-        // console.log('checkout page adding',req.body);
         if (productName && selectedVariant && price && mrp) {
-            // Render the singleCheckOut view and pass the data to it
-            res.render('user/singleCheckOut', { productName, selectedVariant, price, mrp });
+            if(user.userAddress && user.userAddress.length > 0){
+                res.render('user/singleCheckOut', { productName, selectedVariant, price, mrp ,userAddress:user.userAddress});
+
+            }
+            else{
+                res.render('user/singleCheckOut', { productName, selectedVariant, price, mrp });
+
+            }
         } else {
             throw new Error('Missing required data.');
         }
@@ -743,12 +751,16 @@ let singleCheckOut=async(req,res)=>{
 
 let singleCheckOutget = async (req, res) => {
     try {
+        const userId=req.user.id
+        
+        const user=await User.findById(userId)
+       
         const { productName, selectedVariant, price, mrp } = req.query;
         const result = { productName, selectedVariant, price, mrp };
         console.log('checkout page getting', req.query);
         const shipping=60
         const totalamount=+result.price+shipping
-        res.render('user/singleCheckOut', { result,shipping,totalamount });
+        res.render('user/singleCheckOut', { result,shipping,totalmount,userAddress:user.userAddress });
          
     } catch (error) {
         console.log('Error in singleCheckOutget:', error);
@@ -941,7 +953,7 @@ const order = async (req, res) => {
             }
         ]);
 
-        console.log(orderDetails);
+        // console.log(orderDetails);
 
         res.render('user/order', { orderDetails });
     } catch (error) {
@@ -1014,20 +1026,39 @@ let singleOrderDetails = async (req, res) => {
         console.log('User ID:', userId);
         console.log('Order ID:', orderId);
 
-        const order = await Order.findOne({ _id: orderId, userId: userId });
+        const singleorder = await Order.findOne({ _id: orderId, userId: userId });
+        console.log(singleorder);
 
-        if (!order) {
+        if (!singleorder) {
             return res.status(404).json({ error: 'Order not found' });
         }
 
         // If order is found, return it
-        res.json(order);
+        res.json({ singleorder });
     } catch (error) {
         console.error('Error fetching order details:', error);
         res.status(500).json({ error: 'Failed to fetch order details' });
     }
 };
 
+let cancelOrder=async(req,res)=>{
+    try {
+        const userId = req.user.id; 
+        const orderId = req.params.orderId;
+        console.log(orderId);
+
+        const order = await Order.findOneAndDelete({ _id: orderId, userId: userId });
+
+        if (!order) {
+            return res.status(404).json({ error: 'Order not found or unauthorized to cancel' });
+        }
+
+        res.status(200).json({ message: 'Order cancelled successfully' });
+    } catch (error) {
+        console.error('Error cancelling order:', error);
+        res.status(500).json({ error: 'Failed to cancel order' });
+    }
+}
 
 
 
@@ -1060,5 +1091,6 @@ module.exports={
     order,
     profile,
     razorpaypayment,
-    singleOrderDetails
+    singleOrderDetails,
+    cancelOrder
 }

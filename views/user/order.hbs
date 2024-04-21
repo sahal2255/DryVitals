@@ -8,7 +8,7 @@
     <!-- Include Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Include your custom CSS file -->
-    
+
     <style>
         /* Custom CSS styles */
         body {
@@ -90,9 +90,8 @@
         .delivery-details {
             background-color: #f8f9fa;
             border-radius: 10px;
-            padding: 20px;
+            
             margin-bottom: 20px;
-            /* Add some space between sections */
         }
 
         .delivery-details p {
@@ -126,7 +125,7 @@
     <div class="container">
         <h1 class="text-center mb-4">Order Details</h1>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-8">
                 <div class="card order-summary">
                     <div class="card-header">
                         <h2 class="mb-0">Order Summary</h2>
@@ -138,28 +137,30 @@
                                 <thead>
                                     <tr>
                                         <th>Date</th>
-                                        {{!-- <th>orderId</th> --}}
-                                        {{!-- <th>Image</th> --}}
-                                        {{!-- <th>Quantity</th>
-                                        <th>Product Variant</th> --}}
+
                                         <th>Payment Method</th>
                                         <th>Price</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {{#each this.cartProducts}}
-                                    <tr>
+                                    <tr data-order-id="{{../_id}}">
                                         <td>
                                             {{#with createdAt}}
                                             {{../createdAt}}
                                             {{/with}}
                                         </td>
-                                        
+
                                         <td>{{../selectedPaymentMethod}}</td>
-                                        <td>{{../totalAmount}}</td> 
-                                        <td><button class="viewOrderDetails" data-toggle="modal"
-                                                data-target="#productModal" data-product-id="{{this._id}}" type="button">View</button></td>
+                                        <td>{{../totalAmount}}</td>
+
+                                        <td></td>
+                                        <td><button type="button" class="btn btn-primary" data-toggle="modal"
+                                                data-target="#exampleModalCenter" onclick="getOrderDetails()">
+                                                view
+                                            </button></td>
                                     </tr>
                                     {{/each}}
 
@@ -167,14 +168,13 @@
                             </table>
                         </div>
                         <div class="order-total">
-                            {{!-- <h3 class="mb-0">Total Amount: <span id="total-amount">₹{{this.totalAmount}}</span>
-                            </h3> --}}
+
                         </div>
                     </div>
                     {{/each}}
                 </div>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-4">
                 <div class="card delivery-details">
                     <div class="card-header">
                         <h2 class="mb-0">Delivery Address</h2>
@@ -195,7 +195,7 @@
                         </p>
                     </div>
                     {{/if}}
-                    
+
 
 
                 </div>
@@ -203,33 +203,26 @@
         </div>
     </div>
 
-    <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="productModalLabel">Product Details</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-               <div id="modalOrderDetails">
-    {{!-- {{#each orderDetails}}
-    {{this.cartProducts.[0].productName}}
-        {{#each this.cartProducts}}
-            <p>{{this._id}}</p>
-            <p>{{this.productName}}</p>
-        {{/each}}
-    {{/each}} --}}
-</div>
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btn-cancel">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
 
@@ -246,41 +239,73 @@
             const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             return monthNames[monthIndex];
         }
-// Add a click event listener to the button that triggers the modal
-document.querySelectorAll('.viewOrderDetails').forEach(button => {
-    button.addEventListener('click', async function() {
-        try {
-            // Extract the order ID from the button's data attribute
-            const orderId = this.dataset.orderId;
 
-            const response = await axios.get(`/singleOrderDetails/${orderId}`);
-
-            // Check if the request was successful
-            if (response.status === 200) {
-                const orderDetails = response.data;
-
-                // Populate the modal with the received order details
-                document.getElementById('modalOrderDetails').innerHTML = `
-                    <p>Order ID: ${orderDetails._id}</p>
-                    <p>User ID: ${orderDetails.userId}</p>
-                    <!-- Add more order details here -->
-                `;
-
-                // Show the modal
-                $('#productModal').modal('show');
-            } else {
-                // Handle error responses
-                console.error('Failed to fetch order details:', response.data.error);
-                // Display an error message to the user
+        async function getOrderDetails() {
+            const orderId = event.target.closest('tr').dataset.orderId;
+            console.log(orderId)
+            try {
+                const response = await axios.get(`/singleOrderDetails/${orderId}`); // Corrected typo in URL
+                showOrderDetails(response.data.singleorder);  // Accessing correct property in response data
+            } catch (error) {
+                console.error('Error fetching order details:', error);
+                // Handle error gracefully, e.g., display an error message to the user
             }
-        } catch (error) {
-            console.error('Error fetching order details:', error);
-            // Handle errors (e.g., display an error message to the user)
         }
-    });
-});
-    
+
+        function showOrderDetails(orderDetails) {
+            const modalBody = document.querySelector('.modal-body');
+            modalBody.innerHTML = `
+        <p>Order ID: ${orderDetails._id}</p>
+        <input type="hidden" value="${orderDetails._id}" id="orderId">
+        <p>Created At: ${orderDetails.createdAt}</p>
+        <p>Payment Method: ${orderDetails.selectedPaymentMethod}</p>
+        <p>Total Amount: ${orderDetails.totalAmount}</p>
         
+        
+    `;
+        }
+
+        // Function to handle the click event on the "Cancel" button
+        async function handleCancelButtonClick() {
+            const orderId = document.getElementById('orderId').value;
+
+            // Display confirmation dialog using SweetAlert
+            const isConfirmed = await Swal.fire({
+                title: 'Are you sure?',
+                text: 'Once cancelled, you will not be able to recover this order!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, cancel it!',
+                cancelButtonText: 'No, keep it'
+            });
+
+            // Check if user confirmed the action
+            if (isConfirmed.isConfirmed) {
+                try {
+                    const response = await axios.delete(`/orders/${orderId}`);
+
+                    if (response.status === 200) {
+                        // Show success message
+                        Swal.fire('Cancelled!', 'Your order has been cancelled.', 'success')
+                            .then(() => {
+                                // Refresh the page
+                                window.location.reload();
+                            });
+                    } else {
+                        // Show error message
+                        Swal.fire('Error!', 'Failed to cancel order.', 'error');
+                    }
+                } catch (error) {
+                    // Show error message
+                    Swal.fire('Error!', 'Failed to cancel order.', 'error');
+                    console.error('Error cancelling order:', error);
+                }
+            }
+        }
+
+        // Add event listener to the "Cancel" button
+        document.getElementById('btn-cancel').addEventListener('click', handleCancelButtonClick);
+
     </script>
 
     <!-- jQuery -->
@@ -292,7 +317,7 @@ document.querySelectorAll('.viewOrderDetails').forEach(button => {
     <!-- Include Axios and SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    
+
 </body>
 
 </html>

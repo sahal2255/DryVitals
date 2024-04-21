@@ -328,12 +328,21 @@
         const data = response.data.data;
 		if (data) {
 			Swal.fire({
-            icon: 'success',
-            title: 'Success!',
-            text: 'Product added to cart!',
-            showConfirmButton: false,
-            timer: 2000
-        });
+                icon: 'success',
+                title: 'Success!',
+                text: 'Product added to cart!',
+                showConfirmButton: true,
+                confirmButtonText: 'OK',
+                showCancelButton: true,
+                cancelButtonText: 'View Cart'
+            }).then((result) => {
+                if (!result.dismiss) {
+                    // OK button clicked, do nothing
+                } else {
+                    // View Cart button clicked, redirect to cart page
+                    window.location.href = '/cart';
+                }
+            });
 		} else {
 			window.location.href = '/login'
 		}
