@@ -6,6 +6,7 @@ const adminAuth = require('../middleware/admin_jwt');
 const adminMiddleware=require('../middleware/adminMiddleware')
 const upload = require('../config/multer');
 const axios = require('axios');
+const { userAuth } = require('../middleware/user_jwt');
 // const cloudinary=require('../config/cloudinary')
 
 
@@ -45,8 +46,11 @@ router.post('/admin/disableUser', adminController.disableUser);
 router.get('/admin/editProduct/:id',adminAuth,adminController.editProduct)
 router.post('/admin/editProduct/:id',upload.array('image',3),adminAuth,adminController.editProductPost)
 
-
+router.get('/admin/orderList',adminAuth,adminController.orderShow)
 
 router.get('/admin/adminLogOut',adminController.adminLogOut)
+
+router.get('/admin/singleOrder/:id',adminAuth,adminController.singleOrder)
+router.get('/admin/singleView',adminAuth,adminController.singleView)
 
 module.exports = router;

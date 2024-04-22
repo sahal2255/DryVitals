@@ -348,6 +348,7 @@ function wishlistToCart(productId, productName, productImage, variant, mrp, pric
                 timer: 2000
             }).then(() => {
                 // Reload the page after adding to cart
+				 deleteFromWishlist(productId);
                 location.reload();
             });
         } else {
@@ -369,7 +370,19 @@ function wishlistToCart(productId, productName, productImage, variant, mrp, pric
         console.log('error adding to cart:', error);
     });
 }
-
+function deleteFromWishlist(productId) {
+    axios.delete(`/wishlist/delete-wishlist/${productId}`)
+    .then(response => {
+        if(response.status === 200) {
+            console.log('Item removed from wishlist');
+        } else {
+            console.log('Failed to remove item from wishlist');
+        }
+    })
+    .catch(error => {
+        console.error('Error removing item from wishlist', error);
+    });
+}
 
 </script>
 

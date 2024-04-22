@@ -557,21 +557,17 @@ else if (selectedPaymentMethod === 'razorpay') {
         })
         .then(response => {
             console.log("Response from server:", response);
-            // Extract Razorpay order details from the server response
             const { orderId, amount } = response.data;
 
-            // Initialize Razorpay payment
             var options = {
                 key: '',
-                amount: amount, // amount in the smallest currency unit
+                amount: amount, 
                 currency: "INR",
                 order_id: orderId,
                 name: "Your Company Name",
                 description: "Description of the payment",
                 handler: function (response) {
-                    // Handle successful payment response
                     console.log("Razorpay response:", response);
-                    // Call the server to store the order
                     axios.post('/placeOrder', {
                         selectedPaymentMethod: selectedPaymentMethod,
                         razorpayOrderId: orderId,

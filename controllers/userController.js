@@ -760,7 +760,7 @@ let singleCheckOutget = async (req, res) => {
         console.log('checkout page getting', req.query);
         const shipping=60
         const totalamount=+result.price+shipping
-        res.render('user/singleCheckOut', { result,shipping,totalmount,userAddress:user.userAddress });
+        res.render('user/singleCheckOut', { result,shipping,totalamount,userAddress:user.userAddress });
          
     } catch (error) {
         console.log('Error in singleCheckOutget:', error);
@@ -833,29 +833,12 @@ const placeOrder = async (req, res) => {
             })),
             
             totalAmount:totalAmount,
-            createdAt: formatDate(Date.now()),
+            
+            createdAt: new Date(),
             selectedPaymentMethod: selectedPaymentMethod, 
             cart: cart, 
         });
-        function formatDate(timestamp) {
-            const dateObject = new Date(timestamp);
-            const day = getDayName(dateObject.getDay()); // Get day name
-            const month = getMonthName(dateObject.getMonth()); // Get month name
-            const year = dateObject.getFullYear();
-            return `${day}, ${month} ${year}`;
-        }
         
-        // Function to get day name
-        function getDayName(dayIndex) {
-            const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            return dayNames[dayIndex];
-        }
-        
-        // Function to get month name
-        function getMonthName(monthIndex) {
-            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-            return monthNames[monthIndex];
-        }
         const savedOrder = await newOrder.save();
         console.log('Order saved successfully:', savedOrder);
 
@@ -911,6 +894,7 @@ const order = async (req, res) => {
                     _id: 1,
                     userId: 1,
                     createdAt:1,
+                    status:1,
                     userAddress: { $arrayElemAt: ['$userData.userAddress', 0] }, // Extract the userAddress
                     selectedPaymentMethod: 1,
                     totalAmount: 1,
@@ -939,7 +923,8 @@ const order = async (req, res) => {
             {
                 $group: {
                     _id: '$_id',
-                    createdAt:{$first:'$createdAt'},
+                    createdAt: { $first: { $dateToString: { format: "%Y-%m-%d %H:%M:%S", date: "$createdAt", timezone: "+03:00" } } },
+                    status:{$first:'$status'},
                     userId: { $first: '$userId' },
                     userAddress: { $first: '$userAddress' },
                     selectedPaymentMethod: { $first: '$selectedPaymentMethod' },
@@ -949,7 +934,7 @@ const order = async (req, res) => {
                 }
             },
             {
-                $sort: { createdAt: 1 } // Sort by createdAt field in descending order (most recent first)
+                $sort: { createdAt: -1 } // Sort by createdAt field in descending order (most recent first)
             }
         ]);
 
@@ -982,15 +967,6 @@ const order = async (req, res) => {
 
 
 
-// const razorpaypayment=async(req,res)=>{
-//     const {amount}=req.body;
-//     const razorpay=new Razorpay({
-//         key_id:'rzp_test_1bD9cj9uL4sy4Y',
-//         key_secret:'7tMWK4GYRa7UuOOqSHmgsao3'
-//     }) 
-//     res.json({ok:'ok'})
-    
-// }
 
 
 const razorpaypayment = async (req, res) => {

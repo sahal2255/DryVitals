@@ -1,5 +1,6 @@
 const Admin = require('../models/admin');
 const Product=require('../models/products')
+
 const User=require('../models/user')
 const bcrypt = require('bcrypt');
 const { application } = require('express')
@@ -8,9 +9,11 @@ const jwt = require('jsonwebtoken');
 const fs=require('fs')
 const path=require('path')
 const axios = require('axios');
+const mongoose=require('mongoose')
 
 // const cloudinary=require('../config/cloudinary')
-const upload=require('../config/multer')
+const upload=require('../config/multer');
+const Order = require('../models/order');
 require('dotenv').config();
 
 
@@ -414,26 +417,7 @@ let userList=async (req,res)=>{
         console.log('user list error',error);
     }
 }
-// let disableUser=async(req,res)=>{
-//     const userId=req.body.userid;
-//     // console.log(userId);
-//     try{
-//         const user=await User.findById(userId)
-//         if(!user){
-//             return res.status(404).send('user not found')
-//         }
-//         if(user.isDisabled){
-//             user.isDisabled=!user.isDisabled
-//         }else{
-//             user.isDisabled=true;
-//         }
-//         await user.save()
-//         return res.redirect('/admin/userList')
-//     }
-//     catch(error){
-//         console.log('error toggling user status',error);
-//     }
-// }
+
 
 
 let disableUser = async (req, res) => {
@@ -462,9 +446,162 @@ let disableUser = async (req, res) => {
 
 
 
+const orderShow = async (req, res) => {
+    try {
+        const orders = await Order.aggregate([
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "userId",
+                    foreignField: "_id",
+                    as: "userDetails"
+                }
+            },
+            {
+                $unwind: "$userDetails"
+            },
+            {
+                $project: {
+                    _id: 1,
+                    userId: 1,
+                    orderDetails: "$$ROOT", // Store the order details in a field
+                    userDetails: {
+                        _id: "$userDetails._id",
+                        userName: "$userDetails.userName",
+                        email:'$userDetails.email'
+                    }
+                }
+            }
+        ]);
+
+        const updatedOrders = orders.map(order => ({
+            ...order,
+            newdate: new Date(order.orderDetails.createdAt).toLocaleString()
+        }));
+
+        console.log('admin order listing', updatedOrders);
+        res.render('admin/orderList', { orders:updatedOrders }); // Assuming your view expects 'orders' variable
+    } catch (error) {
+        console.log('order show error', error);
+        // Handle error
+    }
+}
 
 
 
+let singleOrder=async(req,res)=>{
+    try{
+        const orderId=req.params.id;
+        console.log('order Id for viewing',orderId);
+        const singelOrd=await Order.findById(orderId)
+        console.log(singelOrd);
+        // res.json({singelOrd})
+        res.json({singelOrd})
+    }
+    catch(error){
+        console.log('single Order show',error);
+    }
+}
+let singleView = async (req, res) => {
+    try {
+        const orderId = req.query.id;
+        console.log('Order Id for querying:', orderId);
+
+        // Find the order details
+        const singleOrd = await Order.findById(orderId);
+        console.log(singleOrd);
+
+        // Find the user details based on userId from the order
+        const userDetails = await User.findById(singleOrd.userId);
+        console.log(userDetails);
+
+        // Use aggregation to populate product details in the cart
+        const orderWithProducts = await Order.aggregate([
+            { $match: { _id:new mongoose.Types.ObjectId(orderId) } },
+            {
+                $lookup: {
+                    from: 'products', // Assuming the name of your products collection is 'products'
+                    localField: 'cart.product.productId',
+                    foreignField: '_id',
+                    as: 'cartItems'
+                }
+            }
+        ]);
+        console.log(orderWithProducts);
+
+        // Render the singleOrder page with order, user details, and cart products
+        res.render('admin/singleOrder', { singleOrd: orderWithProducts[0], userDetails });
+    } catch (error) {
+        console.log('Error in rendering single view:', error);
+        res.status(500).send('Internal server error');
+    }
+}
+
+
+
+// let singleView = async (req, res) => {
+//     try {
+//         const orderId = req.query.id;
+//         console.log('Order Id for querying:', orderId);
+
+//         // Use aggregation to retrieve order details including user details and product information
+//         const orderWithDetails = await Order.aggregate([
+//             { 
+//                 $match: { _id: new mongoose.Types.ObjectId(orderId) } 
+//             },
+//             { 
+//                 $lookup: { 
+//                     from: 'users', // Assuming the name of your users collection is 'users'
+//                     localField: 'userId',
+//                     foreignField: '_id',
+//                     as: 'userDetails'
+//                 } 
+//             },
+//             { 
+//                 $unwind: '$userDetails' // Unwind the userDetails array
+//             },
+//             {
+//                 $lookup: {
+//                     from: 'products', // Assuming the name of your products collection is 'products'
+//                     localField: 'cart.product.productId',
+//                     foreignField: '_id',
+//                     as: 'cartItems'
+//                 }
+//             },
+//             {
+//                 $unwind: '$userDetails.userAddress' // Unwind the userAddress array
+//             },
+//             {
+//                 $unwind: '$cart' // Unwind the cart array
+//             },
+//             {
+//                 $project: {
+//                     _id: 1,
+//                     userId: 1,
+//                     cart: 1,
+//                     selectedPaymentMethod: 1,
+//                     status: 1,
+//                     totalAmount: 1,
+//                     createdAt: 1,
+//                     userDetails: {
+//                         _id: 1,
+//                         userName: 1,
+//                         email: 1,
+//                         phoneNumber: 1,
+//                         userAddress: 1
+//                     },
+//                     cartItems: 1
+//                 }
+//             }
+//         ]);
+// console.log(orderWithDetails);
+//         // Render the singleOrder page with order details, user details, and cart products
+//         res.render('admin/singleOrder', { singleOrd: orderWithDetails[0] });
+//     } catch (error) {
+//         console.log('Error in rendering single view:', error);
+//         res.status(500).send('Internal server error');
+//     }
+// }
 
 
 
@@ -504,5 +641,8 @@ module.exports = {
     disableUser,
     editProduct,
     editProductPost,
-    adminLogOut
+    adminLogOut,
+    orderShow,
+    singleOrder,
+    singleView
 };

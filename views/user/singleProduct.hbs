@@ -59,6 +59,13 @@
 	.bynow:hover{
 		background-color: rgb(215, 120, 31);
 	}
+	#stock-status {
+    color: green; /* Default color for in-stock message */
+}
+
+#stock-status.out-of-stock {
+    color: red; /* Color for out-of-stock message */
+}
 
 </style>
 </head>
@@ -199,13 +206,14 @@
         <div class="single-product-content">
             <h2>{{product.productName}}</h2>
             <p class="single-product-pricing" id="selected-variant-price">₹ {{product.stock.0.price}}</p>
-            <del><h6 id="selected-variant-mrp">₹{{product.stock.0.mrp}}</h6></del>                  
+            <del><h6 id="selected-variant-mrp">₹{{product.stock.0.mrp}}</h6></del>   
+			<p id="stock-status">In Stock</p>               
             <p>{{product.description}}</p>
             <div class="single-product-form">
                 <p><strong>Category : </strong>{{product.category}}</p>
                 {{#each product.stock}}
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="variant" id="{{@index}}" data-price="{{price}}" data-mrp="{{mrp}}" onchange="updatePrice(this)" {{#if @index}} {{else}} checked {{/if}}>
+                    <input class="form-check-input" type="radio" name="variant" id="{{@index}}" data-price="{{price}}" data-mrp="{{mrp}}" data-stock="{{stock}}" onchange="updatePrice(this)" {{#if @index}} {{else}} checked {{/if}}>
                     <label class="form-check-label" for="{{@index}}">
                         {{variant}}
                     </label>
@@ -300,9 +308,20 @@
 	
     function updatePrice(radio) {
         var price = radio.getAttribute('data-price');
-		var mrp=radio.getAttribute('data-mrp')
+		var mrp=radio.getAttribute('data-mrp');
+		var stock = radio.getAttribute('data-stock');
         document.getElementById('selected-variant-price').innerText = " ₹" +' '+ price;
 		document.getElementById('selected-variant-mrp').innerHTML="₹"+mrp;
+	var stockStatus = document.getElementById('stock-status');
+    if (stock === '0') {
+        stockStatus.innerText = "Out of Stock";
+        stockStatus.classList.add('out-of-stock'); // Add the out-of-stock class
+        document.getElementById('addToCartBtn').disabled = true; // Disable the "Add to Cart" button
+    } else {
+        stockStatus.innerText = "In Stock";
+        stockStatus.classList.remove('out-of-stock'); // Remove the out-of-stock class
+        document.getElementById('addToCartBtn').disabled = false; // Enable the "Add to Cart" button
+    }
     }
 	function getSelectedPrice(){
 		let selectedVariant=document.querySelector('input[name="variant"]:checked')

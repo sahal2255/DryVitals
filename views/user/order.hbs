@@ -130,7 +130,6 @@
                     <div class="card-header">
                         <h2 class="mb-0">Order Summary</h2>
                     </div>
-                    {{#each orderDetails}}
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table">
@@ -145,18 +144,19 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                {{#each orderDetails}}
                                     {{#each this.cartProducts}}
                                     <tr data-order-id="{{../_id}}">
                                         <td>
-                                            {{#with createdAt}}
+                                            {{!-- {{#with createdAt}} --}}
                                             {{../createdAt}}
-                                            {{/with}}
+                                            {{!-- {{/with}} --}}
                                         </td>
 
                                         <td>{{../selectedPaymentMethod}}</td>
                                         <td>{{../totalAmount}}</td>
 
-                                        <td></td>
+                                        <td>{{../status}}</td>
                                         <td><button type="button" class="btn btn-primary" data-toggle="modal"
                                                 data-target="#exampleModalCenter" onclick="getOrderDetails()">
                                                 view
@@ -164,6 +164,7 @@
                                     </tr>
                                     {{/each}}
 
+                    {{/each}}
                                 </tbody>
                             </table>
                         </div>
@@ -171,7 +172,6 @@
 
                         </div>
                     </div>
-                    {{/each}}
                 </div>
             </div>
             <div class="col-md-4">
@@ -227,18 +227,7 @@
 
 
     <script>
-        function formatDate(timestamp) {
-            const date = new Date(timestamp);
-            const day = date.getDate();
-            const month = getMonthName(date.getMonth());
-            const year = date.getFullYear();
-            return `${day} ${month} ${year}`;
-        }
-
-        function getMonthName(monthIndex) {
-            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-            return monthNames[monthIndex];
-        }
+        
 
         async function getOrderDetails() {
             const orderId = event.target.closest('tr').dataset.orderId;

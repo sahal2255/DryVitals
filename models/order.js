@@ -21,10 +21,14 @@ const orderSchema = new mongoose.Schema({
     selectedPaymentMethod:{
         type:String
     },
+    status:{
+        type:String,
+        default:'OrderPlaced'
+    },
     totalAmount:{type:Number},
     createdAt: {
         type: Date,
-        default: Date.now // Set default value to current date/time
+        default: Date.now 
     }
 
     
