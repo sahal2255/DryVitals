@@ -215,6 +215,8 @@
 	<!-- end breadcrumb section -->
 
 	<!-- check out section -->
+
+	{{#if cartItems}}
 	<div class="checkout-section mt-150 mb-150">
 		<div class="container">
 			<div class="row">
@@ -239,40 +241,25 @@
 												onsubmit="return saveAddress(event)">
 												{{#if userAddress}}
 												{{#with userAddress.[0]}}
-												<!-- Access the first address object if exists -->
-												<p><input type="text" placeholder="Name" id="name" name="Name"
-														value="{{name}}"></p>
-												<p id="nameError" class="error"></p>
-												<p><input type="email" placeholder="Email" id="email" name="email"
-														value="{{email}}"></p>
-												<p id="emailError" class="error"></p>
-												<p><input type="number" placeholder="Phone" id="phone"
-														name="phoneNumber" value="{{phoneNumber}}"></p>
-												<p id="phoneError" class="error"></p>
+
 												<p><input type="text" value="{{district}}"></p>
 												<p><input type="text" placeholder="Place" id="place" name="place"
-														value="{{place}}"></p>
+														value="{{place}}" readonly></p>
 												<p id="placeError" class="error"></p>
 												{{#if address}}
-												<p><input type="text" style="height: 100px;" value="{{address}}"></p>
+												<p><input type="text" style="height: 100px;" value="{{address}}" readonly></p>
 												{{else}}
 												<p><textarea placeholder="Address" id="address"
 														name="address"></textarea></p>
 												<p id="addressError" class="error"></p>
 												{{/if}}
 												<p><input type="number" placeholder="Pincode" id="pincode"
-														name="pincode" value="{{pincode}}"></p>
+														name="pincode" value="{{pincode}}" readonly></p>
 												<p id="pincodeError" class="error"></p>
 												{{/with}}
 												{{else}}
 												<!-- If no userAddress exists, display form fields to input a new address -->
-												<p><input type="text" placeholder="Name" id="name" name="Name"></p>
-												<p id="nameError" class="error"></p>
-												<p><input type="email" placeholder="Email" id="email" name="email"></p>
-												<p id="emailError" class="error"></p>
-												<p><input type="number" placeholder="Phone" id="phone"
-														name="phoneNumber"></p>
-												<p id="phoneError" class="error"></p>
+												
 												<p>
 													<select name="district" id="district" name="district">
 														<option value="" selected disabled>Select District</option>
@@ -380,6 +367,7 @@
 			</div>
 		</div>
 	</div>
+	{{/if}}
 	</div>
 
 	<!-- end check out section -->
@@ -391,18 +379,18 @@
 			event.preventDefault();
 			console.log("Save Address button clicked");
 			// Get form input values
-			var name = document.getElementById("name").value.trim();
-			var email = document.getElementById("email").value.trim();
-			var phone = document.getElementById("phone").value.trim();
+			//var name = document.getElementById("name").value.trim();
+			//var email = document.getElementById("email").value.trim();
+			//var phone = document.getElementById("phone").value.trim();
 			var district = document.getElementById("district").value;
 			var place = document.getElementById("place").value.trim();
 			var address = document.getElementById("address").value.trim();
 			var pincode = document.getElementById("pincode").value.trim();
 
 			// Reset error messages
-			document.getElementById("nameError").innerText = "";
-			document.getElementById("emailError").innerText = "";
-			document.getElementById("phoneError").innerText = "";
+			//document.getElementById("nameError").innerText = "";
+			//document.getElementById("emailError").innerText = "";
+			//document.getElementById("phoneError").innerText = "";
 			document.getElementById("selectError").innerText = "";
 			document.getElementById("placeError").innerText = "";
 			document.getElementById("addressError").innerText = "";
@@ -411,26 +399,7 @@
 			// Validation
 			var isValid = true;
 
-			if (name === "") {
-				document.getElementById("nameError").innerText = "Please enter your name";
-				isValid = false;
-			}
-
-			if (email === "") {
-				document.getElementById("emailError").innerText = "Please enter your email";
-				isValid = false;
-			} else if (!isValidEmail(email)) {
-				document.getElementById("emailError").innerText = "Please enter a valid email address";
-				isValid = false;
-			}
-
-			if (phone === "") {
-				document.getElementById("phoneError").innerText = "Please enter your phone number";
-				isValid = false;
-			} else if (!isValidPhone(phone)) {
-				document.getElementById("phoneError").innerText = "Phone Number Must Be 10 digits";
-				isValid = false;
-			}
+			
 
 			if (district === "") {
 				document.getElementById("selectError").innerText = "Please select a district";
@@ -458,9 +427,7 @@
 			if (isValid) {
 				// Send form data to the server using Axios
 				axios.post('/saveAddress', {
-					Name: name,
-					email: email,
-					phoneNumber: phone,
+					
 					district: district,
 					place: place,
 					address: address,
@@ -489,16 +456,7 @@
 			}
 		}
 
-		function isValidEmail(email) {
-			// Basic email validation
-			var emailRegex = /\S+@\S+\.\S+/;
-			return emailRegex.test(email);
-		}
-		function isValidPhone(phone) {
-			// Phone number validation (10 digits)
-			var phoneRegex = /^\d{10}$/;
-			return phoneRegex.test(phone);
-		}
+		
 
 		function isValidPincode(pincode) {
 			// Pincode validation (6 digits)

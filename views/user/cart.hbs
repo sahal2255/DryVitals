@@ -151,34 +151,13 @@
 	<!-- end breadcrumb section -->
 
 	<!-- cart -->
+		{{#if data}}
 	<div class="cart-section mt-150 mb-150">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-8 col-md-12">
 					<div class="cart-table-wrap">
-						{{!-- <table class="cart-table">
-							<thead class="cart-table-head">
-								<tr class="table-head-row">
-									<th class="product-remove"></th>
-									<th class="product-image">Product Image</th>
-									<th class="product-name">Name</th>
-									<th class="product-price">Price</th>
-									<th class="product-quantity">Quantity</th>
-									<th class="product-total">Total</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr class="table-body-row">
-									<td class="product-remove"><a href="#"><i class="far fa-window-close"></i></a></td>
-									<td class="product-image"><img src="/assets/img/products/product-img-1.jpg" alt=""></td>
-									<td class="product-name">Strawberry</td>
-									<td class="product-price">$85</td>
-									<td class="product-quantity"><input type="number" placeholder="0"></td>
-									<td class="product-total">1</td>
-								</tr>
-								
-							</tbody>
-						</table> --}}
+						
 <table class="cart-table">
     <thead class="cart-table-head">
         <tr class="table-head-row">
@@ -195,7 +174,6 @@
         </tr>
     </thead>
     <tbody>
-		{{#if data}}
         {{#each data}}
         <tr class="table-body-row" id="data-product-id">
 			{{!-- <td>{{productId}}</td> --}}
@@ -214,12 +192,10 @@
             <td class="product-price" id="totalPrice_{{this.productId}}">₹{{productPrice}}</td>
         </tr>
         {{/each}}
-		{{else}}
-		<p>no orders</p>
-		{{/if}}
+		
+		
     </tbody>
 </table>
-{{!-- <i class="fas fa-trash-alt"></i> --}}
 
 					</div>
 				</div>
@@ -242,32 +218,33 @@
 									<td><strong>Subtotal: </strong></td>
 									<td>₹{{total}}</td>
 								</tr>
-								{{!-- <tr class="total-data">
-									<td><strong>Total: </strong></td>
-									<td>$545</td>
-								</tr> --}}
+								
 							</tbody>
 						</table>
 						<div class="cart-buttons">
 							<a href="/product" class="boxed-btn">Add More Item</a>
 							<a href="/checkOut" class="boxed-btn black">Buy Now</a>
-							{{!-- <button onclick="checkOut('{{cartItems}}')">Buy Now</button> --}}
 						</div>
 					</div>
-
-					{{!-- <div class="coupon-section">
-						<h3>Apply Coupon</h3>
-						<div class="coupon-form-wrap">
-							<form action="index.html">
-								<p><input type="text" placeholder="Coupon"></p>
-								<p><input type="submit" value="Apply"></p>
-							</form>
-						</div>
-					</div> --}}
+					
 				</div>
 			</div>
 		</div>
 	</div>
+
+{{else}}
+<div class="container" style="height: 250px; background-color: #ffcccc; display: flex; justify-content: center; align-items: center;">
+    <div class="not-product" style="text-align: center;">
+        <h1 style="font-size: 24px; color: #ff0000;">Product Not Found In Cart</h1>
+        <p style="font-size: 16px; color: #333;">Add products to your cart to see them here.</p>
+    </div>
+</div>
+<div style="margin-top: 20px; text-align: center;">
+    <a href="/product" class="boxed-btn" style="background-color: #4caf50; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Add More Items</a>
+</div>
+{{/if}}
+
+
 
 
 	<!-- footer -->

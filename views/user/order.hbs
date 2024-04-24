@@ -182,9 +182,9 @@
 
                     {{#if orderDetails.length}}
                     <div class="card-body">
-                        <p><strong>Name:</strong> <span id="name">{{orderDetails.[0].userAddress.name}}</span></p>
-                        <p><strong>Email:</strong> <span id="email">{{orderDetails.[0].userAddress.email}}</span></p>
-                        <p><strong>Phone:</strong> <span id="phone">{{orderDetails.[0].userAddress.phoneNumber}}</span>
+                        <p><strong>Name:</strong> <span id="name">{{orderDetails.[0].userData.userName}}</span></p>
+                        <p><strong>Email:</strong> <span id="email">{{orderDetails.[0].userData.email}}</span></p>
+                        <p><strong>Phone:</strong> <span id="phone">{{orderDetails.[0].userData.phoneNumber}}</span>
                         </p>
                         <p><strong>District:</strong> <span
                                 id="district">{{orderDetails.[0].userAddress.district}}</span></p>

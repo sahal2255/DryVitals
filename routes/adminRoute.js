@@ -53,4 +53,6 @@ router.get('/admin/adminLogOut',adminController.adminLogOut)
 router.get('/admin/singleOrder/:id',adminAuth,adminController.singleOrder)
 router.get('/admin/singleView',adminAuth,adminController.singleView)
 
+router.post('/admin/singleView',adminAuth,adminController.updateStatus)
+
 module.exports = router;

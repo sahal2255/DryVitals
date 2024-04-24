@@ -502,40 +502,45 @@ let singleOrder=async(req,res)=>{
         console.log('single Order show',error);
     }
 }
-let singleView = async (req, res) => {
-    try {
-        const orderId = req.query.id;
-        console.log('Order Id for querying:', orderId);
 
-        // Find the order details
-        const singleOrd = await Order.findById(orderId);
-        console.log(singleOrd);
 
-        // Find the user details based on userId from the order
-        const userDetails = await User.findById(singleOrd.userId);
-        console.log(userDetails);
 
-        // Use aggregation to populate product details in the cart
-        const orderWithProducts = await Order.aggregate([
-            { $match: { _id:new mongoose.Types.ObjectId(orderId) } },
-            {
-                $lookup: {
-                    from: 'products', // Assuming the name of your products collection is 'products'
-                    localField: 'cart.product.productId',
-                    foreignField: '_id',
-                    as: 'cartItems'
-                }
-            }
-        ]);
-        console.log(orderWithProducts);
 
-        // Render the singleOrder page with order, user details, and cart products
-        res.render('admin/singleOrder', { singleOrd: orderWithProducts[0], userDetails });
-    } catch (error) {
-        console.log('Error in rendering single view:', error);
-        res.status(500).send('Internal server error');
-    }
-}
+// let singleView = async (req, res) => {
+//     try {
+//         const orderId = req.query.id;
+//         console.log('Order Id for querying:', orderId);
+
+//         // Find the order details
+//         const singleOrd = await Order.findById(orderId);
+//         console.log(singleOrd);
+
+//         // Find the user details based on userId from the order
+//         const userDetails = await User.findById(singleOrd.userId);
+//         console.log(userDetails);
+
+//         // Use aggregation to populate product details in the cart
+//         const orderWithProducts = await Order.aggregate([
+//             { $match: { _id:new mongoose.Types.ObjectId(orderId) } },
+//             {
+//                 $lookup: {
+//                     from: 'products', // Assuming the name of your products collection is 'products'
+//                     localField: 'cart.product.productId',
+//                     foreignField: '_id',
+//                     as: 'cartItems'
+//                 }
+//             }
+//         ]);
+//         console.log(orderWithProducts);
+
+//         // Render the singleOrder page with order, user details, and cart products
+//         res.render('admin/singleOrder', { singleOrd: orderWithProducts[0], userDetails });
+//     } catch (error) {
+//         console.log('Error in rendering single view:', error);
+//         res.status(500).send('Internal server error');
+//     }
+// }
+
 
 
 
@@ -551,63 +556,134 @@ let singleView = async (req, res) => {
 //             },
 //             { 
 //                 $lookup: { 
-//                     from: 'users', // Assuming the name of your users collection is 'users'
+//                     from: 'users',
 //                     localField: 'userId',
 //                     foreignField: '_id',
 //                     as: 'userDetails'
 //                 } 
 //             },
 //             { 
-//                 $unwind: '$userDetails' // Unwind the userDetails array
+//                 $unwind: '$userDetails' 
 //             },
-//             {
-//                 $lookup: {
-//                     from: 'products', // Assuming the name of your products collection is 'products'
-//                     localField: 'cart.product.productId',
-//                     foreignField: '_id',
-//                     as: 'cartItems'
-//                 }
-//             },
-//             {
+//             { 
 //                 $unwind: '$userDetails.userAddress' // Unwind the userAddress array
 //             },
 //             {
-//                 $unwind: '$cart' // Unwind the cart array
-//             },
-//             {
-//                 $project: {
-//                     _id: 1,
-//                     userId: 1,
-//                     cart: 1,
-//                     selectedPaymentMethod: 1,
-//                     status: 1,
-//                     totalAmount: 1,
-//                     createdAt: 1,
-//                     userDetails: {
-//                         _id: 1,
-//                         userName: 1,
-//                         email: 1,
-//                         phoneNumber: 1,
-//                         userAddress: 1
+//                 $group: {
+//                     _id: '$_id',
+//                     userId: { $first: '$userId' },
+//                     userDetails: { 
+//                         $first: {
+//                             _id: '$userDetails._id',
+//                             userName: '$userDetails.userName',
+//                             email: '$userDetails.email',
+//                             phoneNumber: '$userDetails.phoneNumber',
+//                             userAddress: '$userDetails.userAddress' // Include userAddress array
+//                         }
 //                     },
-//                     cartItems: 1
+//                     cart: { 
+//                         $push: {
+//                             productId: '$cart.product.productId',
+//                             quantity: '$cart.product.quantity',
+//                             productName: '$cart.product.productName',
+//                             productVariant: '$cart.product.productVariant',
+//                             productPrice: '$cart.product.productPrice',
+//                             _id: '$cart.productDetails._id' // Include product ID
+//                         } 
+//                     },
+//                     selectedPaymentMethod: { $first: '$selectedPaymentMethod' },
+//                     status: { $first: '$status' },
+//                     totalAmount: { $first: '$totalAmount' },
+//                     createdAt: { $first: '$createdAt' }
 //                 }
 //             }
 //         ]);
-// console.log(orderWithDetails);
-//         // Render the singleOrder page with order details, user details, and cart products
+
+//         console.log(orderWithDetails);
+
 //         res.render('admin/singleOrder', { singleOrd: orderWithDetails[0] });
 //     } catch (error) {
 //         console.log('Error in rendering single view:', error);
 //         res.status(500).send('Internal server error');
 //     }
-// }
+// };
+
+
+let singleView = async (req, res) => {
+    try {
+        const orderId = req.query.id;
+       
+        console.log('Order Id for querying:', orderId);
+
+        const orderDetails = await Order.aggregate([
+            {
+                $match: { _id: new mongoose.Types.ObjectId(orderId) }
+            },
+            {
+                $unwind: '$cart.product' 
+            },
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: 'cart.product.productId',
+                    foreignField: '_id',
+                    as: 'productDetails'
+                }
+            },
+            {
+                $unwind: '$productDetails'
+            },
+            {
+                $unwind:'$productDetails.imageUrl'
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'userId',
+                    foreignField: '_id',
+                    as: 'userDetails'
+                }
+            },
+            {
+                $unwind: '$userDetails'
+            },
+            {
+                $unwind:'$userDetails.userAddress'
+            },
+            
+        ]);
+
+        console.log(orderDetails);
+
+        res.render('admin/singleOrder', { orderDetails });
+    } catch (error) {
+        console.log('Error in getting order details:', error);
+        throw error;
+    }
+};
 
 
 
 
+const updateStatus = async (req, res) => {
+    try {
+        const orderId = req.body.orderId;
+        const selectedStatus = req.body.status;
 
+        console.log('Order ID:', orderId);
+        console.log('Selected Status:', selectedStatus);
 
+        // Update the status field in the Order collection
+        const updatedOrder = await Order.findByIdAndUpdate(orderId, { status: selectedStatus }, { new: true });
+
+        console.log('Updated Order:', updatedOrder);
+
+        res.status(200).json({ message: 'Status updated successfully', updatedOrder });
+    } catch (error) {
+        console.error('Error updating status:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
 
 
 
@@ -644,5 +720,6 @@ module.exports = {
     adminLogOut,
     orderShow,
     singleOrder,
-    singleView
+    singleView,
+    updateStatus
 };

@@ -68,18 +68,18 @@ const userSchema=new mongoose.Schema({
 },
 
 userAddress:[{
-    name:{
-        type:String,
-        required:true
-    },
-    email:{
-        type:String,
-        required:true
-    },
-    phoneNumber:{
-        type:String,
-        required:true
-    },
+    // name:{
+    //     type:String,
+    //     required:true
+    // },
+    // email:{
+    //     type:String,
+    //     required:true
+    // },
+    // phoneNumber:{
+    //     type:String,
+    //     required:true
+    // },
     district:{
         type:String,
         required:true

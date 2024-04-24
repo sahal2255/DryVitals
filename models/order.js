@@ -1,3 +1,4 @@
+const { isCancel } = require('axios');
 const { type } = require('jquery');
 const mongoose = require('mongoose');
 
@@ -29,6 +30,10 @@ const orderSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now 
+    },
+    isCancel:{
+        type:Boolean,
+        defaul:false
     }
 
     

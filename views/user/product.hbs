@@ -52,10 +52,10 @@
 			top: 10px;
 			right: 10px;
 			z-index: 1;
-			color: #9a9696;
+			
 			font-size: 20px;
 			text-decoration: none;
-			/*  background-color: transparent;*/
+			
 			border: none;
 			cursor: pointer;
 		}
@@ -64,8 +64,7 @@
 		.wishlist-btn i {
 			vertical-align: middle;
 		}
-
-		.added-to-wishlist .bi-heart-fill {
+	.added-to-wishlist .bi-heart-fill {
 			color: red;
 		}
 
@@ -437,81 +436,62 @@ ${product.inWishlist ? `<a href="#" class="wishlist-btn" style="color: red;" dat
 
 
 				productsContainer.insertAdjacentHTML('beforeend', productHTML);
-				setWishlistIconColor(product._id);
+				
 
 			});
 		}
 
 
-		// Select all wishlist buttons
-		const wishlistButtons = document.querySelectorAll('.wishlist-btn');
 
-		// Add event listener to each wishlist button
-		wishlistButtons.forEach(wishlistButton => {
-			wishlistButton.addEventListener('click', async (event) => {
-				event.preventDefault();
+const wishlistButtons = document.querySelectorAll('.wishlist-btn');
 
-				try {
-					const productId = wishlistButton.getAttribute('data-product-id');
-					console.log('product id', productId)
-					if (!productId) {
-						console.error('Product ID is empty.');
-						return;
-					}
+wishlistButtons.forEach(wishlistButton => {
+    wishlistButton.addEventListener('click', async (event) => {
+        event.preventDefault();
 
-					else {
-						// Item is not in the wishlist, add it
-						const response = await axios.post('/wishlist/add', {
-							productId: productId
-						});
-						console.log(productId)
-						const isItemAddedToWishlist = response.data.success;
-						if (isItemAddedToWishlist) {
-							window.location.reload()
-						}
+        try {
+            const productId = wishlistButton.getAttribute('data-product-id');
+            console.log('product id', productId);
+            if (!productId) {
+                console.error('Product ID is empty.');
+                return;
+            } else {
+                // Item is not in the wishlist, add it
+                $.ajax({
+                    url: '/wishlist/add',
+                    method: 'POST',
+                    data: { productId: productId },
+                    success: function(response) {
+                        console.log(productId);
+                        const isItemAddedToWishlist = response.success;
+                        if (isItemAddedToWishlist) {
+                            wishlistButton.innerHTML = '<i class="bi bi-heart-fill"></i>';
+                            wishlistButton.style.color = 'red';
+                            wishlistButton.classList.add('added-to-wishlist');
 
-					}
-				} catch (error) {
-					console.error('Error:', error);
-				}
-			});
-		});
-
-
-
-		async function setWishlistIconColor(productId) {
-			try {
-				const response = await axios.get(`/wishlist/${productId}`);
-				const isInWishlist = response.data.isInWishlist;
-				let productButtons = document.querySelectorAll(`[data-product-id="${productId}"]`);
-				productButtons.forEach(button => {
-					if (isInWishlist) {
-						button.innerHTML = '<i class="bi bi-heart-fill"></i>';
-						button.style.color = 'red';
-						button.classList.add('added-to-wishlist');
-					} else {
-						button.innerHTML = '<i class="bi bi-heart"></i>';
-						button.style.color = '';
-						button.classList.remove('added-to-wishlist');
-
-					}
-					// Add event listener to the wishlist icon
-					button.addEventListener('click', event => {
-						const productName = button.dataset.productName;
-						const productImage = button.dataset.productImage;
-						const productPrice = button.dataset.productPrice;
-						const productVariant = button.dataset.productVariant;
-						addToWishlist(productId, productName, productImage, productPrice, productVariant, button, event);
-					});
-				});
-			} catch (error) {
-				console.error('Error checking wishlist:', error);
-			}
-		}
+                        } else {
+                            wishlistButton.innerHTML = '<i class="bi bi-heart"></i>';
+                            wishlistButton.style.color = '';
+                            wishlistButton.classList.remove('added-to-wishlist');
+                        }
+                    },
+                    error: function(error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+});
 
 
 
 	</script>
+	<!-- Include jQuery from a CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 	<!-- //If you're using CDN -->
 	<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 

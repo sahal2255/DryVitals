@@ -567,7 +567,7 @@ const wishlistAdd = async (req, res) => {
             user.wishlist.product = user.wishlist.product.filter(item => item.productId.toString() !== productId);
             user = await user.save();
             console.log('Existing product removed from the wishlist', );
-             return res.status(200).json({ success: true, });
+             return res.status(200).json({ success: false, });
         
         }
         if (!user) {
@@ -770,14 +770,14 @@ let singleCheckOutget = async (req, res) => {
 
 let saveAddress = async (req, res) => {
     try {
-        const { Name, email, phoneNumber, district, place, address, pincode } = req.body;
+        const {  district, place, address, pincode } = req.body;
         const userId = req.user.id; // Assuming you have the user ID in the request object
         
         // Construct the user address object
         const userAddress = [{
-            name: Name,
-            email: email,
-            phoneNumber: phoneNumber,
+            // name: Name,
+            // email: email,
+            // phoneNumber: phoneNumber,
             district: district,
             place: place,
             address: address,
@@ -892,6 +892,7 @@ const order = async (req, res) => {
             {
                 $project: {
                     _id: 1,
+                    userData:1,
                     userId: 1,
                     createdAt:1,
                     status:1,
@@ -923,6 +924,7 @@ const order = async (req, res) => {
             {
                 $group: {
                     _id: '$_id',
+                    userData:{$first:'$userData'},
                     createdAt: { $first: { $dateToString: { format: "%Y-%m-%d %H:%M:%S", date: "$createdAt", timezone: "+03:00" } } },
                     status:{$first:'$status'},
                     userId: { $first: '$userId' },
@@ -951,17 +953,80 @@ const order = async (req, res) => {
 
 //   get user profile page
 
-  let profile=async(req,res)=>{
+let profile = async (req, res) => {
+    let userId = req.user.id;
+    console.log(userId);
 
-    let userId=req.user.id
-    let user=await User.findOne({_id:userId})
-    // console.log(user);
-    if(!user){
-        return res.status(400).send('user not found')
+    try {
+        let user = await User.aggregate([
+            { $match: { _id:new mongoose.Types.ObjectId(userId) } }, 
+            { $unwind: "$userAddress" } // Unwind the userAddress array
+        ]);
+
+        if (!user || user.length === 0) {
+            return res.status(400).send('User not found');
+        }
+
+        user = user[0];
+
+        return res.render('user/profile', { user });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send('Internal Server Error');
     }
-   return res.render('user/profile',{user})
-   
-  }
+};
+
+
+
+// Update the editUserAddress function
+let editUserAddress = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        console.log('userAddress edit id',userId);
+        const {
+            
+            district,
+            place,
+            address,
+            pincode
+        } = req.body;
+
+        // Find the user by ID
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({
+                message: 'User not found'
+            });
+        }
+
+        // Update the user's address
+        user.userAddress = {
+            
+            district,
+            place,
+            address,
+            pincode,
+            hasAddress: true
+        };
+
+        // Save the updated user
+        await user.save();
+
+        res.status(200).json({
+            message: 'User address updated successfully',
+            user: user // Optionally, you can send back the updated user object in the response
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: 'Internal server error'
+        });
+    }
+};
+
+
+
 
 // ----end profile page section
 
@@ -1068,5 +1133,6 @@ module.exports={
     profile,
     razorpaypayment,
     singleOrderDetails,
-    cancelOrder
+    cancelOrder,
+    editUserAddress
 }
