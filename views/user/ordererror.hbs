@@ -130,7 +130,6 @@
                     <div class="card-header">
                         <h2 class="mb-0">Order Summary</h2>
                     </div>
-                    {{!-- {{orderDetails.[0].createdAt}} --}}
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table">
@@ -145,20 +144,26 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                               {{#each orderDetails}}
-                    <tr data-order-id="{{this._id}}">
-                        <td>{{this.createdAt}}</td>
-                        <td>{{this.selectedPaymentMethod}}</td>
-                        <td>{{this.totalAmount}}</td>
-                        <td>{{this.status}}</td>
-                        <td>
-                            <button type="button" class="btn btn-primary" data-toggle="modal"
-                                data-target="#exampleModalCenter" onclick="getOrderDetails('{{this._id}}')">
-                                View
-                            </button>
-                        </td>
-                    </tr>
-                {{/each}}
+                                {{#each orderDetails}}
+                                    {{#each this.cartProducts}}
+                                    <tr data-order-id="{{../_id}}">
+                                        <td>
+                                            {{../createdAt}}
+                                        </td>
+
+                                        <td>{{../selectedPaymentMethod}}</td>
+                                        <td>{{../totalAmount}}</td>
+
+                                        <td>{{../status}}</td>
+                                        <td><button type="button" class="btn btn-primary" data-toggle="modal"
+                                                data-target="#exampleModalCenter" onclick="getOrderDetails()">
+                                                view
+                                            </button></td>
+                                    </tr>
+                                    {{!-- <p>{{../isCancel}}</p> --}}
+                                    {{/each}}
+
+                    {{/each}}
                                 </tbody>
                             </table>
                         </div>
@@ -176,17 +181,22 @@
                     </div>
 
                     {{#if orderDetails.length}}
-    <div class="card-body">
-        <p><strong>Name:</strong> <span id="name">{{orderDetails.[0].userDetails.userName}}</span></p>
-        <p><strong>Email:</strong> <span id="email">{{orderDetails.[0].userDetails.email}}</span></p>
-        <p><strong>Phone:</strong> <span id="phone">{{orderDetails.[0].userDetails.phoneNumber}}</span></p>
-        <p><strong>District:</strong> <span id="district">{{orderDetails.[0].userDetails.userAddress.district}}</span></p>
-        <p><strong>Place:</strong> <span id="place">{{orderDetails.[0].userDetails.userAddress.place}}</span></p>
-        <p><strong>Address:</strong> <span id="address">{{orderDetails.[0].userDetails.userAddress.address}}</span></p>
-        <p><strong>Pincode:</strong> <span id="pincode">{{orderDetails.[0].userDetails.userAddress.pincode}}</span></p>
-    </div>
-{{/if}}
-
+                    <div class="card-body">
+                        <p><strong>Name:</strong> <span id="name">{{orderDetails.[0].userData.userName}}</span></p>
+                        <p><strong>Email:</strong> <span id="email">{{orderDetails.[0].userData.email}}</span></p>
+                        <p><strong>Phone:</strong> <span id="phone">{{orderDetails.[0].userData.phoneNumber}}</span>
+                        </p>
+                        <p><strong>District:</strong> <span
+                                id="district">{{orderDetails.[0].userAddress.district}}</span></p>
+                        <p><strong>Place:</strong> <span id="place">{{orderDetails.[0].userAddress.place}}</span></p>
+                        <p><strong>Address:</strong> <span id="address">{{orderDetails.[0].userAddress.address}}</span>
+                        </p>
+                        <p><strong>Pincode:</strong> <span id="pincode">{{orderDetails.[0].userAddress.pincode}}</span>
+                        
+                        </p>
+                        
+                    </div>
+                    {{/if}}
 
 
 
@@ -207,7 +217,7 @@
                 </div>
                 <div class="modal-body">
 
-                    {{!-- <p>{{orderDetails.productDetails.prductName}}</p> --}}
+                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -216,6 +226,7 @@
             </div>
         </div>
     </div>
+
 
 
     <script>
@@ -230,55 +241,34 @@
             const orderId = event.target.closest('tr').dataset.orderId;
             console.log(orderId)
             try {
-                const response = await axios.get(`/singleOrderDetails/${orderId}`); 
-                const details=response.data.singleorder
-                showOrderDetails(details);  // Accessing correct property in response data
+                const response = await axios.get(`/singleOrderDetails/${orderId}`); // Corrected typo in URL
+                showOrderDetails(response.data.singleorder);  // Accessing correct property in response data
             } catch (error) {
                 console.error('Error fetching order details:', error);
                 // Handle error gracefully, e.g., display an error message to the user
             }
         }
 
-function showOrderDetails(details) {
-    const modalBody = document.querySelector('.modal-body');
-    const closeButton = document.querySelector('[data-dismiss="modal"]');
-    const cancelButton = document.getElementById('btn-cancel');
-    const modalFooter = document.querySelector('.modal-footer');
+        function showOrderDetails(orderDetails) {
+            const modalBody = document.querySelector('.modal-body');
+                const closeButton = document.querySelector('[data-dismiss="modal"]');
 
-    // Clear previous content
-    modalBody.innerHTML = '';
+                const cancelButton = document.getElementById('btn-cancel');
+                const modalFooter = document.querySelector('.modal-footer');
 
-    // Display order details
-    modalBody.innerHTML = `
-        <p>Order ID: ${details[0]._id}</p>
-        <input type="hidden" value="${details[0]._id}" id="orderId">
-        <p>Created At: ${details[0].createdAt}</p>
-        <p>Payment Method: ${details[0].selectedPaymentMethod}</p>
-        <p>Total Amount: ${details[0].totalAmount}</p>
-
+            modalBody.innerHTML = `
+        <p>Order ID: ${orderDetails._id}</p>
+        <input type="hidden" value="${orderDetails._id}" id="orderId">
+        <p>Created At: ${orderDetails.createdAt}</p>
+        <p>Payment Method: ${orderDetails.selectedPaymentMethod}</p>
+        <p>Total Amount: ${orderDetails.totalAmount}</p>
+        <p>${orderDetails.isCancel}</p>
+        <p>${orderDetails.productName}</p>
+        
+        
     `;
-    console.log(details)
-
-    // Loop through each product in the order and display its details
-    details.forEach(product => {
-        const productDiv = document.createElement('div');
-        productDiv.classList.add('product-details');
-        productDiv.innerHTML = `
-            <div class="card">
-                <div class="card-body">
-                    <p>Name: ${product.productDetails.productName}</p>
-                    <img src="${product.productDetails.imageUrl}" style="width:100px">
-                    <p>Price: ${product.cart.product.productPrice}</p>
-                    <p>Quantity: ${product.cart.product.quantity}</p>
-                    <p>Variant: ${product.cart.product.productVariant}</p>
-                </div>
-            </div>
-        `;
-        modalBody.appendChild(productDiv);
-    });
-
-    // Toggle display of cancel button based on order cancellation status
-    if (details[0].isCancel) {
+     
+    if (orderDetails.isCancel) {
         cancelButton.style.display = 'none'; // Hide the cancel button
         closeButton.style.display = 'block'; // Show the close button
     } else {
@@ -286,7 +276,7 @@ function showOrderDetails(details) {
         closeButton.style.display = 'block'; // Show the close button
         cancelButton.addEventListener('click', handleCancelButtonClick);
     }
-}
+        }
 
         // Function to handle the click event on the "Cancel" button
         async function handleCancelButtonClick() {

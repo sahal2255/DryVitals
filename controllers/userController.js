@@ -10,6 +10,7 @@ const Order =require('../models/order')
 const { error } = require('jquery')
 const { ObjectId } = mongoose.Types;
 const razorpay = require('../config/razorpay')
+const { singleOrder } = require('./adminController')
 // const Razorpay = require('razorpay')
 
 
@@ -690,32 +691,79 @@ const wishlisttoCart=async(req,res)=>{
 };
 
 
+// const checkOut = async (req, res) => {
+//     try {
+//         // Retrieve user data including userAddress and cart
+//         const user = await User.findById(req.user.id);
+//         const userId = req.user.id;
+//         console.log(user.userAddress)
+//         // Check if the user has a stored address
+//         if (user.userAddress && user.userAddress.length > 0) {
+//             res.render('user/checkOut', {
+//                 userId,
+//                 userAddress: user.userAddress,
+//                 cartItems: user.cart,
+//                 total: user.cart.total,
+//                 totalmrp: user.cart.totalmrp,
+//                 shipping: 60,
+//                 totalAmount: user.cart.total + 60,
+//             });
+//         } else {
+//             res.render('user/checkOut', {
+//                 userId,
+//                 cartItems: user.cart,
+//                 total: user.cart.total,
+//                 totalmrp: user.cart.totalmrp,
+//                 shipping: 60,
+//                 totalAmount: user.cart.total + 60,
+//                 noAddress: true // Flag to indicate that user has no addresses
+//             });
+//         }
+//     } catch (error) {
+//         console.error('Error during checkout:', error);
+//         res.status(500).send('Internal Server Error');
+//     }
+// };
+
+
 const checkOut = async (req, res) => {
     try {
         // Retrieve user data including userAddress and cart
         const user = await User.findById(req.user.id);
         const userId = req.user.id;
-        console.log(user.userAddress)
-        // Check if the user has a stored address
-        if (user.userAddress && user.userAddress.length > 0) {
-            res.render('user/checkOut', {
-                userId,
-                userAddress: user.userAddress,
-                cartItems: user.cart,
-                total: user.cart.total,
-                totalmrp: user.cart.totalmrp,
-                shipping: 60,
-                totalAmount: user.cart.total + 60,
-            });
+        
+        // Check if the user has cart items
+        if (user.cart && user.cart.product.length > 0) {
+            // User has cart items
+            console.log(user.userAddress);
+            if (user.userAddress && user.userAddress.length > 0) {
+                // User has stored address
+                res.render('user/checkOut', {
+                    userId,
+                    userAddress: user.userAddress,
+                    cartItems: user.cart,
+                    total: user.cart.total,
+                    totalmrp: user.cart.totalmrp,
+                    shipping: 60,
+                    totalAmount: user.cart.total + 60,
+                });
+            } else {
+                // User has no stored address
+                res.render('user/checkOut', {
+                    userId,
+                    cartItems: user.cart,
+                    total: user.cart.total,
+                    totalmrp: user.cart.totalmrp,
+                    shipping: 60,
+                    totalAmount: user.cart.total + 60,
+                    noAddress: true // Flag to indicate that user has no addresses
+                });
+            }
         } else {
+            // User has no cart items
             res.render('user/checkOut', {
                 userId,
-                cartItems: user.cart,
-                total: user.cart.total,
-                totalmrp: user.cart.totalmrp,
-                shipping: 60,
-                totalAmount: user.cart.total + 60,
-                noAddress: true // Flag to indicate that user has no addresses
+                cartItems: null, // Passing null when cart is empty
             });
         }
     } catch (error) {
@@ -811,7 +859,6 @@ const placeOrder = async (req, res) => {
         console.log(userId);
         const selectedPaymentMethod = req.body.selectedPaymentMethod;
         console.log(selectedPaymentMethod);
-        // Retrieve the user document including userAddress and cart fields
         const user = await User.findById(userId, 'userAddress cart');
 
         // Extract userAddress and cart from the retrieved user document
@@ -837,6 +884,7 @@ const placeOrder = async (req, res) => {
             createdAt: new Date(),
             selectedPaymentMethod: selectedPaymentMethod, 
             cart: cart, 
+            isCancel:false,
         });
         
         const savedOrder = await newOrder.save();
@@ -867,89 +915,161 @@ const placeOrder = async (req, res) => {
 
 
 
-const order = async (req, res) => {
-    const userId = req.user.id;
-    console.log('Order page for user:', userId);
+// const order = async (req, res) => {
+//     const userId = req.user.id;
+//     console.log('Order page for user:', userId);
 
+//     try {
+//         const orderDetails = await Order.aggregate([
+//             {
+//                 $match: {
+//                     userId: new mongoose.Types.ObjectId(userId)
+//                 }
+//             },
+//             {
+//                 $lookup: {
+//                     from: 'users',
+//                     localField: 'userId',
+//                     foreignField: '_id',
+//                     as: 'userData'
+//                 }
+//             },
+//             {
+//                 $unwind: '$userData'
+//             },
+//             {
+//                 $project: {
+//                     _id: 1,
+//                     userData:1,
+//                     userId: 1,
+//                     createdAt:1,
+//                     status:1,
+//                     userAddress: { $arrayElemAt: ['$userData.userAddress', 0] }, // Extract the userAddress
+//                     selectedPaymentMethod: 1,
+//                     totalAmount: 1,
+//                     isCancel:1,
+//                     cart: 1,
+//                     cartProducts: '$cart.product' // Rename to cartProducts to avoid confusion
+//                 }
+//             },
+//             {
+//                 $unwind: '$cartProducts'
+//             },
+//             {
+//                 $lookup: {
+//                     from: 'products',
+//                     localField: 'cartProducts.productId',
+//                     foreignField: '_id',
+//                     as: 'productDetails'
+//                 }
+//             },
+//             {
+//                 $addFields: {
+//                     'cartProducts.productImage': { 
+//                         $arrayElemAt: ['$productDetails.imageUrl', 0] 
+//                     }
+//                 }
+//             },
+//             {
+//                 $group: {
+//                     _id: '$_id',
+//                     userData:{$first:'$userData'},
+//                     createdAt: { $first: { $dateToString: { format: "%Y-%m-%d %H:%M:%S", date: "$createdAt", timezone: "+03:00" } } },
+//                     status:{$first:'$status'},
+//                     userId: { $first: '$userId' },
+//                     userAddress: { $first: '$userAddress' },
+//                     selectedPaymentMethod: { $first: '$selectedPaymentMethod' },
+//                     totalAmount: { $first: '$totalAmount' },
+//                     isCancel:{$first:'$isCancel'},
+//                     cart: { $first: '$cart' },
+//                     cartProducts: { $push: '$cartProducts' }
+//                 }
+//             },
+//             {
+//                 $sort: { createdAt: -1 } // Sort by createdAt field in descending order (most recent first)
+//             }
+//         ]);
+
+//         // console.log(orderDetails);
+
+//         res.render('user/order', { orderDetails });
+//     } catch (error) {
+//         console.error('Error fetching order details:', error);
+//         res.status(500).send('Internal Server Error');
+//     }
+// }
+
+
+let order = async (req, res) => {
     try {
+        const userId=req.user.id
+        console.log('userid ',userId)
+       
+
         const orderDetails = await Order.aggregate([
             {
-                $match: {
-                    userId: new mongoose.Types.ObjectId(userId)
+                $match: { userId:new mongoose.Types.ObjectId(userId) }
+            },
+            
+            {
+                $unwind: '$cart.product' 
+            },
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: 'cart.product.productId',
+                    foreignField: '_id',
+                    as: 'productDetails'
                 }
+            },
+            {
+                $unwind: '$productDetails'
+            },
+            {
+                $unwind:'$productDetails.imageUrl'
             },
             {
                 $lookup: {
                     from: 'users',
                     localField: 'userId',
                     foreignField: '_id',
-                    as: 'userData'
+                    as: 'userDetails'
                 }
             },
             {
-                $unwind: '$userData'
+                $unwind: '$userDetails'
             },
             {
-                $project: {
-                    _id: 1,
-                    userData:1,
-                    userId: 1,
-                    createdAt:1,
-                    status:1,
-                    userAddress: { $arrayElemAt: ['$userData.userAddress', 0] }, // Extract the userAddress
-                    selectedPaymentMethod: 1,
-                    totalAmount: 1,
-                    cart: 1,
-                    cartProducts: '$cart.product' // Rename to cartProducts to avoid confusion
-                }
+                $unwind:'$userDetails.userAddress'
             },
-            {
-                $unwind: '$cartProducts'
-            },
-            {
-                $lookup: {
-                    from: 'products',
-                    localField: 'cartProducts.productId',
-                    foreignField: '_id',
-                    as: 'productDetails'
-                }
-            },
-            {
-                $addFields: {
-                    'cartProducts.productImage': { 
-                        $arrayElemAt: ['$productDetails.imageUrl', 0] 
-                    }
-                }
-            },
+            
             {
                 $group: {
-                    _id: '$_id',
-                    userData:{$first:'$userData'},
-                    createdAt: { $first: { $dateToString: { format: "%Y-%m-%d %H:%M:%S", date: "$createdAt", timezone: "+03:00" } } },
-                    status:{$first:'$status'},
-                    userId: { $first: '$userId' },
-                    userAddress: { $first: '$userAddress' },
-                    selectedPaymentMethod: { $first: '$selectedPaymentMethod' },
-                    totalAmount: { $first: '$totalAmount' },
-                    cart: { $first: '$cart' },
-                    cartProducts: { $push: '$cartProducts' }
+                    _id: '$_id', 
+                    createdAt: { $first: '$createdAt' }, 
+                    selectedPaymentMethod: { $first: '$selectedPaymentMethod' }, 
+                    totalAmount: { $first: '$totalAmount' }, 
+                    status: { $first: '$status' } ,
+                    userDetails: { $first: '$userDetails' } 
+
                 }
             },
             {
-                $sort: { createdAt: -1 } // Sort by createdAt field in descending order (most recent first)
-            }
+                $sort: { createdAt: -1 } // Sort by createdAt date in descending order
+            },
+            
         ]);
-
+        orderDetails.forEach(order => {
+            order.createdAt = new Date(order.createdAt).toLocaleString();
+        });
         // console.log(orderDetails);
 
         res.render('user/order', { orderDetails });
     } catch (error) {
-        console.error('Error fetching order details:', error);
-        res.status(500).send('Internal Server Error');
+        console.log('Error in getting order details:', error);
+        throw error;
     }
-}
-
-
+};
 
 //   get user profile page
 
@@ -1058,6 +1178,30 @@ const razorpaypayment = async (req, res) => {
 };
 
 
+// let singleOrderDetails = async (req, res) => {
+//     try {
+//         const userId = req.user.id; 
+//         console.log(userId);
+//         const orderId = req.params.orderId; // Assuming order ID is passed as a route parameter
+
+//         console.log('User ID:', userId);
+//         console.log('Order ID:', orderId);
+
+//         const singleorder = await Order.findOne({ _id: orderId, userId: userId });
+//         console.log(singleorder);
+
+//         if (!singleorder) {
+//             return res.status(404).json({ error: 'Order not found' });
+//         }
+
+//         res.json({ singleorder });
+//     } catch (error) {
+//         console.error('Error fetching order details:', error);
+//         res.status(500).json({ error: 'Failed to fetch order details' });
+//     }
+// };
+
+
 let singleOrderDetails = async (req, res) => {
     try {
         const userId = req.user.id; 
@@ -1067,30 +1211,51 @@ let singleOrderDetails = async (req, res) => {
         console.log('User ID:', userId);
         console.log('Order ID:', orderId);
 
-        const singleorder = await Order.findOne({ _id: orderId, userId: userId });
-        console.log(singleorder);
+        const singleorder = await Order.aggregate([
+            {
+                $match: { _id:new mongoose.Types.ObjectId(orderId), userId:new mongoose.Types.ObjectId(userId) }
+            },
+            {
+                $unwind: '$cart.product' 
+            },
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: 'cart.product.productId',
+                    foreignField: '_id',
+                    as: 'productDetails'
+                }
+            },
+            {
+                $unwind: '$productDetails'
+            },
+            {
+                $unwind: '$productDetails.imageUrl'
+            },
+            
+        ]);
 
-        if (!singleorder) {
+        if (!singleorder || singleorder.length === 0) {
             return res.status(404).json({ error: 'Order not found' });
         }
-
-        // If order is found, return it
-        res.json({ singleorder });
+console.log('single order',singleorder);
+        res.json({ singleorder: singleorder });
     } catch (error) {
         console.error('Error fetching order details:', error);
         res.status(500).json({ error: 'Failed to fetch order details' });
     }
 };
 
-let cancelOrder=async(req,res)=>{
+
+
+let cancelOrder = async (req, res) => {
     try {
         const userId = req.user.id; 
         const orderId = req.params.orderId;
-        console.log(orderId);
 
-        const order = await Order.findOneAndDelete({ _id: orderId, userId: userId });
+        const updatedOrder = await Order.findByIdAndUpdate(orderId, { isCancel: true });
 
-        if (!order) {
+        if (!updatedOrder) {
             return res.status(404).json({ error: 'Order not found or unauthorized to cancel' });
         }
 
@@ -1100,6 +1265,8 @@ let cancelOrder=async(req,res)=>{
         res.status(500).json({ error: 'Failed to cancel order' });
     }
 }
+
+
 
 
 
