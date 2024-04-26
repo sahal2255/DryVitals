@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Link Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+       body {
+        background-color: gainsboro; /* Set background color for the body */
+    }
+    .cart-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.product-name {
+    flex-basis: 40%; /* Adjust the width for product name */
+}
+
+.quantity, .variant, .price {
+    flex-basis: 20%; 
+}
+
+.price {
+    text-align: right;
+}
+.cart-details {
+    margin-top: 20px;
+}
+
+.cart-details > div {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.cart-details span:first-child {
+    font-weight: bold;
+}
+
+.total-amount {
+    font-size: 18px;
+}
+
+.amount {
+    text-align: right;
+}
+/* Custom styling for list-group radio buttons */
+.list-group-item {
+    border: none;
+}
+
+.list-group-item .form-check {
+    margin-bottom: 0;
+}
+
+.list-group-item .form-check-input {
+    margin-top: 5px;
+}
+
+
+
+
+
+    </style>
+</head>
+<body>
+    
+    <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+        <div class="container-fluid " >     
+            <div class="row justify-content-evenly" >
+                <div class="col-4" style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); padding: 20px;">
+                    <h1 class="text-center ">Cart Items</h1>
+                    <hr>
+                    <div class="cart-item">
+                        <span class="product-name">Product Name:</span>
+                        <span class="quantity">Quantity:</span>
+                        <span class="variant">Variant:</span>
+                        <span class="price">Price:</span>
+                    </div>
+                    <div class="cart-item">
+                        <span class="product-name">Product Name:</span>
+                        <span class="quantity">Quantity:</span>
+                        <span class="variant">Variant:</span>
+                        <span class="price">Price:</span>
+                    </div>
+                    <hr>
+                    <div class="cart-details">
+                        <div class="total">
+                            <span>Total:</span>
+                            <span class="amount">$100.00</span> <!-- Example value, replace with actual total -->
+                        </div>
+                        <div class="shipping">
+                            <span>Shipping:</span>
+                            <span class="amount">$10.00</span> <!-- Example value, replace with actual shipping -->
+                        </div>
+                        <hr>
+                        <div class="total-amount">
+                            <span>Total Amount:</span>
+                            <span class="amount">$110.00</span> <!-- Example value, replace with actual total amount -->
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="col-4 " style="background-color: rgb(255, 255, 255); padding: 20px;">
+                    <div class="row gy-4 ">
+                        <div class="col-12" style="background-color: rgb(255, 255, 255); padding: 0;">
+                            <h3 style="margin: 10px 0;" class="text-center">Address</h3>
+                            <div>
+                            <div class="mb-3">
+                                <label class="form-label">Select Address:</label><br>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="addressOption" id="addressOption1" value="option1">
+                                    <label class="form-check-label ml-2 text-left" for="addressOption1">Address 1</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="addressOption" id="addressOption2" value="option2">
+                                    <label class="form-check-label ml-2" for="addressOption2">Address 2</label>
+                                </div>
+                                <!-- Add more address options here -->
+                            </div>
+                        </div>
+                            
+                            
+                            
+                            
+                            
+                            
+                            <p class="d-inline-flex gap-1">
+                                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                  Add Address
+                                </button>
+                              </p>
+                              <div class="collapse" id="collapseExample">
+                                <div class="card card-body">
+                                    <!-- Address form -->
+                                    <form>
+                                        <div class="row mb-3">
+                                            <label for="inputAddress" class="col-sm-2 col-form-label">Address</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="inputAddress" placeholder="123 Main St">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="inputCity" class="col-sm-2 col-form-label">City</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="inputCity" placeholder="City">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="inputState" class="col-sm-2 col-form-label">State</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="inputState" placeholder="State">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label for="inputZip" class="col-sm-2 col-form-label">Zip</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="inputZip" placeholder="Zip">
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-sm-10 offset-sm-2">
+                                                <button type="submit" class="btn btn-primary">Save Address</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!-- End of address form -->
+                                </div>
+                            </div>
+                          
+
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row gy-4 mt-5 ">
+                        <div class="col-12" style="background-color: rgb(255, 255, 255); padding: 0;">
+                            <h3 style="margin: 10px 0;" class="text-center">Payment Method</h3>
+                            <hr>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                                <label class="form-check-label" for="inlineRadio1">COD</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                                <label class="form-check-label" for="inlineRadio2">Online</label>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center ">
+                            <button type="button" class="btn btn-lg btn-success">Buy Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    
+    
+
+
+
+
+
+
+    <!-- Bootstrap JavaScript and Popper.js (not required for this layout, but included for completeness) -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+</body>
+</html>

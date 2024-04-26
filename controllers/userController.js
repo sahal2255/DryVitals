@@ -732,12 +732,9 @@ const checkOut = async (req, res) => {
         const user = await User.findById(req.user.id);
         const userId = req.user.id;
         
-        // Check if the user has cart items
         if (user.cart && user.cart.product.length > 0) {
-            // User has cart items
             console.log(user.userAddress);
             if (user.userAddress && user.userAddress.length > 0) {
-                // User has stored address
                 res.render('user/checkOut', {
                     userId,
                     userAddress: user.userAddress,
@@ -748,7 +745,6 @@ const checkOut = async (req, res) => {
                     totalAmount: user.cart.total + 60,
                 });
             } else {
-                // User has no stored address
                 res.render('user/checkOut', {
                     userId,
                     cartItems: user.cart,
@@ -773,76 +769,32 @@ const checkOut = async (req, res) => {
 };
 
 
-let singleCheckOut=async(req,res)=>{
-    try {
-        const userId=req.user.id
-        console.log('hello',userId);
-        const user=await User.findById(userId)
-        const { productName, selectedVariant, price, mrp } = req.body;
-        if (productName && selectedVariant && price && mrp) {
-            if(user.userAddress && user.userAddress.length > 0){
-                res.render('user/singleCheckOut', { productName, selectedVariant, price, mrp ,userAddress:user.userAddress});
 
-            }
-            else{
-                res.render('user/singleCheckOut', { productName, selectedVariant, price, mrp });
 
-            }
-        } else {
-            throw new Error('Missing required data.');
-        }
-    } catch (error) {
-        console.log('Error in singleCheckOut:', error);
-        res.status(400).send('Bad Request');
-    }
-}
 
-let singleCheckOutget = async (req, res) => {
-    try {
-        const userId=req.user.id
-        
-        const user=await User.findById(userId)
-       
-        const { productName, selectedVariant, price, mrp } = req.query;
-        const result = { productName, selectedVariant, price, mrp };
-        console.log('checkout page getting', req.query);
-        const shipping=60
-        const totalamount=+result.price+shipping
-        res.render('user/singleCheckOut', { result,shipping,totalamount,userAddress:user.userAddress });
-         
-    } catch (error) {
-        console.log('Error in singleCheckOutget:', error);
-        
-    }
-}
 
 let saveAddress = async (req, res) => {
     try {
-        const {  district, place, address, pincode } = req.body;
+        const { newAddress } = req.body;
         const userId = req.user.id; // Assuming you have the user ID in the request object
-        
-        // Construct the user address object
-        const userAddress = [{
-            // name: Name,
-            // email: email,
-            // phoneNumber: phoneNumber,
-            district: district,
-            place: place,
-            address: address,
-            pincode: pincode
-        }];
 
-        // Update the user document with the new address
-        const updatedUser = await User.findByIdAndUpdate(userId, { userAddress: userAddress }, { new: true });
+        // Fetch the current user data from the database
+        const user = await User.findById(userId);
 
-        if (!updatedUser) {
+        if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        console.log('User address updated:', updatedUser);
-        
-        // Redirect the user to the checkout page after address update
-        res.redirect('/checkOut');
+        // Add the new address to the userAddress array
+        user.userAddress.push(newAddress);
+
+        // Save the updated user data back to the database
+        await user.save();
+
+        console.log('User address updated:', user);
+
+        // Send a response back to the client
+        res.status(200).json({ message: 'Address saved successfully', user: user });
     } catch (error) {
         console.log('Error:', error);
         return res.status(500).json({ message: 'Internal server error' });
@@ -858,6 +810,8 @@ const placeOrder = async (req, res) => {
         const userId = req.user.id;
         console.log(userId);
         const selectedPaymentMethod = req.body.selectedPaymentMethod;
+        const selectedPincode=req.body.selectedPincode
+        console.log('selected pincode',selectedPincode);
         console.log(selectedPaymentMethod);
         const user = await User.findById(userId, 'userAddress cart');
 
@@ -880,7 +834,7 @@ const placeOrder = async (req, res) => {
             })),
             
             totalAmount:totalAmount,
-            
+            selectedPincode:selectedPincode,
             createdAt: new Date(),
             selectedPaymentMethod: selectedPaymentMethod, 
             cart: cart, 
@@ -914,90 +868,6 @@ const placeOrder = async (req, res) => {
 
 
 
-
-// const order = async (req, res) => {
-//     const userId = req.user.id;
-//     console.log('Order page for user:', userId);
-
-//     try {
-//         const orderDetails = await Order.aggregate([
-//             {
-//                 $match: {
-//                     userId: new mongoose.Types.ObjectId(userId)
-//                 }
-//             },
-//             {
-//                 $lookup: {
-//                     from: 'users',
-//                     localField: 'userId',
-//                     foreignField: '_id',
-//                     as: 'userData'
-//                 }
-//             },
-//             {
-//                 $unwind: '$userData'
-//             },
-//             {
-//                 $project: {
-//                     _id: 1,
-//                     userData:1,
-//                     userId: 1,
-//                     createdAt:1,
-//                     status:1,
-//                     userAddress: { $arrayElemAt: ['$userData.userAddress', 0] }, // Extract the userAddress
-//                     selectedPaymentMethod: 1,
-//                     totalAmount: 1,
-//                     isCancel:1,
-//                     cart: 1,
-//                     cartProducts: '$cart.product' // Rename to cartProducts to avoid confusion
-//                 }
-//             },
-//             {
-//                 $unwind: '$cartProducts'
-//             },
-//             {
-//                 $lookup: {
-//                     from: 'products',
-//                     localField: 'cartProducts.productId',
-//                     foreignField: '_id',
-//                     as: 'productDetails'
-//                 }
-//             },
-//             {
-//                 $addFields: {
-//                     'cartProducts.productImage': { 
-//                         $arrayElemAt: ['$productDetails.imageUrl', 0] 
-//                     }
-//                 }
-//             },
-//             {
-//                 $group: {
-//                     _id: '$_id',
-//                     userData:{$first:'$userData'},
-//                     createdAt: { $first: { $dateToString: { format: "%Y-%m-%d %H:%M:%S", date: "$createdAt", timezone: "+03:00" } } },
-//                     status:{$first:'$status'},
-//                     userId: { $first: '$userId' },
-//                     userAddress: { $first: '$userAddress' },
-//                     selectedPaymentMethod: { $first: '$selectedPaymentMethod' },
-//                     totalAmount: { $first: '$totalAmount' },
-//                     isCancel:{$first:'$isCancel'},
-//                     cart: { $first: '$cart' },
-//                     cartProducts: { $push: '$cartProducts' }
-//                 }
-//             },
-//             {
-//                 $sort: { createdAt: -1 } // Sort by createdAt field in descending order (most recent first)
-//             }
-//         ]);
-
-//         // console.log(orderDetails);
-
-//         res.render('user/order', { orderDetails });
-//     } catch (error) {
-//         console.error('Error fetching order details:', error);
-//         res.status(500).send('Internal Server Error');
-//     }
-// }
 
 
 let order = async (req, res) => {
@@ -1098,7 +968,6 @@ let profile = async (req, res) => {
 
 
 
-// Update the editUserAddress function
 let editUserAddress = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -1238,8 +1107,15 @@ let singleOrderDetails = async (req, res) => {
         if (!singleorder || singleorder.length === 0) {
             return res.status(404).json({ error: 'Order not found' });
         }
-console.log('single order',singleorder);
-        res.json({ singleorder: singleorder });
+// console.log('single order',singleorder);
+const selectedPincode = singleorder[0].selectedPincode;
+console.log('selected pincode', selectedPincode)
+const userAddress = await User.findOne({ 'userAddress.pincode': selectedPincode });
+console.log('selected pincode addess',userAddress);
+
+// Pass order details and user's address to the frontend
+res.json({ singleorder: singleorder, });
+
     } catch (error) {
         console.error('Error fetching order details:', error);
         res.status(500).json({ error: 'Failed to fetch order details' });
@@ -1292,8 +1168,7 @@ module.exports={
     wishlistdelete,
     wishlisttoCart,
     checkOut,
-    singleCheckOut,
-    singleCheckOutget,
+    
     saveAddress,
     placeOrder,
     order,

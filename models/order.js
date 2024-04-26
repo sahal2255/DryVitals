@@ -19,6 +19,9 @@ const orderSchema = new mongoose.Schema({
             productPrice: { type: Number }
         }]
     },
+    selectedPincode:{
+        type:Number
+    },
     selectedPaymentMethod:{
         type:String
     },

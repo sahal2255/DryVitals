@@ -233,15 +233,21 @@
 	</div>
 
 {{else}}
-<div class="container" style="height: 250px; background-color: #ffcccc; display: flex; justify-content: center; align-items: center;">
-    <div class="not-product" style="text-align: center;">
-        <h1 style="font-size: 24px; color: #ff0000;">Product Not Found In Cart</h1>
-        <p style="font-size: 16px; color: #333;">Add products to your cart to see them here.</p>
+<div style="font-family: Arial, sans-serif; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f0f0f0;">
+    <div style="max-width: 400px; width: 100%; text-align: center; padding: 40px; border-radius: 20px; background: linear-gradient(135deg, #ffffff, #f2f2f2); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; overflow: hidden;">
+        <div style="font-size: 64px; color: #aaa; margin-bottom: 20px; transition: transform 0.3s ease-in-out;">
+            🛒
+        </div>
+        <div style="font-size: 24px; color: #666; margin-bottom: 20px; opacity: 0.8; transition: opacity 0.3s ease-in-out;">
+            Your cart is empty
+        </div>
+<div style="margin-top: 20px; text-align: center;">
+    <a href="/product" style="background-color: #4caf50; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; font-size: 18px; transition: background-color 0.3s ease-in-out;">Add More Items</a>
+</div>
     </div>
 </div>
-<div style="margin-top: 20px; text-align: center;">
-    <a href="/product" class="boxed-btn" style="background-color: #4caf50; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Add More Items</a>
-</div>
+
+
 {{/if}}
 
 
