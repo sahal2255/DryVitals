@@ -11,6 +11,7 @@ const { error } = require('jquery')
 const { ObjectId } = mongoose.Types;
 const razorpay = require('../config/razorpay')
 const { singleOrder } = require('./adminController')
+const { search } = require('../routes/userRoute')
 // const Razorpay = require('razorpay')
 
 
@@ -1015,6 +1016,33 @@ let editUserAddress = async (req, res) => {
 };
 
 
+let editDetails = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        console.log('editAddress user', userId);
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        // Check if userName is provided in the request body
+        if (!req.body.userName) {
+            return res.status(400).json({ error: 'User name is required' });
+        }
+        // Update user details
+        user.userName = req.body.userName; 
+        user.email = req.body.email; 
+        user.phoneNumber = req.body.phone; 
+        // Save the updated user
+        await user.save();
+
+        res.status(200).json({ message: 'User details updated successfully' });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+
 
 
 // ----end profile page section
@@ -1047,28 +1075,7 @@ const razorpaypayment = async (req, res) => {
 };
 
 
-// let singleOrderDetails = async (req, res) => {
-//     try {
-//         const userId = req.user.id; 
-//         console.log(userId);
-//         const orderId = req.params.orderId; // Assuming order ID is passed as a route parameter
 
-//         console.log('User ID:', userId);
-//         console.log('Order ID:', orderId);
-
-//         const singleorder = await Order.findOne({ _id: orderId, userId: userId });
-//         console.log(singleorder);
-
-//         if (!singleorder) {
-//             return res.status(404).json({ error: 'Order not found' });
-//         }
-
-//         res.json({ singleorder });
-//     } catch (error) {
-//         console.error('Error fetching order details:', error);
-//         res.status(500).json({ error: 'Failed to fetch order details' });
-//     }
-// };
 
 
 let singleOrderDetails = async (req, res) => {
@@ -1143,8 +1150,17 @@ let cancelOrder = async (req, res) => {
 }
 
 
-
-
+let searchPro=async(req,res)=>{
+    const keyword = req.body.keyword.toLowerCase();
+    console.log(keyword);
+    const products=await Product.find({})
+    const searchResults = products.filter(product =>
+        product.productName.toLowerCase().includes(keyword)
+    );
+    console.log('search result',searchResults)
+    // Return the search results
+    res.json({ products: searchResults });
+}
 
 module.exports={
     homepage,
@@ -1176,5 +1192,7 @@ module.exports={
     razorpaypayment,
     singleOrderDetails,
     cancelOrder,
-    editUserAddress
+    editUserAddress,
+    editDetails,
+    searchPro
 }

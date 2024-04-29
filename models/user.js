@@ -1,5 +1,6 @@
 const { type } = require('jquery');
 const mongoose=require('mongoose')
+const bcrypt=require('bcrypt')
 
 const userSchema=new mongoose.Schema({
     userName:{
@@ -68,18 +69,7 @@ const userSchema=new mongoose.Schema({
 },
 
 userAddress:[{
-    // name:{
-    //     type:String,
-    //     required:true
-    // },
-    // email:{
-    //     type:String,
-    //     required:true
-    // },
-    // phoneNumber:{
-    //     type:String,
-    //     required:true
-    // },
+
     district:{
         type:String,
         required:true
@@ -103,8 +93,14 @@ userAddress:[{
 
 }]
 
-
 });
+userSchema.methods.comparePassword = async function(candidatePassword) {
+    try {
+        return await bcrypt.compare(candidatePassword, this.password);
+    } catch (error) {
+        throw new Error(error);
+    }
+};
 
 
 const User=mongoose.model('User',userSchema)

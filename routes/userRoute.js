@@ -74,5 +74,7 @@ router.get('/singleOrderDetails/:orderId',userAuth,userController.singleOrderDet
 router.put('/orders/:orderId',userAuth,userController.cancelOrder)
 
 router.post('/profile/editAddress/:id',userAuth,userController.editUserAddress)
+router.post('/profile/editDetails/:id',userAuth,userController.editDetails)
+router.post('/product/search',userAuth,userController.searchPro)
 
 module.exports=router

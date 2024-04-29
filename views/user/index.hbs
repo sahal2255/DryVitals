@@ -51,7 +51,7 @@
 					<div class="main-menu-wrap">
 						<!-- logo -->
 						<div class="site-logo">
-							<a href="index.hbs">
+							<a href="/">
 								<img src="/assets/img/Mainlogo.png" alt="">
 							</a>
 						</div>
@@ -61,40 +61,34 @@
 						<nav class="main-menu">
 							<ul>
 								<li class="current-list-item"><a href="#">Home</a>
-									<ul class="sub-menu">
+									{{!-- <ul class="sub-menu">
 										<li><a href="index.hbs">Static Home</a></li>
 										<li><a href="index_2.html">Slider Home</a></li>
-									</ul>
+									</ul> --}}
 								</li>
 								<li><a href="/product">Product</a></li>
 								<li><a href="#">Pages</a>
 									<ul class="sub-menu">
-										<li><a href="404.html">404 page</a></li>
-										<li><a href="about.html">About</a></li>
-										<li><a href="cart.html">Cart</a></li>
-										<li><a href="checkout.html">Check Out</a></li>
-										<li><a href="contact.html">Contact</a></li>
+										{{!-- <li><a href="404.html">404 page</a></li> --}}
+										{{!-- <li><a href="about.html">About</a></li> --}}
+										<li><a href="/cart">Cart</a></li>
+										{{!-- <li><a href="checkout.html">Check Out</a></li> --}}
+										{{!-- <li><a href="contact.html">Contact</a></li> --}}
 										<li><a href="/product">Product</a></li>
-										<li><a href="/login">Login</a></li>
+										{{!-- <li><a href="/login">Login</a></li> --}}
 									</ul>
 								</li>
 								
-								<li><a href="contact.html">Contact</a></li>
-								<li><a href="shop.html">Shop</a>
+								{{!-- <li><a href="contact.html">Contact</a></li> --}}
+								<li><a href="/product">Products</a>
 									<ul class="sub-menu">
 										<li><a href="/product">Product</a></li>
-										<li><a href="checkout.html">Check Out</a></li>
+										{{!-- <li><a href="checkout.html">Check Out</a></li> --}}
 										{{!-- <li><a href="/singleProduct">Single Product</a></li> --}}
-										<li><a href="cart.html">Cart</a></li>
+										<li><a href="/cart">Cart</a></li>
 									</ul>
 								</li>
-								<li><a href="#">Login</a>
-									<ul class="sub-menu">
-										<li><a href="/login">Login</a></li>
-										<li><a href="/logOut">LogOut</a></li>
-										{{!-- <li><a href="single-news.html">Single News</a></li> --}}
-									</ul>
-								</li>
+								
 								<li>
 									<div class="header-icons">
 										<a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
