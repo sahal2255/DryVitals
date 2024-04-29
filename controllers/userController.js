@@ -1114,7 +1114,6 @@ let singleOrderDetails = async (req, res) => {
         if (!singleorder || singleorder.length === 0) {
             return res.status(404).json({ error: 'Order not found' });
         }
-// console.log('single order',singleorder);
 const selectedPincode = singleorder[0].selectedPincode;
 console.log('selected pincode', selectedPincode)
 const userAddress = await User.findOne({ 'userAddress.pincode': selectedPincode });

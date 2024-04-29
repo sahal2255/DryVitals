@@ -396,6 +396,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const selectedCategory = categoryFilter.value;
         filterAndSortProducts(selectedCategory, selectedSort);
     });
+	    attachWishlistEventListeners();
+
 });
 
 function filterAndSortProducts(category, sortBy) {
@@ -408,6 +410,8 @@ function filterAndSortProducts(category, sortBy) {
         .then(response => {
             if (response.data && response.data.products) {
                 renderProducts(response.data.products);
+				attachWishlistEventListeners();
+
             } else {
                 console.log('No products found in the response.');
             }
@@ -438,7 +442,7 @@ const productHTML = `
             <div class="stock-details">
                 <!-- Any additional details you want to display -->
             </div>
-${product.inWishlist ? `<a href="#" class="wishlist-btn" style="color: red;" data-product-id="${product._id}"><i class="bi bi-heart-fill"></i></a>` : `<a class="wishlist-btn" id="addToWishlist" data-product-id="${product._id}"><i class="bi bi-heart"></i></a>`}
+${product.inWishlist ? `<a href="#" class="wishlist-btn added-to-wishlist" style="color: red;" data-product-id="${product._id}"><i class="bi bi-heart-fill"></i></a>` : `<a class="wishlist-btn" id="addToWishlist" data-product-id="${product._id}"><i class="bi bi-heart"></i></a>`}
         </div>
     </div>
 `;
@@ -452,6 +456,7 @@ ${product.inWishlist ? `<a href="#" class="wishlist-btn" style="color: red;" dat
 
 
 
+function attachWishlistEventListeners() {
 const wishlistButtons = document.querySelectorAll('.wishlist-btn');
 
 wishlistButtons.forEach(wishlistButton => {
@@ -494,6 +499,7 @@ wishlistButtons.forEach(wishlistButton => {
         }
     });
 });
+}
 
 $(document).ready(function(){
             $("#sortFilterSection").hide(); 
