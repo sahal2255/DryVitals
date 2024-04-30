@@ -777,24 +777,20 @@ const checkOut = async (req, res) => {
 let saveAddress = async (req, res) => {
     try {
         const { newAddress } = req.body;
-        const userId = req.user.id; // Assuming you have the user ID in the request object
-
-        // Fetch the current user data from the database
+        const userId = req.user.id; 
         const user = await User.findById(userId);
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
+        if (user.userAddress.length >= 3) {
+            return res.status(400).json({ message: 'Maximum address limit reached' });
+        }
 
-        // Add the new address to the userAddress array
         user.userAddress.push(newAddress);
-
-        // Save the updated user data back to the database
         await user.save();
 
         console.log('User address updated:', user);
-
-        // Send a response back to the client
         res.status(200).json({ message: 'Address saved successfully', user: user });
     } catch (error) {
         console.log('Error:', error);
@@ -946,19 +942,13 @@ let order = async (req, res) => {
 
 let profile = async (req, res) => {
     let userId = req.user.id;
-    console.log(userId);
 
     try {
-        let user = await User.aggregate([
-            { $match: { _id:new mongoose.Types.ObjectId(userId) } }, 
-            { $unwind: "$userAddress" } // Unwind the userAddress array
-        ]);
+        let user = await User.findById(userId);
 
-        if (!user || user.length === 0) {
+        if (!user) {
             return res.status(400).send('User not found');
         }
-
-        user = user[0];
 
         return res.render('user/profile', { user });
     } catch (error) {
@@ -967,19 +957,35 @@ let profile = async (req, res) => {
     }
 };
 
+let editaddressGet = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const addressId = req.params.addressId;
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        const address = user.userAddress.find(addr => addr._id.toString() === addressId);
+        console.log(address);
+        if (!address) {
+            return res.status(404).json({ message: "Address not found" });
+        }
+
+        res.status(200).json({ address });
+    } catch (error) {
+        console.error('Error fetching address details:', error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
 
 
 let editUserAddress = async (req, res) => {
     try {
         const userId = req.user.id;
-        console.log('userAddress edit id',userId);
-        const {
-            
-            district,
-            place,
-            address,
-            pincode
-        } = req.body;
+        const addressId = req.params.addressId;
+        const { district, place, address, pincode } = req.body;
 
         // Find the user by ID
         const user = await User.findById(userId);
@@ -990,22 +996,28 @@ let editUserAddress = async (req, res) => {
             });
         }
 
-        // Update the user's address
-        user.userAddress = {
-            
-            district,
-            place,
-            address,
-            pincode,
-            hasAddress: true
-        };
+        // Find the index of the address within the user's address array
+        const addressIndex = user.userAddress.findIndex(addr => addr._id.toString() === addressId);
+
+        // If the address is not found, return a 404 error
+        if (addressIndex === -1) {
+            return res.status(404).json({
+                message: 'Address not found'
+            });
+        }
+
+        // Update the address details at the specified index
+        user.userAddress[addressIndex].district = district;
+        user.userAddress[addressIndex].place = place;
+        user.userAddress[addressIndex].address = address;
+        user.userAddress[addressIndex].pincode = pincode;
 
         // Save the updated user
         await user.save();
 
         res.status(200).json({
-            message: 'User address updated successfully',
-            user: user // Optionally, you can send back the updated user object in the response
+            message: 'Address updated successfully',
+            address: user.userAddress[addressIndex] // Optionally, send back the updated address
         });
     } catch (error) {
         console.error(error);
@@ -1014,6 +1026,7 @@ let editUserAddress = async (req, res) => {
         });
     }
 };
+
 
 
 let editDetails = async (req, res) => {
@@ -1161,6 +1174,11 @@ let searchPro=async(req,res)=>{
     res.json({ products: searchResults });
 }
 
+
+
+
+
+
 module.exports={
     homepage,
     loginPage,
@@ -1193,5 +1211,6 @@ module.exports={
     cancelOrder,
     editUserAddress,
     editDetails,
-    searchPro
+    searchPro,
+    editaddressGet
 }

@@ -1,213 +1,439 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <!-- Link Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-       body {
-        background-color: gainsboro; /* Set background color for the body */
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <style>
+    body {
+      background-color: #f8f9fa; /* Light background color */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Custom Font */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
-    .cart-item {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-.product-name {
-    flex-basis: 40%; /* Adjust the width for product name */
-}
-
-.quantity, .variant, .price {
-    flex-basis: 20%; 
-}
-
-.price {
-    text-align: right;
-}
-.cart-details {
-    margin-top: 20px;
-}
-
-.cart-details > div {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
-}
-
-.cart-details span:first-child {
-    font-weight: bold;
-}
-
-.total-amount {
-    font-size: 18px;
-}
-
-.amount {
-    text-align: right;
-}
-/* Custom styling for list-group radio buttons */
-.list-group-item {
-    border: none;
-}
-
-.list-group-item .form-check {
-    margin-bottom: 0;
-}
-
-.list-group-item .form-check-input {
-    margin-top: 5px;
-}
-
-
-
-
-
-    </style>
+    .profile-container {
+      background-color: #fff;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      text-align: center;
+    } 
+    .options {
+      margin-top: 20px;
+    }
+    .options a {
+      display: flex;
+      align-items: center;
+      padding: 12px 24px;
+      margin-bottom: 10px;
+      color: #4a4848;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease; /* Animation */
+    }
+    .options a:hover {
+      background-color: #007bff; /* Blue background color on hover */
+      color: #fff;
+    }
+    .user-details {
+      background-color: #fff;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      text-align: left; /* Align text to left for better readability */
+    }
+    .user-details h2 {
+      margin-bottom: 20px;
+      color: #333;
+      font-size: 2rem; /* Larger Font Size */
+    }
+    .user-details p {
+      color: #666;
+      font-size: 1.2rem; /* Larger Font Size */
+    }
+    .edit-address-btn {
+      background-color: #fdfdfe;
+      border-color: #fafafb;
+      color: #333;
+      border-radius: 5px;
+      border: none;
+      padding: 12px 24px;
+      margin-bottom: 10px;
+      transition: background-color 0.3s ease; /* Animation */
+      display: flex;
+      align-items: center;
+    }
+    .edit-address-btn:hover {
+      background-color: #007bff;
+      border-color: #ffffff;
+      color: #fff;
+    }
+    .edit-address-btn i {
+      margin-right: 10px;
+    }
+    .error-msg{
+      color: red;
+    }
+  </style>
 </head>
 <body>
-    
-    <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
-        <div class="container-fluid " >     
-            <div class="row justify-content-evenly" >
-                <div class="col-4" style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); padding: 20px;">
-                    <h1 class="text-center ">Cart Items</h1>
-                    <hr>
-                    <div class="cart-item">
-                        <span class="product-name">Product Name:</span>
-                        <span class="quantity">Quantity:</span>
-                        <span class="variant">Variant:</span>
-                        <span class="price">Price:</span>
-                    </div>
-                    <div class="cart-item">
-                        <span class="product-name">Product Name:</span>
-                        <span class="quantity">Quantity:</span>
-                        <span class="variant">Variant:</span>
-                        <span class="price">Price:</span>
-                    </div>
-                    <hr>
-                    <div class="cart-details">
-                        <div class="total">
-                            <span>Total:</span>
-                            <span class="amount">$100.00</span> <!-- Example value, replace with actual total -->
-                        </div>
-                        <div class="shipping">
-                            <span>Shipping:</span>
-                            <span class="amount">$10.00</span> <!-- Example value, replace with actual shipping -->
-                        </div>
-                        <hr>
-                        <div class="total-amount">
-                            <span>Total Amount:</span>
-                            <span class="amount">$110.00</span> <!-- Example value, replace with actual total amount -->
-                        </div>
-                    </div>
-                </div>
-        
-                <div class="col-4 " style="background-color: rgb(255, 255, 255); padding: 20px;">
-                    <div class="row gy-4 ">
-                        <div class="col-12" style="background-color: rgb(255, 255, 255); padding: 0;">
-                            <h3 style="margin: 10px 0;" class="text-center">Address</h3>
-                            <div>
-                            <div class="mb-3">
-                                <label class="form-label">Select Address:</label><br>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="addressOption" id="addressOption1" value="option1">
-                                    <label class="form-check-label ml-2 text-left" for="addressOption1">Address 1</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="addressOption" id="addressOption2" value="option2">
-                                    <label class="form-check-label ml-2" for="addressOption2">Address 2</label>
-                                </div>
-                                <!-- Add more address options here -->
-                            </div>
-                        </div>
-                            
-                            
-                            
-                            
-                            
-                            
-                            <p class="d-inline-flex gap-1">
-                                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                                  Add Address
-                                </button>
-                              </p>
-                              <div class="collapse" id="collapseExample">
-                                <div class="card card-body">
-                                    <!-- Address form -->
-                                    <form>
-                                        <div class="row mb-3">
-                                            <label for="inputAddress" class="col-sm-2 col-form-label">Address</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="inputAddress" placeholder="123 Main St">
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <label for="inputCity" class="col-sm-2 col-form-label">City</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="inputCity" placeholder="City">
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <label for="inputState" class="col-sm-2 col-form-label">State</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="inputState" placeholder="State">
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <label for="inputZip" class="col-sm-2 col-form-label">Zip</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" class="form-control" id="inputZip" placeholder="Zip">
-                                            </div>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <div class="col-sm-10 offset-sm-2">
-                                                <button type="submit" class="btn btn-primary">Save Address</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <!-- End of address form -->
-                                </div>
-                            </div>
-                          
+{{!-- <div class="container">
 
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row gy-4 mt-5 ">
-                        <div class="col-12" style="background-color: rgb(255, 255, 255); padding: 0;">
-                            <h3 style="margin: 10px 0;" class="text-center">Payment Method</h3>
-                            <hr>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                                <label class="form-check-label" for="inlineRadio1">COD</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                <label class="form-check-label" for="inlineRadio2">Online</label>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-center ">
-                            <button type="button" class="btn btn-lg btn-success">Buy Now</button>
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
+  <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/index">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Profil</li>
+  </ol>
+</nav>
+</div> --}}
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-4 col-sm-12">
+      <div class="profile-container">
+        <h1 class="mb-3">{{ user.userName }}</h1>
+        <p class="mb-4">{{ user.email }}</p>
+        <hr>
+        <div class="options">
+          <a href="/wishlist" class="btn p- "><i class="fas fa-heart me-1 " ></i> Wishlist</a>
+          <a href="/cart" class="btn "><i class="fas fa-shopping-cart me-1"></i> Cart</a>
+          <a href="/order" class="btn "><i class="fas fa-box-open me-1"></i> Order</a>
+          <button type="button" class="edit-address-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            <i class="fas fa-edit me-1"></i> Edit Address
+          </button>
+        <a href="#" class="btn" data-bs-toggle="modal" data-bs-target="#changePasswordModal"><i class="fas fa-lock me-1"></i> Change Password</a>
+          <a href="/logOut" class="btn "><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
         </div>
+      </div>
     </div>
-    
-    
+<div class="col-md-8">
+    <div class="user-details">
+        <h2 class="mb-4">User Addresses</h2>
+        {{#each user.userAddress}}
+            <div class="card mb-4">
+                <div class="card-body">                    
+                        <p class="card-text"><strong>Address:</strong> {{address}}</p>
+                        <p class="card-text"><strong>Place:</strong> {{place}}</p>
+                        <p class="card-text"><strong>District:</strong> {{district}}</p>
+                        <p class="card-text"><strong>Pincode:</strong> {{pincode}}</p>
+                    
+                        <a href="#" class="btn btn-primary edit-address-btn">
+                            <i class="fas fa-edit"></i> Edit Address
+                        </a>
+                    
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</div>
+
+
+  </div>
+</div>
+
+{{!-- modal section for edit userAddress --}}
+{{!-- <div class="modal-dialog modal-dialog-centered"> --}}
+
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit Address</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="edit-address-form" >
+          
+          <div class="mb-3">
+            <label for="edit-address" class="form-label">Address</label>
+            <textarea class="form-control" id="edit-address" name="address" rows="3">{{ user.userAddress.address }}</textarea>
+            <p class="error-msg" id="address-error"></p>
+          </div>
+          <div class="mb-3">
+            <label for="edit-place" class="form-label">Place</label>
+            <input type="text" class="form-control" id="edit-place" name="place" value="{{ user.userAddress.place }}" >
+            <p class="error-msg" id="place-error"></p>
+          </div>
+          <div class="mb-3">
+            <label for="edit-district" class="form-label">District</label>
+            <input type="text" class="form-control" id="edit-district" name="district" value="{{ user.userAddress.district }}" >
+            <p class="error-msg" id="district-error"></p>
+          </div>
+          <div class="mb-3">
+            <label for="edit-pincode" class="form-label">Pincode</label>
+            <input type="text" class="form-control" id="edit-pincode" name="pincode" value="{{ user.userAddress.pincode }}">
+            <p class="error-msg" id="pincode-error"></p>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <input type="hidden" id="userId" value="{{user._id}}">
+        <button type="button" id="savebtn" class="btn btn-primary" onclick="validateForm()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- New modal for changing password -->
+<div class="modal fade" id="changePasswordModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="changePasswordModalLabel">Change User Details</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Form for changing password -->
+        <form id="change-password-form">
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <input type="text" class="form-control" id="name" name="name" value="{{user.userName}}">
+      <p class="error-msg" id="nameError"></p>
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" class="form-control" id="email" name="email" value="{{user.email}}">
+      <p class="error-msg" id="emailError"></p>
+    </div>
+    <div class="mb-3">
+      <label for="phone" class="form-label">Phone Number</label>
+      <input type="tel" class="form-control" id="phone" name="phone" value="{{user.phoneNumber}}">
+      <p class="error-msg" id="phoneError"></p>
+    </div>
+    <div class="mb-3">
+      <label for="current-password" class="form-label">Current Password</label>
+      <input type="password" class="form-control" id="current-password" name="currentPassword" value="{{user.password}}">
+      <p class="error-msg" id="current-password-error"></p>
+    </div>
+    <div class="mb-3">
+      <label for="new-password" class="form-label">New Password</label>
+      <input type="password" class="form-control" id="new-password" name="newPassword"  >
+      <p class="error-msg" id="new-password-error"></p>
+    </div>
+    <div class="mb-3">
+      <label for="confirm-password" class="form-label">Confirm Password</label>
+      <input type="password" class="form-control" id="confirm-password" name="confirmPassword">
+      <p class="error-msg" id="confirm-password-error"></p>
+    </div>
+  </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <input type="hidden" name="userId" value="{{user._id}}">
+        <button type="button" class="btn btn-primary" onclick="changePassword()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function validateForm() {
+
+  const address = document.getElementById('edit-address').value.trim();
+  const place = document.getElementById('edit-place').value.trim();
+  const district = document.getElementById('edit-district').value.trim();
+  const pincode = document.getElementById('edit-pincode').value.trim();
+  
+  // Reset error messages
+  document.querySelectorAll('.error-msg').forEach(msg => msg.textContent = '');
+  
+  let isValid = true;
+
+ 
+  
+
+  // Validate address
+  if (address === '') {
+    document.getElementById('address-error').textContent = 'Address is required';
+    isValid = false;
+  }
+
+  // Validate place
+  if (place === '') {
+    document.getElementById('place-error').textContent = 'Place is required';
+    isValid = false;
+  }
+
+  // Validate district
+  if (district === '') {
+    document.getElementById('district-error').textContent = 'District is required';
+    isValid = false;
+  }
+
+  // Validate pincode
+  if (pincode === '') {
+    document.getElementById('pincode-error').textContent = 'Pincode is required';
+    isValid = false;
+  } else if (!validatePincode(pincode)) {
+    document.getElementById('pincode-error').textContent = 'Invalid pincode';
+    isValid = false;
+  }
+
+ if (isValid) {
+        const formData = {
+            district,
+            place,
+            address,
+            pincode
+        };
+        const userId = document.getElementById('userId').value;
+
+        fetch(`/profile/editAddress/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to update address');
+            }
+        })
+        .then(data => {
+            // Handle success
+            console.log(data);
+            // Show SweetAlert for success
+            Swal.fire({
+                icon: 'success',
+                title: 'Address Updated',
+                text: 'Your address has been successfully updated.',
+                showConfirmButton: false,
+                timer: 2000
+            });
+        })
+        .catch(error => {
+            // Handle error
+            console.error('Error:', error);
+            // Show SweetAlert for error
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to update address. Please try again later.',
+            });
+        });
+    }
+}
+
+
+function validatePincode(pincode) {
+  const re = /^[1-9][0-9]{5}$/;
+  return re.test(pincode);
+}
 
 
 
+// validate the change password 
 
 
+function validateForm() {
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const currentPassword = document.getElementById('current-password').value.trim();
+  const newPassword = document.getElementById('new-password').value.trim();
+  const confirmPassword = document.getElementById('confirm-password').value.trim();
+  const phoneError = document.getElementById('phoneError');
 
-    <!-- Bootstrap JavaScript and Popper.js (not required for this layout, but included for completeness) -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+  // Reset error messages
+  document.querySelectorAll('.error-msg').forEach(msg => msg.textContent = '');
+
+  let isValid = true;
+
+  // Validate name
+  if (name === '') {
+    document.getElementById('nameError').textContent = 'Name is required';
+    isValid = false;
+  }
+
+  // Validate email
+  if (email === '') {
+    document.getElementById('emailError').textContent = 'Email is required';
+    isValid = false;
+  }
+
+  // Validate phone number
+  if (phone === '') {
+    phoneError.textContent = 'Phone number is required';
+    isValid = false;
+  } else if (!(/^\d{10}$/).test(phone)) {
+    phoneError.textContent = 'Phone number must be 10 digits';
+    isValid = false;
+  }
+
+  // Validate current password
+  if (currentPassword === '') {
+    document.getElementById('current-password-error').textContent = 'Current password is required';
+    isValid = false;
+  }
+
+  // Validate new password
+  if (newPassword === '') {
+    document.getElementById('new-password-error').textContent = 'New password is required';
+    isValid = false;
+  }
+
+  // Validate confirm password
+  if (confirmPassword === '') {
+    document.getElementById('confirm-password-error').textContent = 'Confirm password is required';
+    isValid = false;
+  } else if (newPassword !== confirmPassword) {
+    document.getElementById('confirm-password-error').textContent = 'Passwords do not match';
+    isValid = false;
+  }
+
+  return isValid;
+}
+
+function changePassword() {
+  if (validateForm()) {
+    const userId = document.querySelector('input[name="userId"]').value;
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const currentPassword = document.getElementById('current-password').value.trim();
+    const newPassword = document.getElementById('new-password').value.trim();
+    const confirmPassword = document.getElementById('confirm-password').value.trim();
+
+    const formData = {
+      name,
+      email,
+      phone,
+      currentPassword,
+      newPassword,
+      confirmPassword
+    };
+
+
+    console.log(userId)
+    axios.post(`/profile/editDetails/${userId}`,formData)
+    .then(response=>{
+      console.log(response.data)
+    })
+    .catch(error=>{
+      console.log('error',error)
+    })
+}
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Bootstrap JS Bundle (Popper.js + Bootstrap JS) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Font Awesome -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 </body>
 </html>
