@@ -128,7 +128,8 @@
       background-color: #0056b3;
       border-color: #0056b3;
     }
-    .error{
+
+    .error {
       color: red;
     }
   </style>
@@ -184,7 +185,7 @@
                   <ul class="sub-menu">
                     <li><a href="/product">Product</a></li>
                     {{!-- <li><a href="checkout.html">Check Out</a></li> --}}
-                    {{!-- <li><a href="/singleProduct">Single Product</a></li> --}}
+                    <li><a href="/summary">Summary</a></li>
                     <li><a href="/cart">Cart</a></li>
                   </ul>
                 </li>
@@ -201,7 +202,7 @@
 
               </ul>
             </nav>
-            <a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
+            {{!-- <a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a> --}}
             <div class="mobile-menu"></div>
             <!-- menu end -->
           </div>
@@ -236,7 +237,7 @@
       <div class="row">
         <div class="col-lg-8 offset-lg-2 text-center">
           <div class="breadcrumb-text">
-            <p>Dryc Vitals</p>
+            <p>Dry Vitals</p>
             <h1>Profile</h1>
           </div>
         </div>
@@ -249,7 +250,7 @@
 
   <div class="container mt-5 ">
     <div class="row justify-content-center">
-      <div class="col-md-4 col-sm-12">
+      <div class="col-md-6 col-lg-4 col-sm-12">
         <div class="profile-container">
           <h1 class="mb-3">{{ user.userName }}</h1>
           <p class="mb-4">{{ user.email }}</p>
@@ -263,12 +264,12 @@
               data-bs-target="#staticBackdrop">
               <i class="fas fa-edit me-1"></i> Edit Address
             </button> --}}
-            <a href="#" class="btn" data-bs-toggle="modal" data-bs-target="#changePasswordModal"> Change Details</a>
+            <a href="#" class="btn" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Edit Profile</a>
             <a href="/logOut" class="btn "><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
           </div>
         </div>
       </div>
-      <div class="col-md-8">
+      <div class="col-md-6 col-lg-8">
         <div class="user-details">
 
           {{#each user.userAddress}}
@@ -283,6 +284,9 @@
                 data-bs-target="#staticBackdrop" data-id="{{_id}}">
                 <i class="fas fa-edit"></i><input type="hidden" value="{{_id}}"> Edit Address
               </a>
+              <button class="btn btn-danger delete-address-btn" data-id="{{_id}}">
+                <i class="fas fa-trash"></i> Delete Address
+              </button>
 
             </div>
           </div>
@@ -291,54 +295,53 @@
 
 
 
-        	<p class="d-inline-flex gap-1">
-								<button class="btn btn-primary" type="button" data-bs-toggle="collapse"
-									data-bs-target="#collapseExample" aria-expanded="false"
-									aria-controls="collapseExample">
-									Add Address
-								</button>
-							</p>
-							<div class="collapse" id="collapseExample">
-								<div class="card card-body">
-									<!-- Address form -->
-									<form id="addressForm" action="/saveAddress" method="POST" onsubmit="return saveAddress(event)">
-    <div class="row mb-3">
-        <label for="inputAddress" class="col-sm-2 col-form-label">Address</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" id="address" placeholder="Address" name="address">
-        <p id="addressError" class="error"></p> <!-- Error message for address -->
-        </div>
-    </div>
-    <div class="row mb-3">
-        <label for="inputCity" class="col-sm-2 col-form-label">District</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" id="district" name="district" placeholder="District">
-        <p id="districtError" class="error"></p> <!-- Error message for district -->
-        </div>
-    </div>
-    <div class="row mb-3">
-        <label for="inputState" class="col-sm-2 col-form-label">Place</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" id="place" name="place" placeholder="Place">
-        <p id="placeError" class="error"></p> <!-- Error message for place -->
-        </div>
-    </div>
-    <div class="row mb-3">
-        <label for="inputZip" class="col-sm-2 col-form-label">Pincode</label>
-        <div class="col-sm-10">
-            <input type="number" class="form-control" id="pincode" name="pincode" placeholder="Pincode">
-        <p id="pincodeError" class="error"></p> <!-- Error message for pincode -->
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-sm-10 offset-sm-2">
-            <button type="button" class="btn btn-primary" id="submitAddress">Save Address</button>
-        </div>
-    </div>
-</form>
+        <p class="d-inline-flex gap-1">
+          <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
+            aria-expanded="false" aria-controls="collapseExample">
+            Add Address
+          </button>
+        </p>
+        <div class="collapse" id="collapseExample">
+          <div class="card card-body">
+            <!-- Address form -->
+            <form id="addressForm" action="/saveAddress" method="POST" onsubmit="return saveAddress(event)">
+              <div class="row mb-3">
+                <label for="inputAddress" class="col-sm-2 col-form-label">Address</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="address" placeholder="Address" name="address">
+                  <p id="addressError" class="error"></p> <!-- Error message for address -->
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="inputCity" class="col-sm-2 col-form-label">District</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="district" name="district" placeholder="District">
+                  <p id="districtError" class="error"></p> <!-- Error message for district -->
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="inputState" class="col-sm-2 col-form-label">Place</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="place" name="place" placeholder="Place">
+                  <p id="placeError" class="error"></p> <!-- Error message for place -->
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="inputZip" class="col-sm-2 col-form-label">Pincode</label>
+                <div class="col-sm-10">
+                  <input type="number" class="form-control" id="pincode" name="pincode" placeholder="Pincode">
+                  <p id="pincodeError" class="error"></p> <!-- Error message for pincode -->
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-sm-10 offset-sm-2">
+                  <button type="button" class="btn btn-primary" id="submitAddress">Save Address</button>
+                </div>
+              </div>
+            </form>
 
-								</div>
-							</div>
+          </div>
+        </div>
       </div>
 
 
@@ -358,41 +361,45 @@
           <form id="edit-address-form">
 
             <div class="mb-3">
-  <label for="edit-address" class="form-label">Address</label>
-  <textarea class="form-control" id="edit-address" name="address" rows="3">{{ addressDetails.address.address }}</textarea>
-  <p class="error-msg" id="address-error"></p>
-</div>
-<div class="mb-3">
-  <label for="edit-place" class="form-label">Place</label>
-  <input type="text" class="form-control" id="edit-place" name="place" value="{{ addressDetails.address.place }}">
-  <p class="error-msg" id="place-error"></p>
-</div>
-<div class="mb-3">
-  <label for="edit-district" class="form-label">District</label>
-  <input type="text" class="form-control" id="edit-district" name="district" value="{{ addressDetails.address.district }}">
-  <p class="error-msg" id="district-error"></p>
-</div>
-<div class="mb-3">
-  <label for="edit-pincode" class="form-label">Pincode</label>
-  <input type="text" class="form-control" id="edit-pincode" name="pincode" value="{{ addressDetails.address.pincode }}">
-  <p class="error-msg" id="pincode-error"></p>
-</div>
+              <label for="edit-address" class="form-label">Address</label>
+              <textarea class="form-control" id="edit-address" name="address"
+                rows="3">{{ addressDetails.address.address }}</textarea>
+              <p class="error-msg" id="address-error"></p>
+            </div>
+            <div class="mb-3">
+              <label for="edit-place" class="form-label">Place</label>
+              <input type="text" class="form-control" id="edit-place" name="place"
+                value="{{ addressDetails.address.place }}">
+              <p class="error-msg" id="place-error"></p>
+            </div>
+            <div class="mb-3">
+              <label for="edit-district" class="form-label">District</label>
+              <input type="text" class="form-control" id="edit-district" name="district"
+                value="{{ addressDetails.address.district }}">
+              <p class="error-msg" id="district-error"></p>
+            </div>
+            <div class="mb-3">
+              <label for="edit-pincode" class="form-label">Pincode</label>
+              <input type="text" class="form-control" id="edit-pincode" name="pincode"
+                value="{{ addressDetails.address.pincode }}">
+              <p class="error-msg" id="pincode-error"></p>
+            </div>
 
-            
+
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <input type="hidden" id="addressId">
-          <button type="button" id="savebtn" class="btn btn-primary" >Save</button>
+          <button type="button" id="savebtn" class="btn btn-primary">Save</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- New modal for changing password -->
-  {{!-- <div class="modal fade" id="changePasswordModal" data-bs-backdrop="static" data-bs-keyboard="false"
-    tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+  <!-- New modal for changing profile -->
+  <div class="modal fade" id="changePasswordModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="changePasswordModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -428,21 +435,17 @@
               <input type="password" class="form-control" id="new-password" name="newPassword">
               <p class="error-msg" id="new-password-error"></p>
             </div>
-            <div class="mb-3">
-              <label for="confirm-password" class="form-label">Confirm Password</label>
-              <input type="password" class="form-control" id="confirm-password" name="confirmPassword">
-              <p class="error-msg" id="confirm-password-error"></p>
-            </div>
+
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <input type="hidden" name="userId" value="{{user._id}}">
-          <button type="button" class="btn btn-primary" onclick="changePassword()">Save Changes</button>
+          <input type="hidden" id="userId" value="{{user._id}}">
+          <button type="button" id="editProfile" class="btn btn-primary">Save Changes</button>
         </div>
       </div>
     </div>
-  </div> --}}
+  </div>
 
   <script>
 
@@ -461,7 +464,7 @@
             document.getElementById('edit-place').value = addressDetails.address.place;
             document.getElementById('edit-district').value = addressDetails.address.district;
             document.getElementById('edit-pincode').value = addressDetails.address.pincode;
-            document.getElementById('addressId').value=addressDetails.address._id
+            document.getElementById('addressId').value = addressDetails.address._id
 
 
           })
@@ -471,120 +474,187 @@
       });
     });
 
-document.getElementById('savebtn').addEventListener('click', function () {
-  const addressId = document.getElementById('addressId').value;
-  const newAddress = document.getElementById('edit-address').value;
-  const newPlace = document.getElementById('edit-place').value;
-  const newDistrict = document.getElementById('edit-district').value;
-  const newPincode = document.getElementById('edit-pincode').value;
+    document.getElementById('savebtn').addEventListener('click', function () {
+      const addressId = document.getElementById('addressId').value;
+      const newAddress = document.getElementById('edit-address').value;
+      const newPlace = document.getElementById('edit-place').value;
+      const newDistrict = document.getElementById('edit-district').value;
+      const newPincode = document.getElementById('edit-pincode').value;
 
-  const newData = {
-    
-    address: newAddress,
-    place: newPlace,
-    district: newDistrict,
-    pincode: newPincode
-  };
-  console.log('address edit id',addressId)
+      const newData = {
 
-  axios.post(`/profile/editaddress/${addressId}`, newData)
-    .then(response => {
-      console.log('Address details updated successfully:', response.data);
-    })
-    .catch(error => {
-      console.error('Error updating address details:', error);
+        address: newAddress,
+        place: newPlace,
+        district: newDistrict,
+        pincode: newPincode
+      };
+      console.log('address edit id', addressId)
+
+
+      axios.post(`/profile/editaddress/${addressId}`, newData)
+        .then(response => {
+          console.log('Address details updated successfully:', response.data);
+        })
+        .catch(error => {
+          console.error('Error updating address details:', error);
+        });
     });
-});
 
 
-document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("submitAddress").addEventListener("click", saveAddress);
-});
+    document.addEventListener("DOMContentLoaded", function () {
+      document.getElementById("submitAddress").addEventListener("click", saveAddress);
+    });
 
-async function saveAddress(event) {
-    event.preventDefault();
+    async function saveAddress(event) {
+      event.preventDefault();
 
-    var district = document.getElementById("district").value;
-    var place = document.getElementById("place").value.trim();
-    var address = document.getElementById("address").value.trim();
-    var pincode = document.getElementById("pincode").value.trim();
+      var district = document.getElementById("district").value;
+      var place = document.getElementById("place").value.trim();
+      var address = document.getElementById("address").value.trim();
+      var pincode = document.getElementById("pincode").value.trim();
 
-    // Reset error messages
-    document.getElementById("districtError").innerText = "";
-    document.getElementById("placeError").innerText = "";
-    document.getElementById("addressError").innerText = "";
-    document.getElementById("pincodeError").innerText = "";
+      // Reset error messages
+      document.getElementById("districtError").innerText = "";
+      document.getElementById("placeError").innerText = "";
+      document.getElementById("addressError").innerText = "";
+      document.getElementById("pincodeError").innerText = "";
 
-    // Validation
-    var isValid = true;
+      // Validation
+      var isValid = true;
 
-    if (district === "") {
+      if (district === "") {
         document.getElementById("districtError").innerText = "Please enter your district";
         isValid = false;
-    }
+      }
 
-    if (place === "") {
+      if (place === "") {
         document.getElementById("placeError").innerText = "Please enter your place";
         isValid = false;
-    }
+      }
 
-    if (address === "") {
+      if (address === "") {
         document.getElementById("addressError").innerText = "Please enter your address";
         isValid = false;
-    }
+      }
 
-    if (pincode === "") {
+      if (pincode === "") {
         document.getElementById("pincodeError").innerText = "Please enter your pincode";
         isValid = false;
-    } else if (!isValidPincode(pincode)) {
+      } else if (!isValidPincode(pincode)) {
         document.getElementById("pincodeError").innerText = "Pincode should be exactly 6 digits";
         isValid = false;
-    }
+      }
 
-    if (isValid) {
+      if (isValid) {
         try {
-            // Construct the new address object
-            const newAddress = {
-                district: district,
-                place: place,
-                address: address,
-                pincode: pincode
-            };
+          // Construct the new address object
+          const newAddress = {
+            district: district,
+            place: place,
+            address: address,
+            pincode: pincode
+          };
 
-            // Send a request to your server to update the user's address
-            const response = await axios.post('/saveAddress', { newAddress });
+          // Send a request to your server to update the user's address
+          const response = await axios.post('/saveAddress', { newAddress });
 
-            // Handle the response from the server
-            console.log('Address saved successfully:', response.data);
-            // Show SweetAlert notification
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'Your address has been saved successfully!',
-                confirmButtonText: 'OK'
-            }).then((result) => {
-                window.location.href = '/profile';
-            });
+          // Handle the response from the server
+          console.log('Address saved successfully:', response.data);
+          // Show SweetAlert notification
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Your address has been saved successfully!',
+            confirmButtonText: 'OK'
+          }).then((result) => {
+            window.location.href = '/profile';
+          });
         } catch (error) {
-            console.error('Error saving address:', error);
-            // Show SweetAlert for error
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Something went wrong! Please try again later.',
-                confirmButtonText: 'OK'
-            });
+          console.error('Error saving address:', error);
+          // Show SweetAlert for error
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong! Please try again later.',
+            confirmButtonText: 'OK'
+          });
         }
+      }
     }
-}
 
-function isValidPincode(pincode) {
-    // Pincode validation (6 digits)
-    var pincodeRegex = /^\d{6}$/;
-    return pincodeRegex.test(pincode);
-}
+    function isValidPincode(pincode) {
+      // Pincode validation (6 digits)
+      var pincodeRegex = /^\d{6}$/;
+      return pincodeRegex.test(pincode);
+    }
+
+    document.querySelectorAll('.delete-address-btn').forEach(btn => {
+      btn.addEventListener('click', function (event) {
+        event.preventDefault();
+        const addressId = this.dataset.id;
+
+        // Show SweetAlert confirmation dialog
+        Swal.fire({
+          title: 'Are you sure?',
+          text: 'Once deleted, you will not be able to recover this address!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'Yes, delete it!',
+          cancelButtonText: 'Cancel'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            axios.delete(`/profile/deleteAddress/${addressId}`)
+              .then(response => {
+                console.log('Address deleted successfully:', response.data);
+                Swal.fire(
+                  'Deleted!',
+                  'Your address has been deleted.',
+                  'success'
+                ).then((result) => {
+                  window.location.href = '/profile';
+                });
+              })
+              .catch(error => {
+                console.error('Error deleting address:', error);
+                Swal.fire(
+                  'Error!',
+                  'Something went wrong. Please try again later.',
+                  'error'
+                );
+              });
+          }
+        });
+      });
+    });
 
 
+    document.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('editProfile').addEventListener('click', function () {
+        // Get form data
+        const formData = {
+          name: document.getElementById('name').value,
+          email: document.getElementById('email').value,
+          phone: document.getElementById('phone').value,
+          currentPassword: document.getElementById('current-password').value,
+          newPassword: document.getElementById('new-password').value
+        };
+
+        const userId = document.getElementById('userId').value;
+        console.log('profile editing userId', userId);
+
+        axios.post(`/profile/editDetails/${userId}`, formData)
+          .then(function (response) {
+            console.log(response.data);
+            window.location.reload()
+          })
+
+          .catch(function (error) {
+            console.error(error);
+          });
+      });
+    });
 
 
   </script>

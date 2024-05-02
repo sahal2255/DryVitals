@@ -14,6 +14,8 @@ const mongoose=require('mongoose')
 // const cloudinary=require('../config/cloudinary')
 const upload=require('../config/multer');
 const Order = require('../models/order');
+const { cart } = require('./userController');
+const { count } = require('console');
 require('dotenv').config();
 
 
@@ -21,10 +23,6 @@ require('dotenv').config();
 
 // admin dashboard
 
-let adminDash=async(req,res)=>{
-    console.log("req.admin :",req.admin);
-    res.render('admin/index',{admin:req.admin});
-}
 
 
 
@@ -52,7 +50,7 @@ let adminLoginPost=async(req,res)=>{
             if(password!=admin.password){
                 return res.status(400).render("admin/login",{errorp:'password not matching'})
             }else{
-
+                
                 const token=jwt.sign(
                     {
                         id:admin._id,
@@ -64,22 +62,22 @@ let adminLoginPost=async(req,res)=>{
                     }
                 );
                 res.cookie('admin_jwt',token,{httpOnly:true,maxAge:86400000})
-                    
+                
                 console.log('admin logged woth email and password');
                 return res.redirect('/admin/index')
             }
         }
         
         catch(error){
-        console.log('this is admin error');
-        return res.status(500).json({ error: "Internal server error" });
-    }
-    
+            console.log('this is admin error');
+            return res.status(500).json({ error: "Internal server error" });
+        }
+        
     }
     else{
         return res.render('admin/login',{error:'please complete the details'})
     }
-
+    
 }
 
 
@@ -100,24 +98,24 @@ let addCatagoryPost = async (req, res) => {
         if (!req.admin) {
             throw new Error('Admin is not authenticated');
         }
-
-
+        
+        
         let product = await Admin.findOne();
         if (!product) {
             product = new Admin({});
         }
 
         product.categories.push({ catagoryName: catagoryName });
-            await product.save();
-            console.log('Category adding success');
+        await product.save();
+        console.log('Category adding success');
         return res.redirect('/admin/catagoryList');
-
-        } catch (error) {
-            console.log('addCatagory error:', error);
-            return res.render('admin/addCatagory', { error: 'Error adding category' });
+        
+    } catch (error) {
+        console.log('addCatagory error:', error);
+        return res.render('admin/addCatagory', { error: 'Error adding category' });
     }
 };
-    
+
 // catagory list
 
 
@@ -147,16 +145,16 @@ const deleteCategory = async (req, res) => {
     try {
         let product = await Admin.findOne();
         if (!product) {
-          return res.status(400).send('product not found');
+            return res.status(400).send('product not found');
         }
         product.categories = product.categories.filter(category => category._id.toString() !== categoryId);
         await product.save();
         return res.redirect('/admin/catagoryList');
     } catch (error) {
-      console.log('Error deleting category:', error);
-      return res.status(500).send('Internal server error');
+        console.log('Error deleting category:', error);
+        return res.status(500).send('Internal server error');
     }
-  };
+};
 
 
 
@@ -166,7 +164,7 @@ let editCatagory=async(req,res)=>{
         let categoryId=req.params.id
         console.log(categoryId);
         let product=await Admin.findOne({'categories._id':categoryId})
-
+        
         // let catagory=product.categories._id(categoryId)
         let catagory=product.categories.find(category=>category._id.toString()===categoryId)
 
@@ -198,7 +196,7 @@ let editCatagoryPost = async (req, res) => {
             console.log('Category not found in product');
             return res.status(404).send('Category not found in product');
         }
-
+        
         category.catagoryName = newName;
         await product.save();
         return res.redirect('/admin/catagoryList');
@@ -241,7 +239,7 @@ let addProductPost = async (req, res) => {
         const prices = req.body.price;
         const stocks = req.body.stock;
         const mrp=req.body.mrp;
-
+        
         // Upload images to cloudinary
         const imageUrl = [];
         for (const file of images) {
@@ -255,9 +253,9 @@ let addProductPost = async (req, res) => {
             price: prices[index],
             stock: stocks[index],
             mrp:mrp[index]
-
+            
         }));
-
+        
         // Create a new product instance
         const newProduct = new Product({
             productName,
@@ -266,10 +264,10 @@ let addProductPost = async (req, res) => {
             stock: stockDetails,
             imageUrl
         });
-
+        
         // Save the new product to the database
         await newProduct.save();
-
+        
         console.log('Product added successfully');
         res.redirect('/admin/productList');
     } catch (error) {
@@ -330,7 +328,7 @@ let disableProduct = async (req, res) => {
         }
         
         await product.save();
-
+        
         return res.redirect('/admin/productList');
     } catch (error) {
         console.error('Error while toggling product status:', error);
@@ -346,7 +344,7 @@ let editProduct = async (req, res) => {
         let productId = req.params.id;
         // console.log(productId);
         let product = await Product.findById(productId);
-
+        
         if (!product) {
             console.log('Product not found');
             return res.status(404).send('Product not found');
@@ -368,19 +366,19 @@ let editProductPost = async (req, res) => {
     try {
         const productId = req.params.id;
         const newProduct = req.body;
-
+        
         let product = await Product.findById(productId);
-
+        
         if (!product) {
             console.log('Product not found');
             return res.status(404).send('Product not found');
         }
-
+        
         // Update basic product details
         product.productName = newProduct.productName;
         product.category = newProduct.category;
         product.description = newProduct.description;
-
+        
         // Update product image if a new one is provided
         if (req.files && req.files.length > 0) {
             const file = req.files[0];
@@ -397,7 +395,7 @@ let editProductPost = async (req, res) => {
                 mrp:item.mrp
             }));
         }
-
+        
         await product.save();
         return res.redirect('/admin/productList');
     } catch (error) {
@@ -427,7 +425,7 @@ let disableUser = async (req, res) => {
         if (!user) {
             return res.status(404).send('User not found');
         }
-
+        
         if (user.isDisabled && req.user && req.user.id === user._id.toString()) {
             // If the user is logged in and the user being disabled is the same user, redirect to login page with error
             return res.redirect('/login?error=disabled');
@@ -473,12 +471,12 @@ const orderShow = async (req, res) => {
                 }
             }
         ]);
-
+        
         const updatedOrders = orders.map(order => ({
             ...order,
             newdate: new Date(order.orderDetails.createdAt).toLocaleString()
         }));
-
+        
         console.log('admin order listing', updatedOrders);
         res.render('admin/orderList', { orders:updatedOrders }); // Assuming your view expects 'orders' variable
     } catch (error) {
@@ -507,9 +505,9 @@ let singleOrder=async(req,res)=>{
 let singleView = async (req, res) => {
     try {
         const orderId = req.query.id;
-       
+        
         console.log('Order Id for querying:', orderId);
-
+        
         const orderDetails = await Order.aggregate([
             {
                 $match: { _id: new mongoose.Types.ObjectId(orderId) }
@@ -547,9 +545,9 @@ let singleView = async (req, res) => {
             },
             
         ]);
-
+        
         console.log(orderDetails);
-
+        
         res.render('admin/singleOrder', { orderDetails });
     } catch (error) {
         console.log('Error in getting order details:', error);
@@ -564,10 +562,10 @@ const updateStatus = async (req, res) => {
     try {
         const orderId = req.body.orderId;
         const selectedStatus = req.body.status;
-
+        
         console.log('Order ID:', orderId);
         console.log('Selected Status:', selectedStatus);
-
+        
         // Update the status field in the Order collection
         const updatedOrder = await Order.findByIdAndUpdate(orderId, { status: selectedStatus }, { new: true });
 
@@ -579,6 +577,120 @@ const updateStatus = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+
+// let dashBoard=async(req,res)=>{
+//     const admin=req.admin
+//     console.log('dashboard adminID',admin)
+//     const totalOrder=await Order.find({}).count()
+//     res.render('admin/index',{totalOrder})
+// }
+
+
+let adminDash = async (req, res) => {
+    console.log("req.admin :", req.admin);
+    const admin = req.admin;
+
+    try {
+        const totalOrder = await Order.countDocuments();
+        const totalUser = await User.countDocuments();
+        const totalOrderAmountResult = await Order.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    totalAmount: { $sum: "$totalAmount" }
+                }
+            }
+        ]);
+
+        const totalOrderAmount = totalOrderAmountResult.length > 0 ? totalOrderAmountResult[0].totalAmount : 0;
+        console.log('total amount',totalOrderAmount);
+
+        const orderChart=await Order.aggregate([
+            {$unwind:"$cart.product"},
+            {$lookup:{
+                from:'products',
+                localField:'cart.product.productId',
+                foreignField:'_id',
+                as:'productDetails'
+            }},
+            {$unwind:'$productDetails'},
+            {$group:{
+                _id:'$productDetails.category',
+                totalOrders:{$sum:1}
+            }}
+        ])
+
+
+        const labels = orderChart.map(item => item._id);
+        const data = orderChart.map(item => item.totalOrders);
+        console.log('label',labels)
+        console.log('orderchart',orderChart)
+
+        const totalProducts=await Product.find({}).countDocuments()
+
+        const dailyOrder = await Order.aggregate([
+            {
+                $group: {
+                    _id: {
+                        year: { $year: "$createdAt" },
+                        month: { $month: "$createdAt" },
+                        day: { $dayOfMonth: "$createdAt" }
+                    },
+                    count: { $sum: 1 } 
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    date: {
+                        $dateToString: {
+                            format: "%Y-%m-%d",
+                            date: {
+                                $dateFromParts: {
+                                    year: "$_id.year",
+                                    month: "$_id.month",
+                                    day: "$_id.day"
+                                }
+                            }
+                        }
+                    },
+                    count: 1 
+                }
+            },
+            {
+                $sort: { date: 1 } 
+            }
+        ]);
+        
+// console.log('bar details',barDetails);
+
+const monthlyOrder = await Order.aggregate([
+    {
+        $group: {
+            _id: { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
+            count: { $sum: 1 }
+        }
+    },
+    {
+        $sort: { _id: 1 } 
+    }
+]);
+
+const labels1 = monthlyOrder.map(entry => entry._id);
+const counts1 = monthlyOrder.map(entry => entry.count);
+
+console.log('la',labels1)
+
+// console.log('monthly order',monthlyOrder);
+        res.render('admin/index', { admin, totalOrder, totalUser, totalOrderAmount,totalProducts,dailyOrder,monthlyOrder:{labels1,counts1},orderChart: { labels, data } });
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        res.status(500).send('Internal Server Error');
+    }
+}
+
+
 
 
 
@@ -616,5 +728,7 @@ module.exports = {
     orderShow,
     singleOrder,
     singleView,
-    updateStatus
+    updateStatus,
+    // dashBoard
+
 };

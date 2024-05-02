@@ -55,4 +55,6 @@ router.get('/admin/singleView',adminAuth,adminController.singleView)
 
 router.post('/admin/singleView',adminAuth,adminController.updateStatus)
 
+// router.get('/admin/index',adminAuth,adminController.dashBoard)
+
 module.exports = router;

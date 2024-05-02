@@ -73,11 +73,15 @@ router.post('/razorpay/placeOrder',userAuth,userController.razorpaypayment)
 router.get('/singleOrderDetails/:orderId',userAuth,userController.singleOrderDetails)
 router.put('/orders/:orderId',userAuth,userController.cancelOrder)
 
-router.post('/profile/editDetails/:id',userAuth,userController.editDetails)
 router.post('/product/search',userAuth,userController.searchPro)
 
 
 router.post('/profile/editaddress/:addressId',userAuth,userController.editUserAddress)
 router.get('/profile/editaddress/:addressId',userAuth,userController.editaddressGet)
+
+router.delete('/profile/deleteAddress/:addressId',userAuth,userController.deleteAddress)
+router.post('/profile/editDetails/:userId', userAuth, userController.editDetails);
+
+// router.get('/details',userAuth,userController.summaryis)
 
 module.exports=router

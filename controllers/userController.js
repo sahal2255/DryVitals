@@ -771,9 +771,6 @@ const checkOut = async (req, res) => {
 
 
 
-
-
-
 let saveAddress = async (req, res) => {
     try {
         const { newAddress } = req.body;
@@ -807,7 +804,9 @@ const placeOrder = async (req, res) => {
         const userId = req.user.id;
         console.log(userId);
         const selectedPaymentMethod = req.body.selectedPaymentMethod;
-        const selectedPincode=req.body.selectedPincode
+        // const selectedAddressOption = req.body.selectedAddressOption; // Ensure this value is properly extracted from the request
+
+        const selectedPincode=req.body.selectedPincode;
         console.log('selected pincode',selectedPincode);
         console.log(selectedPaymentMethod);
         const user = await User.findById(userId, 'userAddress cart');
@@ -1029,24 +1028,31 @@ let editUserAddress = async (req, res) => {
 
 
 
-let editDetails = async (req, res) => {
+const editDetails = async (req, res) => {
     try {
-        const userId = req.user.id;
-        console.log('editAddress user', userId);
+        const userId = req.params.userId;
+        console.log('editDetails user', userId);
         const user = await User.findById(userId);
+        console.log('editDetails get user', user);
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
-        // Check if userName is provided in the request body
-        if (!req.body.userName) {
-            return res.status(400).json({ error: 'User name is required' });
+        if (!req.body.name || !req.body.email || !req.body.phone ) {
+            return res.status(400).json({ error: 'All fields are required' });
         }
-        // Update user details
-        user.userName = req.body.userName; 
+
+        user.userName = req.body.name;
+        console.log('e,u',user.userName) 
         user.email = req.body.email; 
         user.phoneNumber = req.body.phone; 
-        // Save the updated user
+        
+        if (req.body.newPassword) {
+            const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
+            user.password = hashedPassword; 
+        }
+
         await user.save();
+        console.log('updated user',user);
 
         res.status(200).json({ message: 'User details updated successfully' });
     } catch (error) {
@@ -1056,6 +1062,31 @@ let editDetails = async (req, res) => {
 };
 
 
+
+
+let deleteAddress = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        console.log(userId);
+
+        const addressId = req.params.addressId;
+        console.log('address id', addressId);
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        user.userAddress = user.userAddress.filter(address => address._id.toString() !== addressId);
+        await user.save();
+
+        console.log('Address removed successfully');
+
+        res.status(200).json({ message: 'Address removed successfully', user: user });
+    } catch (error) {
+        console.error('Error removing address:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
 
 
 // ----end profile page section
@@ -1170,13 +1201,19 @@ let searchPro=async(req,res)=>{
         product.productName.toLowerCase().includes(keyword)
     );
     console.log('search result',searchResults)
-    // Return the search results
     res.json({ products: searchResults });
 }
 
 
 
-
+// let summaryis = async (req, res) => {
+//     try {
+//         const userId = req.user.id;
+//        res.render('details');
+//     } catch (error) {
+//         console.log('error', error);
+//     }
+// };
 
 
 module.exports={
@@ -1212,5 +1249,7 @@ module.exports={
     editUserAddress,
     editDetails,
     searchPro,
-    editaddressGet
+    editaddressGet,
+    deleteAddress,
+    // summaryis
 }
