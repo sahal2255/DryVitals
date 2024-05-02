@@ -915,6 +915,7 @@ let order = async (req, res) => {
                     createdAt: { $first: '$createdAt' }, 
                     selectedPaymentMethod: { $first: '$selectedPaymentMethod' }, 
                     totalAmount: { $first: '$totalAmount' }, 
+                    isCancel:{$first:'$isCancel'},
                     status: { $first: '$status' } ,
                     userDetails: { $first: '$userDetails' } 
 

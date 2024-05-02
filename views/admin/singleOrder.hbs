@@ -519,19 +519,24 @@
 
 <div class="col-md-6" id="order-status-section">
     <div class="status-update-container">
-        <h4>Order Status Update</h4>
-        <select name="order-status" id="orderStatus" class="status-select">
-            <option value="OrderPlaced" selected>{{orderDetails.[0].status}}</option>
-            <option value="OrderConfirmed">Order Confirmed</option>
-            <option value="Shipped">Shipped</option>
-            <option value="OutForDelivery">Out for Delivery</option>
-            <option value="Delivered">Delivered</option>
-            <option value="Cancel">Order Cancelled</option>
-        </select>
-        <div class="text-right">
-            <input type="hidden" id="orderId" value="{{orderDetails.[0]._id}}">
-            <button class="status-update-btn">Update Status</button>
-        </div>
+      {{#if orderDetails.[0].isCancel}}
+    <h4>Order Status</h4>
+    <h3 style="color: red;">This order has been cancelled.</h3>
+{{else}}
+    <h4>Order Status Update</h4>
+    <select name="order-status" id="orderStatus" class="status-select">
+        <option value="OrderPlaced" selected>{{orderDetails.[0].status}}</option>
+        <option value="OrderConfirmed">Order Confirmed</option>
+        <option value="Shipped">Shipped</option>
+        <option value="OutForDelivery">Out for Delivery</option>
+        <option value="Delivered">Delivered</option>
+        <option value="Cancel">Order Cancelled</option>
+    </select>
+    <div class="text-right">
+        <input type="hidden" id="orderId" value="{{orderDetails.[0]._id}}">
+        <button class="status-update-btn">Update Status</button>
+    </div>
+{{/if}}
     </div>
 </div> 
 <div class="card mb-4">

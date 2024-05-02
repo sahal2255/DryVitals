@@ -14,7 +14,7 @@ const mongoose=require('mongoose')
 // const cloudinary=require('../config/cloudinary')
 const upload=require('../config/multer');
 const Order = require('../models/order');
-const { cart } = require('./userController');
+const { cart, order } = require('./userController');
 const { count } = require('console');
 require('dotenv').config();
 
@@ -579,12 +579,7 @@ const updateStatus = async (req, res) => {
 };
 
 
-// let dashBoard=async(req,res)=>{
-//     const admin=req.admin
-//     console.log('dashboard adminID',admin)
-//     const totalOrder=await Order.find({}).count()
-//     res.render('admin/index',{totalOrder})
-// }
+
 
 
 let adminDash = async (req, res) => {
@@ -680,10 +675,49 @@ const monthlyOrder = await Order.aggregate([
 const labels1 = monthlyOrder.map(entry => entry._id);
 const counts1 = monthlyOrder.map(entry => entry.count);
 
-console.log('la',labels1)
 
-// console.log('monthly order',monthlyOrder);
-        res.render('admin/index', { admin, totalOrder, totalUser, totalOrderAmount,totalProducts,dailyOrder,monthlyOrder:{labels1,counts1},orderChart: { labels, data } });
+
+// const latestOrder=await Order.find({}).sort({createdAt:-1}).limit(7)
+
+const latestOrder = await Order.aggregate([
+    // { $unwind: '$cart.product' },
+    // { $lookup: {
+    //     from: 'products',
+    //     localField: 'cart.product.productId',
+    //     foreignField: '_id',
+    //     as: 'productDetails'
+    // }},
+    // { $unwind: '$productDetails' },
+    { $sort: { createdAt: -1 } },
+    { $limit: 6 },
+    { $project: {
+        _id: 1,
+        // product:1,
+        selectedPaymentMethod:1,
+        totalAmount:1,
+        createdAt: {
+            $dateToString: {
+                format: "%Y-%m-%d",
+                date: "$createdAt"
+            }
+        },
+        cart: 1,
+        // productDetails: 1
+    }}
+]);
+
+// console.log('latest order', latestOrder);
+
+
+
+
+
+
+
+        res.render('admin/index', { admin, totalOrder, totalUser, totalOrderAmount,
+            latestOrder,
+            totalProducts,dailyOrder,monthlyOrder:{labels1,counts1}
+            ,orderChart: { labels, data } });
     } catch (error) {
         console.error('Error fetching data:', error);
         res.status(500).send('Internal Server Error');

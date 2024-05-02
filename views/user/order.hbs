@@ -173,7 +173,11 @@
                         <td>{{this.createdAt}}</td>
                         <td>{{this.selectedPaymentMethod}}</td>
                         <td>{{this.totalAmount}}</td>
+                        {{#if this.isCancel}}
+                        <td><h6 style="color: red;">Order cancell</h6></td>
+                        {{else}}
                         <td>{{this.status}}</td>
+                        {{/if}}
                         <td>
                             <button type="button" class="btn btn-primary" data-toggle="modal"
                                 data-target="#exampleModalCenter" onclick="getOrderDetails('{{this._id}}')">

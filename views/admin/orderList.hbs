@@ -461,10 +461,14 @@
                                                                     <td class="p-3 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
                                                                     {{orderDetails.selectedPaymentMethod}} 
                                                                     </td>
+                                                                    {{#if orderDetails.isCancel}}
+                                                                    <td class="p-3 font-semibold text-lg text-gray-800 whitespace-nowrap dark:text-gray-400"><h6 style="color: red;">Order cancelled</h6></td>
+                                                                    {{else}}
                                                                     <td class="p-3 font-semibold text-lg text-gray-800 whitespace-nowrap dark:text-gray-400">
                                                                        {{orderDetails.status}}
 
                                                                     </td>
+                                                                    {{/if}}
                                                                     <td class="p-3 font-semibold text-lg text-gray-800 whitespace-nowrap dark:text-gray-400">
     <button type="button" class="btn btn-link" id="singleOrderDetails" onclick="singleOrders()">
         <i class="bi bi-eye"></i> <!-- Bootstrap eye icon -->

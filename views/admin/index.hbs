@@ -476,15 +476,18 @@
             </div> <!--end inner-grid-->                                                                                                  
         </div>                   
     </div>
+    {{!-- <div class="container" style="max-width:800px;">
+         
         <canvas id="lineChart" width="100%" height="30%"></canvas>
+    </div> --}}
 
 
                     <div class="grid grid-cols-12 sm:grid-cols-12 md:grid-cols-12 lg:grid-cols-12 xl:grid-cols-12 gap-4 mb-4">                         
                         <div class="col-span-12 sm:col-span-12  md:col-span-12 lg:col-span-6 xl:col-span-6 ">
                             <div class="bg-white shadow-sm dark:shadow-slate-700/10 dark:bg-gray-900   rounded-md w-full relative">
                                 <div class="border-b border-dashed border-slate-200 dark:border-slate-700 py-4 px-4 dark:text-slate-300/70">
-                                    <h4 class="font-medium flex-1 self-center mb-2 md:mb-0 text-xxl">Earnings Reports</h4>
-                                    <p class="text-sm text-slate-400">Earnings Reports Last Week <span class="focus:outline-none text-[11px] bg-brand-500/10 text-brand-500 dark:text-brand-300 rounded font-medium py-[2px] px-2">$18532</span></p>
+                                    <h4 class="font-medium flex-1 self-center mb-2 md:mb-0 text-xxl">Latest Orders</h4>
+                                    <p class="text-sm text-slate-400">Latest Orders <span class="focus:outline-none text-[11px] bg-brand-500/10 text-brand-500 dark:text-brand-300 rounded font-medium py-[2px] px-2">₹{{totalOrderAmount}}</span></p>
                                 </div><!--end header-title-->
                                 <div class="grid grid-cols-1 p-4">
                                     <div class="sm:-mx-6 lg:-mx-8">
@@ -496,107 +499,42 @@
                                                             Date
                                                         </th>
                                                         <th scope="col" class="p-3 text-base font-medium tracking-wider text-start text-gray-700 uppercase dark:text-gray-400">
-                                                            Item Count
+                                                            orderId
+                                                        </th>
+                                                        {{!-- <th scope="col" class="p-3 text-base font-medium tracking-wider text-start text-gray-700 uppercase dark:text-gray-400">
+                                                            
+                                                        </th> --}}
+                                                        <th scope="col" class="p-3 text-base font-medium tracking-wider text-start text-gray-700 uppercase dark:text-gray-400">
+                                                            Payment Mthod
                                                         </th>
                                                         <th scope="col" class="p-3 text-base font-medium tracking-wider text-start text-gray-700 uppercase dark:text-gray-400">
-                                                            Tex
+                                                            Amount
                                                         </th>
-                                                        <th scope="col" class="p-3 text-base font-medium tracking-wider text-start text-gray-700 uppercase dark:text-gray-400">
-                                                            Earnings
-                                                        </th>
+
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <!-- 1 -->
+                                                    {{#each latestOrder}}
                                                     <tr class="bg-white border-b border-dashed dark:bg-gray-900 dark:border-gray-700/40">
                                                         <td class="p-3 text-base  text-gray-600 whitespace-nowrap dark:text-gray-400">
-                                                            01 January
+                                                            {{this.createdAt}}
                                                         </td>
                                                         <td class="p-3 text-base text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                                            50
+                                                            {{this._id}}
                                                         </td>
+                                                        {{!-- <td class="p-3 text-base text-gray-500 whitespace-nowrap dark:text-gray-400">
+                                                           <span class="text-red-500">{{this.cart.product.productVariant}}    /  {{this.cart.product.quantity}}ns</span>
+                                                        </td> --}}
                                                         <td class="p-3 text-base text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                                           <span class="text-red-500">$70</span>
+                                                           <span class="text-red-500">{{this.selectedPaymentMethod}}</span>
                                                         </td>
                                                         <td class="p-3 text-base text-gray-700 whitespace-nowrap dark:text-gray-400">
-                                                            <span class="font-semibold">$15,000</span>
+                                                            <span class="font-semibold">₹{{this.totalAmount}}</span>
                                                         </td>
                                                     </tr>
-                                                    <!-- 2 -->
-                                                    <tr class="bg-white border-b border-dashed dark:bg-gray-900 dark:border-gray-700/40">
-                                                        <td class="p-3 text-base  text-gray-600 whitespace-nowrap dark:text-gray-400">
-                                                            02 January
-                                                        </td>
-                                                        <td class="p-3 text-base text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                                            25
-                                                        </td>
-                                                        <td class="p-3 text-base text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                                           <span class="text-slate-100">-</span>
-                                                        </td>
-                                                        <td class="p-3 text-base text-gray-700 whitespace-nowrap dark:text-gray-400">
-                                                            <span class="font-semibold">$15,000</span>
-                                                        </td>
-                                                    </tr>
-                                                    <!-- 3 -->
-                                                    <tr class="bg-white border-b border-dashed dark:bg-gray-900 dark:border-gray-700/40">
-                                                        <td class="p-3 text-base  text-gray-600 whitespace-nowrap dark:text-gray-400">
-                                                            03 January
-                                                        </td>
-                                                        <td class="p-3 text-base text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                                            65
-                                                        </td>
-                                                        <td class="p-3 text-base text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                                           <span class="text-red-500">$115</span>
-                                                        </td>
-                                                        <td class="p-3 text-base text-gray-700 whitespace-nowrap dark:text-gray-400">
-                                                            <span class="font-semibold">$35,000</span>
-                                                        </td>
-                                                    </tr>
-                                                    <!-- 4 -->
-                                                    <tr class="bg-white border-b border-dashed dark:bg-gray-900 dark:border-gray-700/40">
-                                                        <td class="p-3 text-base  text-gray-600 whitespace-nowrap dark:text-gray-400">
-                                                            04 January
-                                                        </td>
-                                                        <td class="p-3 text-base text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                                            20
-                                                        </td>
-                                                        <td class="p-3 text-base text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                                           <span class="text-slate-500">-</span>
-                                                        </td>
-                                                        <td class="p-3 text-base text-gray-700 whitespace-nowrap dark:text-gray-400">
-                                                            <span class="font-semibold">$8,500</span>
-                                                        </td>
-                                                    </tr>
-                                                    <!-- 5 -->
-                                                    <tr class="bg-white border-b border-dashed dark:bg-gray-900 dark:border-gray-700/40">
-                                                        <td class="p-3 text-base  text-gray-600 whitespace-nowrap dark:text-gray-400">
-                                                            05 January
-                                                        </td>
-                                                        <td class="p-3 text-base text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                                            20
-                                                        </td>
-                                                        <td class="p-3 text-base text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                                           <span class="text-slate-500">-</span>
-                                                        </td>
-                                                        <td class="p-3 text-base text-gray-700 whitespace-nowrap dark:text-gray-400">
-                                                            <span class="font-semibold">$8,500</span>
-                                                        </td>
-                                                    </tr>
-                                                    <!-- 6 -->
-                                                    <tr class="bg-white  dark:bg-gray-900">
-                                                        <td class="p-3 text-base  text-gray-600 whitespace-nowrap dark:text-gray-400">
-                                                            06 January
-                                                        </td>
-                                                        <td class="p-3 text-base text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                                            40
-                                                        </td>
-                                                        <td class="p-3 text-base text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                                           <span class="text-red-500">$60</span>
-                                                        </td>
-                                                        <td class="p-3 text-base text-gray-700 whitespace-nowrap dark:text-gray-400">
-                                                            <span class="font-semibold">$12,000</span>
-                                                        </td>
-                                                    </tr>
+                                                    {{/each}}
+ 
+                                                   
                                                 </tbody>
                                             </table>
                                         </div>
@@ -612,12 +550,23 @@
                 </div><!--end container-->
             </div>
         </div>
+
+       <div class="container">
+    <input type="text" id="startDate" placeholder="Start Date">
+    <input type="text" id="endDate" placeholder="End Date">
+    <div id="startDateCalendar" class="hidden"></div>
+    <div id="endDateCalendar" class="hidden"></div>
+</div>
+
+
+  
         
 {{!-- <div class="container">
     
         <canvas id="myChart"></canvas>
 
 </div> --}}
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -691,7 +640,6 @@
         yAxes: [{
             ticks: {
                 beginAtZero: true,
-                stepSize: 1 ,
                 
             }
         }]
@@ -706,33 +654,68 @@
 
 
 
-    var ctx = document.getElementById('lineChart').getContext('2d');
-        var data = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-            datasets: [{
-                label: 'Sales',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 2,
-                data: [65, 59, 80, 81, 56, 55]
-            }]
-        };
 
-        var options = {
-            scales: {
-                x: {
-                    display: false // Hide x-axis
-                },
-                y: {
-                    beginAtZero: true
-                }
-            }
-        };
 
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: data,
-            options: options
-        });
+
+
+//date
+
+const startDateInput = document.getElementById("startDate");
+const endDateInput = document.getElementById("endDate");
+const startDateCalendar = document.getElementById("startDateCalendar");
+const endDateCalendar = document.getElementById("endDateCalendar");
+
+flatpickr(startDateInput, {
+    dateFormat: "Y-m-d",
+    onClose: function(selectedDates) {
+        flatpickr(endDateInput, { minDate: selectedDates[0] });
+    }
+});
+
+flatpickr(endDateInput, {
+    dateFormat: "Y-m-d",
+    onClose: function(selectedDates) {
+        flatpickr(startDateInput, { maxDate: selectedDates[0] });
+    }
+});
+
+startDateInput.addEventListener("focus", function() {
+    if (startDateCalendar.classList.contains("hidden")) {
+        startDateCalendar.classList.remove("hidden");
+        endDateCalendar.classList.add("hidden");
+    }
+});
+
+endDateInput.addEventListener("focus", function() {
+    if (endDateCalendar.classList.contains("hidden")) {
+        endDateCalendar.classList.remove("hidden");
+        startDateCalendar.classList.add("hidden");
+    }
+});
+
+// Initialize Flatpickr for inline calendars
+flatpickr(startDateCalendar, {
+    inline: true,
+    dateFormat: "Y-m-d",
+    onChange: function(selectedDates) {
+        startDateInput.value = selectedDates[0].toISOString().slice(0, 10);
+    },
+    onClose: function() {
+        startDateCalendar.classList.add("hidden");
+    }
+});
+
+flatpickr(endDateCalendar, {
+    inline: true,
+    dateFormat: "Y-m-d",
+    onChange: function(selectedDates) {
+        endDateInput.value = selectedDates[0].toISOString().slice(0, 10);
+    },
+    onClose: function() {
+        endDateCalendar.classList.add("hidden");
+    }
+});
+
 </script>
 
 
