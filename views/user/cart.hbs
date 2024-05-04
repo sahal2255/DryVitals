@@ -176,7 +176,7 @@
             <td class="product-name">{{productName}}</td>
 			{{!-- <td></td> --}}
             <td class="product-quantity">{{productVariant}}</td>
-			<td class="product-mrp"><del>₹{{productmrp}}</del></td>
+			<td class="product-mrp"><strike id="mrp_{{this.productId}}">₹{{productmrp}}</strike></td>
 			{{!-- <td class="selected-price">{{selected.productPrice}}</td> --}}
             <td class="product-total">
                 <button class="quantity-btn" onclick="decrementQuantity('{{this._id}}')">-</button>
@@ -206,11 +206,11 @@
 							<tbody>
 								<tr class="total-data">
 									<td><strong>Total MRP</strong></td>
-									<td><del>₹{{totalmrp}}</del></td>
+									<td><del id="totalmrp">₹{{totalmrp}}</del></td>
 								</tr>
 								<tr class="total-data">
 									<td><strong>Subtotal: </strong></td>
-									<td>₹{{total}}</td>
+									<td id="subtotal"> ₹{{total}}</td>
 								</tr>
 								
 							</tbody>
@@ -330,23 +330,34 @@
 function incrementQuantity(productId) {
     axios.post(`/cart/incrementQuantity/${productId}`)
         .then(async function (response) {
-        window.location.reload()
-
+            const { cartItem } = response.data;
+            document.getElementById(`quantity_${cartItem.productId}`).innerText = cartItem.quantity;
+            document.getElementById(`mrp_${cartItem.productId}`).innerText =`₹${cartItem.productmrp}`;
+            document.getElementById(`totalPrice_${cartItem.productId}`).innerText = `₹${cartItem.productPrice}`;
+            document.getElementById(`totalmrp`).innerText = `₹${response.data.total}`;
+            document.getElementById(`subtotal`).innerText = `₹${response.data.subtotal}`;
         })
         .catch(function (error) {
             console.error('Error incrementing quantity:', error);
         });
 }
 
+
 function decrementQuantity(productId) {
     axios.post(`/cart/decrementQuantity/${productId}`)
         .then(async function (response) {
-            window.location.reload()
+            const { cartItem } = response.data;
+            document.getElementById(`quantity_${cartItem.productId}`).innerText = cartItem.quantity;
+            document.getElementById(`mrp_${cartItem.productId}`).innerText = `₹${cartItem.productmrp}`;
+            document.getElementById(`totalPrice_${cartItem.productId}`).innerText = `₹${cartItem.productPrice}`;
+            document.getElementById(`totalmrp`).innerText = `₹${response.data.total}`;
+            document.getElementById(`subtotal`).innerText = `₹${response.data.subtotal}`;
         })
         .catch(function (error) {
             console.error('Error decrementing quantity:', error);
         });
 }
+
 
 
 

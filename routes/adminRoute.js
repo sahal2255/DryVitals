@@ -14,6 +14,7 @@ const { userAuth } = require('../middleware/user_jwt');
 router.use(bodyparser.urlencoded({ extended: true }));
 
 router.get('/admin/index',adminAuth,adminController.adminDash)
+router.post('/admin/index',adminAuth,adminController.adminDash)
 
 router.get('/admin/login', adminMiddleware,adminController.adminLogin);
 router.post('/admin/login',adminController.adminLoginPost)
@@ -55,6 +56,6 @@ router.get('/admin/singleView',adminAuth,adminController.singleView)
 
 router.post('/admin/singleView',adminAuth,adminController.updateStatus)
 
-// router.get('/admin/index',adminAuth,adminController.dashBoard)
+router.post('/admin/index/salesReport',adminAuth,adminController.salesReportget)
 
 module.exports = router;

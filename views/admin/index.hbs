@@ -501,9 +501,9 @@
                                                         <th scope="col" class="p-3 text-base font-medium tracking-wider text-start text-gray-700 uppercase dark:text-gray-400">
                                                             orderId
                                                         </th>
-                                                        {{!-- <th scope="col" class="p-3 text-base font-medium tracking-wider text-start text-gray-700 uppercase dark:text-gray-400">
-                                                            
-                                                        </th> --}}
+                                                        <th scope="col" class="p-3 text-base font-medium tracking-wider text-start text-gray-700 uppercase dark:text-gray-400">
+                                                            Order Status
+                                                        </th>
                                                         <th scope="col" class="p-3 text-base font-medium tracking-wider text-start text-gray-700 uppercase dark:text-gray-400">
                                                             Payment Mthod
                                                         </th>
@@ -522,11 +522,17 @@
                                                         <td class="p-3 text-base text-gray-500 whitespace-nowrap dark:text-gray-400">
                                                             {{this._id}}
                                                         </td>
-                                                        {{!-- <td class="p-3 text-base text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                                           <span class="text-red-500">{{this.cart.product.productVariant}}    /  {{this.cart.product.quantity}}ns</span>
-                                                        </td> --}}
                                                         <td class="p-3 text-base text-gray-500 whitespace-nowrap dark:text-gray-400">
-                                                           <span class="text-red-500">{{this.selectedPaymentMethod}}</span>
+                                                             {{#if isCancel}}
+                                                           <span class="text-red-500">Order Cancelled</span>
+                                                            {{else}}
+                                                           <span class="text-primary-500">{{this.status}}</span>
+                                                           {{/if}}
+                                                        </td>
+                                                        <td class="p-3 text-base text-gray-500 whitespace-nowrap dark:text-gray-400">
+                                                           
+                                                           <span class="text-black-500">{{this.selectedPaymentMethod}}</span>
+                                                           
                                                         </td>
                                                         <td class="p-3 text-base text-gray-700 whitespace-nowrap dark:text-gray-400">
                                                             <span class="font-semibold">₹{{this.totalAmount}}</span>
@@ -542,7 +548,38 @@
                                 </div><!--end card-body-->
                             </div> <!--end card-->
                         </div>      
-                                  
+                                <div class="col-span-12 sm:col-span-12  md:col-span-12 lg:col-span-6 xl:col-span-6 ">
+                            <div class="bg-white shadow-sm dark:shadow-slate-700/10 dark:bg-gray-900   rounded-md w-full relative">
+                                <div class="border-b border-dashed border-slate-200 dark:border-slate-700 py-4 px-4 dark:text-slate-300/70">                                    
+                                    <h4 class="font-medium flex-1 self-center mb-2 md:mb-0 text-xxl">Sales Report</h4>
+                                    {{!-- <p class="text-sm text-slate-400">New Products Last Week <span class="focus:outline-none text-[11px] bg-brand-500/10 text-brand-500 dark:text-brand-300 rounded font-medium py-[2px] px-2">5</span></p> --}}
+                                </div><!--end header-title-->
+<div class="grid grid-cols-1 p-4">
+    <div class="sm:-mx-6 lg:-mx-8">
+        <div class="relative overflow-x-auto block w-full sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label for="start-date" class="block text-sm font-medium text-gray-700">Start Date</label>
+                    <input type="date" name="start-date" id="startDate" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="start-date">
+                </div>
+                <div>
+                    <label for="end-date" class="block text-sm font-medium text-gray-700">End Date</label>
+                    <input type="date" name="end-date" id="endDate" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="end-date">
+                </div>
+            </div>
+            <div class="mt-4">
+                <button id="applyDates" class="bg-indigo-500 text-white py-2 px-4 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Apply Dates</button>
+            </div>
+            
+        </div>
+    </div>
+</div>
+            
+
+
+<!--end card-body-->
+                            </div> <!--end card-->
+                        </div>  
                     </div><!--end inner-grid--> 
                    
   
@@ -551,12 +588,9 @@
             </div>
         </div>
 
-       <div class="container">
-    <input type="text" id="startDate" placeholder="Start Date">
-    <input type="text" id="endDate" placeholder="End Date">
-    <div id="startDateCalendar" class="hidden"></div>
-    <div id="endDateCalendar" class="hidden"></div>
-</div>
+
+            
+
 
 
   
@@ -653,67 +687,34 @@
     });
 
 
+document.getElementById("applyDates").addEventListener("click", function() {
+    var startDate = document.getElementById("startDate").value;
+    var endDate = document.getElementById("endDate").value;
 
-
-
-
-
-//date
-
-const startDateInput = document.getElementById("startDate");
-const endDateInput = document.getElementById("endDate");
-const startDateCalendar = document.getElementById("startDateCalendar");
-const endDateCalendar = document.getElementById("endDateCalendar");
-
-flatpickr(startDateInput, {
-    dateFormat: "Y-m-d",
-    onClose: function(selectedDates) {
-        flatpickr(endDateInput, { minDate: selectedDates[0] });
+    if (!startDate || !endDate) {
+        alert("Please select both start date and end date.");
+        return;
     }
-});
 
-flatpickr(endDateInput, {
-    dateFormat: "Y-m-d",
-    onClose: function(selectedDates) {
-        flatpickr(startDateInput, { maxDate: selectedDates[0] });
-    }
-});
+    axios.post('/admin/index/salesReport', {
+        startDate: startDate,
+        endDate: endDate
+    },{
+        responseType:'blob'
+    })
+    .then(function(response) {
+        console.log('Response from server:', response);
 
-startDateInput.addEventListener("focus", function() {
-    if (startDateCalendar.classList.contains("hidden")) {
-        startDateCalendar.classList.remove("hidden");
-        endDateCalendar.classList.add("hidden");
-    }
-});
-
-endDateInput.addEventListener("focus", function() {
-    if (endDateCalendar.classList.contains("hidden")) {
-        endDateCalendar.classList.remove("hidden");
-        startDateCalendar.classList.add("hidden");
-    }
-});
-
-// Initialize Flatpickr for inline calendars
-flatpickr(startDateCalendar, {
-    inline: true,
-    dateFormat: "Y-m-d",
-    onChange: function(selectedDates) {
-        startDateInput.value = selectedDates[0].toISOString().slice(0, 10);
-    },
-    onClose: function() {
-        startDateCalendar.classList.add("hidden");
-    }
-});
-
-flatpickr(endDateCalendar, {
-    inline: true,
-    dateFormat: "Y-m-d",
-    onChange: function(selectedDates) {
-        endDateInput.value = selectedDates[0].toISOString().slice(0, 10);
-    },
-    onClose: function() {
-        endDateCalendar.classList.add("hidden");
-    }
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'sales_report.xlsx');
+        document.body.appendChild(link);
+        link.click();
+    })
+    .catch(function(error) {
+        console.error('Error:', error);
+    });
 });
 
 </script>
@@ -721,6 +722,13 @@ flatpickr(endDateCalendar, {
 
         <!-- JAVASCRIPTS -->
         <!-- <div class="menu-overlay"></div> -->
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.8/axios.min.js"
+		integrity="sha512-PJa3oQSLWRB7wHZ7GQ/g+qyv6r4mbuhmiDb8BjSFZ8NZ2a42oTtAq5n0ucWAwcQDlikAtkub+tPVCw4np27WCg=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
         <script src="assets/libs/lucide/umd/lucide.min.js"></script>

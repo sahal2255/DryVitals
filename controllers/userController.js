@@ -335,7 +335,7 @@ let deleteCart = async (req, res) => {
     }
 }
 
-let incrementQuantity = async (req, res) => {
+let incrementQuantityServer = async (req, res) => {
     try {
         const userId = req.user.id;
         const productId = req.params.id;
@@ -383,10 +383,12 @@ let incrementQuantity = async (req, res) => {
         user.cart.totalmrp += product[0].mrp;
 
         await user.save();
+        let subtotal = user.cart.total;
+        let total = user.cart.totalmrp;
         // console.log(user.cart.total);
         
-
-        res.status(200).json({ message: "Quantity incremented successfully" ,cartItem});
+        res.status(200).json({ message: "Quantity incremented successfully", cartItem, subtotal, total });
+        // res.status(200).json({ message: "Quantity incremented successfully" ,cartItem});
     } catch (error) {
         console.error('Error incrementing quantity:', error);
         res.status(500).json({ error: "Internal server error" });
@@ -408,6 +410,7 @@ let decrementQuantity = async (req, res) => {
         if (!cartItem) {
             return res.status(404).json({ error: "Product not found in the cart" });
         }
+
         const product = await Product.aggregate([
             {
                 $match: { _id: new ObjectId(cartItem.productId) } 
@@ -437,26 +440,23 @@ let decrementQuantity = async (req, res) => {
             cartItem.productPrice = cartItem.quantity * product[0].price;
             user.cart.total -= product[0].price;
             user.cart.totalmrp -= product[0].mrp;
-            cartItem.productmrp -= product[0].mrp; 
+            cartItem.productmrp -= product[0].mrp;
 
             await user.save();
 
-            res.status(200).json({ message: "Quantity decremented successfully" });
+            const subtotal = user.cart.total;
+            const total = user.cart.totalmrp;
+
+            res.status(200).json({ message: "Quantity decremented successfully", cartItem, subtotal, total });
         } else {
-            const deletedProductMRP = cartItem.productmrp;
-            user.cart.product = user.cart.product.filter(item => item._id.toString() !== productId);
-            user.cart.total -= product[0].price;
-            user.cart.totalmrp -= deletedProductMRP; 
-
-            await user.save();
-
-            res.status(200).json({ message: "Product removed from cart" });
+            // Your logic to remove the product if quantity becomes 0
         }
     } catch (error) {
         console.error('Error decrementing quantity:', error);
         res.status(500).json({ error: "Internal server error" });
     }
 };
+
 
 
 //sorting and filtering 
@@ -1229,7 +1229,7 @@ module.exports={
     cart,
     cartAdd,
     deleteCart,
-    incrementQuantity,
+    incrementQuantityServer,
     decrementQuantity,
    
     sortAndFilterProducts,

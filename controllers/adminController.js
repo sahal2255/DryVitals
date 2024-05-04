@@ -18,7 +18,7 @@ const { cart, order } = require('./userController');
 const { count } = require('console');
 require('dotenv').config();
 
-
+const Excel=require('exceljs')
 
 
 // admin dashboard
@@ -676,23 +676,13 @@ const labels1 = monthlyOrder.map(entry => entry._id);
 const counts1 = monthlyOrder.map(entry => entry.count);
 
 
-
-// const latestOrder=await Order.find({}).sort({createdAt:-1}).limit(7)
-
 const latestOrder = await Order.aggregate([
-    // { $unwind: '$cart.product' },
-    // { $lookup: {
-    //     from: 'products',
-    //     localField: 'cart.product.productId',
-    //     foreignField: '_id',
-    //     as: 'productDetails'
-    // }},
-    // { $unwind: '$productDetails' },
     { $sort: { createdAt: -1 } },
     { $limit: 6 },
     { $project: {
         _id: 1,
-        // product:1,
+        status:1,
+        isCancel:1,
         selectedPaymentMethod:1,
         totalAmount:1,
         createdAt: {
@@ -706,16 +696,15 @@ const latestOrder = await Order.aggregate([
     }}
 ]);
 
-// console.log('latest order', latestOrder);
 
 
 
 
 
 
-
-        res.render('admin/index', { admin, totalOrder, totalUser, totalOrderAmount,
+res.render('admin/index', { admin, totalOrder, totalUser, totalOrderAmount,
             latestOrder,
+            // salesReport,
             totalProducts,dailyOrder,monthlyOrder:{labels1,counts1}
             ,orderChart: { labels, data } });
     } catch (error) {
@@ -725,7 +714,67 @@ const latestOrder = await Order.aggregate([
 }
 
 
+let salesReportget=async(req,res)=>{
+    const { startDate, endDate } = req.body;
+console.log('start date', startDate);
+console.log('end date', endDate);
 
+
+
+if(startDate&&endDate){
+
+
+const salesReport = await Order.aggregate([
+    {
+        $match: {
+            createdAt: {
+                $gte: new Date(startDate),
+                $lte: new Date(new Date(endDate).setHours(23, 59, 59, 999)) // Adjust end date to end of day
+            }
+        }
+    }
+]);
+
+// console.log('sales report',salesReport);
+
+const workbook = new Excel.Workbook();
+const worksheet = workbook.addWorksheet("Sales Report");
+
+worksheet.columns = [
+    { header: "Order ID", key: "_id", width: 40 },
+    { header: "Order Date", key: "createdAt", width: 20 },
+    { header: "Order Status", key: "status", width: 20 },
+    { header: "Payment Method", key: "selectedPaymentMethod", width: 20 },
+    { header: "Price", key: "totalAmount", width: 20 },
+];
+
+salesReport.forEach((item) => {
+    worksheet.addRow({
+        _id: item._id,
+        createdAt: item.createdAt,
+        status: item.status,
+        selectedPaymentMethod: item.selectedPaymentMethod,
+        totalAmount: item.totalAmount
+    });
+});
+// const excelBuffer = await workbook.xlsx.writeBuffer();
+
+// Set response headers for Excel download
+res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+res.setHeader("Content-Disposition", "attachment; filename=sales_report.xlsx");
+
+workbook.xlsx.write(res)
+          .then(() => {
+            res.end();
+          })
+          .catch((error) => {
+            console.error('Error writing Excel file:', error);
+            res.status(500).send('Error generating Excel file');
+          });
+
+
+}
+}
 
 
 
@@ -763,6 +812,6 @@ module.exports = {
     singleOrder,
     singleView,
     updateStatus,
-    // dashBoard
+    salesReportget
 
 };

@@ -32,7 +32,7 @@ router.get('/cart',userAuth,userController.cart)
 
 
 router.delete('/cart/delete-product/:id',userAuth,userController.deleteCart)
-router.post('/cart/incrementQuantity/:id',userAuth,userController.incrementQuantity)
+router.post('/cart/incrementQuantity/:id',userAuth,userController.incrementQuantityServer)
 router.post('/cart/decrementQuantity/:id', userAuth, userController.decrementQuantity);
 
 
