@@ -9,12 +9,12 @@
 		content="Responsive Bootstrap4 Shop Template, Created by Imran Hossain from https://imransdesign.com/">
 
 	<!-- title -->
-	<title>Check Out</title>
+	<title>Summary</title>
 
 	<!-- favicon -->
 
 	<!-- google font -->
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
 
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
@@ -43,7 +43,7 @@
 <body>
 
 	<!--PreLoader-->
-	
+
 	<!--PreLoader Ends-->
 
 	<!-- header -->
@@ -54,8 +54,8 @@
 					<div class="main-menu-wrap">
 						<!-- logo -->
 						<div class="site-logo">
-							
-								<img src="/assets/img/mainLogo.png" alt="">
+
+							<img src="/assets/img/mainLogo.png" alt="">
 							</a>
 						</div>
 						<!-- logo -->
@@ -63,8 +63,8 @@
 						<!-- menu start -->
 						<nav class="main-menu">
 							<ul>
-								
-								
+
+
 								<li><a href="#">Pages</a>
 									<ul class="sub-menu">
 										<li><a href="/cart">Cart</a></li>
@@ -72,7 +72,7 @@
 										<li><a href="/product">Product</a></li>
 									</ul>
 								</li>
-								
+
 								<li><a href="/product">Shop</a>
 									<ul class="sub-menu">
 										<li><a href="/product">Shop</a></li>
@@ -82,7 +82,7 @@
 								</li>
 								<li>
 									<div class="header-icons">
-										
+
 										<a class="shopping-cart" href="/cart"><i class="fas fa-shopping-cart"></i></a>
 										<a class="mobile-hide wishlist-bar-icon" href="/wishlist"><i
 												class="bi bi-heart-fill"></i></a>
@@ -125,8 +125,8 @@
 			<div class="row">
 				<div class="col-lg-8 offset-lg-2 text-center">
 					<div class="breadcrumb-text">
-						<p>Fresh and Organic</p>
-						<h1>Check Out Product</h1>
+						<p>Dry and Organic</p>
+						<h1>Order Summary</h1>
 					</div>
 				</div>
 			</div>
@@ -134,53 +134,57 @@
 	</div>
 	<!-- end breadcrumb section -->
 
-    <div class="container mt-5 mb-5">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card shadow h-100" style="background-color: #e5f6f7;">
-                    <div class="card-body">
-                        <h5 class="card-title text-primary mb-4">User Details</h5>
-                        <div class="mb-4">
-                            <p class="text-muted mb-1"><strong>Name:</strong> John Doe</p>
-                            <p class="text-muted mb-1"><strong>Email:</strong> john.doe@example.com</p>
-                            <p class="text-muted mb-0"><strong>Phone:</strong> +1234567890</p>
-                        </div>
-                        <h5 class="card-title text-primary mb-4">Order Placed Address</h5>
-                        <div>
-                            <p class="text-muted mb-1"><strong>Street:</strong> 123 Main Street</p>
-                            <p class="text-muted mb-1"><strong>City:</strong> New York</p>
-                            <p class="text-muted mb-0"><strong>Zip Code:</strong> 10001</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card shadow h-100" style="background-color: #f9f3e3;">
-                    <div class="card-body">
-                        <h5 class="card-title text-success mb-4">Product Details</h5>
-                        <div class="d-flex align-items-center mb-4">
-                            <img src="product-image.jpg" alt="Product Image" class="img-fluid mr-3" style="width: 100px;">
-                            <div>
-                                <h6 class="mb-1">Product Name</h6>
-                                <p class="text-muted mb-1"><strong>Product Price:</strong> $10</p>
-                                <p class="text-muted mb-0"><strong>Quantity:</strong> 1</p>
-                            </div>
-                        </div>
-                        <!-- <a href="#" class="btn btn-success">View Product</a> -->
-                    </div>
-                </div>
-            </div>
+	<div class="container mt-5 mb-5">
+		<div class="row">
+		<div class="col-md-12 mb-3">
+            <a href="/product" class="btn " style="background-color: ;">Back to Shop</a>
         </div>
-    </div>
-    
-    
-    
-    
-    
-    
-<div class="container">
-{{!-- <h1>he;l;l</h1> --}}
-</div>
+			<div class="col-md-12">
+				<div class="card shadow h-100" style="background-color: #f9f3e3;">
+					<div class="card-body">
+						<h5 class="card-title text-success mb-4">Product Details</h5>
+						{{#each order}}
+
+						<div class="d-flex align-items-center mb-4">
+							<img src="{{productDetails.imageUrl}}" alt="Product Image" class="img-fluid mr-3"
+								style="width: 100px;">
+							<div>
+								<h6 class="mb-1">{{productDetails.productName}}</h6>
+								<p class="text-muted mb-1"><strong>Product Price:</strong>  ₹ {{cart.product.productPrice}}
+								</p>
+								<p class="text-muted mb-0"><strong>Variant:</strong> {{cart.product.productVariant}}</p>
+
+								<p class="text-muted mb-0"><strong>Quantity:</strong> {{cart.product.quantity}}</p>
+							</div>
+						</div>
+
+						{{/each}}
+						<div>
+
+							<h6>Total Amount:  ₹ {{currentOrder.totalAmount}}</h6>
+
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        setTimeout(function() {
+            window.location.href = '/product'; // Replace '/product' with the URL of your product page
+        }, 30000); // 30 seconds = 30,000 milliseconds
+    });
+</script>
+
+
+
 
 
 
@@ -192,7 +196,7 @@
 		crossorigin="anonymous"></script>
 
 	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

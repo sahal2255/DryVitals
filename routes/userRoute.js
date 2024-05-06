@@ -82,6 +82,6 @@ router.get('/profile/editaddress/:addressId',userAuth,userController.editaddress
 router.delete('/profile/deleteAddress/:addressId',userAuth,userController.deleteAddress)
 router.post('/profile/editDetails/:userId', userAuth, userController.editDetails);
 
-// router.get('/details',userAuth,userController.summaryis)
+router.get('/summary',userAuth,userController.summary)
 
 module.exports=router

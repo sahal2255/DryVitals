@@ -672,6 +672,7 @@ const monthlyOrder = await Order.aggregate([
     }
 ]);
 
+console.log('dhhb',monthlyOrder)
 const labels1 = monthlyOrder.map(entry => entry._id);
 const counts1 = monthlyOrder.map(entry => entry.count);
 

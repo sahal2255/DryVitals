@@ -842,7 +842,7 @@ const placeOrder = async (req, res) => {
 
         for (const item of cart.product) {
             const product = await Product.findById(item.productId);
-            console.log('decremented product',product);
+            // console.log('decremented product',product);
             if (product) {
                 const variant = product.stock.find(variant => variant.variant === item.productVariant);
                 if (variant) {
@@ -1207,14 +1207,49 @@ let searchPro=async(req,res)=>{
 
 
 
-// let summaryis = async (req, res) => {
-//     try {
-//         const userId = req.user.id;
-//        res.render('details');
-//     } catch (error) {
-//         console.log('error', error);
-//     }
-// };
+const summary = async (req, res) => {
+    try {
+        if(req.user && req.user.id) {
+            const userId=req.user.id
+            const currentOrderId=req.query.orderId;
+            console.log('currnt' , currentOrderId)
+             const currentOrder = await Order.findById(currentOrderId)
+             console.log('current order',currentOrder);
+             
+
+             const order=await Order.aggregate([
+                {
+                    $match: { _id:new mongoose.Types.ObjectId(currentOrderId), userId:new mongoose.Types.ObjectId(userId) }
+                },
+                {
+                    $unwind: '$cart.product' 
+                },
+                {
+                    $lookup: {
+                        from: 'products',
+                        localField: 'cart.product.productId',
+                        foreignField: '_id',
+                        as: 'productDetails'
+                    }
+                },
+                {
+                    $unwind: '$productDetails'
+                },
+                {
+                    $unwind: '$productDetails.imageUrl'
+                },
+             ])
+             console.log('total',order.totalAmount)
+
+            return res.render('user/summary',{order,currentOrder});
+        } else {
+            return res.redirect('/login'); 
+        }
+    } catch (error) {
+        console.log('error', error);
+        res.status(500).send('Internal Server Error');
+    }
+}
 
 
 module.exports={
@@ -1252,5 +1287,5 @@ module.exports={
     searchPro,
     editaddressGet,
     deleteAddress,
-    // summaryis
+    summary
 }

@@ -477,7 +477,9 @@ var alertMessageElement=document.getElementById('alertMessage')
 			selectedPincode:selectedPincode
         })
         .then(function (response) {
-            console.log('Order placed successfully!');
+            console.log('Order placed successfully!',response);
+			const CurrentorderId= response.data.order._id;
+			console.log('orderId',CurrentorderId)
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',
@@ -485,7 +487,7 @@ var alertMessageElement=document.getElementById('alertMessage')
             })
             .then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = '/order';
+                    window.location.href = '/summary?orderId=' + CurrentorderId;
                 }
             });
         })
@@ -509,7 +511,8 @@ var alertMessageElement=document.getElementById('alertMessage')
         .then(response => {
             console.log("Response from server:", response);
             const { orderId, amount } = response.data;
-
+			
+			
             var options = {
                 key: '',
                 amount: amount, 
@@ -527,13 +530,15 @@ var alertMessageElement=document.getElementById('alertMessage')
                     })
                     .then(orderResponse => {
                         console.log('Order placed successfully!', orderResponse.data.order);
+						const CurrentorderId=orderResponse.data.order._id
+						console.log('orderId',CurrentorderId)
                         Swal.fire({
                             icon: 'success',
                             title: 'Success!',
                             text: 'Order placed successfully!',
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                window.location.href = '/order';
+                                window.location.href ='/summary?orderId=' + CurrentorderId;
                             }
                         });
                     })
