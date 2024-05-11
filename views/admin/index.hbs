@@ -17,10 +17,12 @@
         <link rel="stylesheet" href="assets/libs/icofont/icofont.min.css">
         <link href="assets/libs/flatpickr/flatpickr.min.css" type="text/css" rel="stylesheet">
         <link rel="stylesheet" href="assets/css/tailwind.min.css">
-
-    </head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap Icons -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+</head>
     
-    <body data-layout-mode="light"  data-sidebar-size="default" data-theme-layout="vertical" class="bg-[#EEF0FC] dark:bg-gray-900">
+<body data-layout-mode="light"  data-sidebar-size="default" data-theme-layout="vertical" class="bg-[#EEF0FC] dark:bg-gray-900">
     
         <!-- leftbar-tab-menu -->
         
@@ -510,12 +512,15 @@
                                                         <th scope="col" class="p-3 text-base font-medium tracking-wider text-start text-gray-700 uppercase dark:text-gray-400">
                                                             Amount
                                                         </th>
+                                                        <th scope="col" class="p-3 text-base font-medium tracking-wider text-start text-gray-700 uppercase dark:text-gray-400">
+                                                            View
+                                                        </th>
 
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     {{#each latestOrder}}
-                                                    <tr class="bg-white border-b border-dashed dark:bg-gray-900 dark:border-gray-700/40">
+                                                    <tr class="bg-white border-b border-dashed dark:bg-gray-900 dark:border-gray-700/40" data-order-id="{{_id}}">
                                                         <td class="p-3 text-base  text-gray-600 whitespace-nowrap dark:text-gray-400">
                                                             {{this.createdAt}}
                                                         </td>
@@ -537,6 +542,11 @@
                                                         <td class="p-3 text-base text-gray-700 whitespace-nowrap dark:text-gray-400">
                                                             <span class="font-semibold">₹{{this.totalAmount}}</span>
                                                         </td>
+                                                        <td class="p-3 font-semibold text-lg text-gray-800 whitespace-nowrap dark:text-gray-400">
+    <button type="button" class="btn btn-link" id="singleOrderDetails" onclick="singleOrders()">
+        <i class="bi bi-eye"></i> <!-- Bootstrap eye icon -->
+    </button>
+</td>
                                                     </tr>
                                                     {{/each}}
  
@@ -554,26 +564,26 @@
                                     <h4 class="font-medium flex-1 self-center mb-2 md:mb-0 text-xxl">Sales Report</h4>
                                     {{!-- <p class="text-sm text-slate-400">New Products Last Week <span class="focus:outline-none text-[11px] bg-brand-500/10 text-brand-500 dark:text-brand-300 rounded font-medium py-[2px] px-2">5</span></p> --}}
                                 </div><!--end header-title-->
-<div class="grid grid-cols-1 p-4">
-    <div class="sm:-mx-6 lg:-mx-8">
-        <div class="relative overflow-x-auto block w-full sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label for="start-date" class="block text-sm font-medium text-gray-700">Start Date</label>
-                    <input type="date" name="start-date" id="startDate" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="start-date">
-                </div>
-                <div>
-                    <label for="end-date" class="block text-sm font-medium text-gray-700">End Date</label>
-                    <input type="date" name="end-date" id="endDate" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="end-date">
-                </div>
-            </div>
-            <div class="mt-4">
-                <button id="applyDates" class="bg-indigo-500 text-white py-2 px-4 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Apply Dates</button>
-            </div>
-            
-        </div>
-    </div>
-</div>
+                                <div class="grid grid-cols-1 p-4">
+                                    <div class="sm:-mx-6 lg:-mx-8">
+                                        <div class="relative overflow-x-auto block w-full sm:px-6 lg:px-8">
+                                            <div class="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label for="start-date" class="block text-sm font-medium text-gray-700">Start Date</label>
+                                                    <input type="date" name="start-date" id="startDate" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="start-date">
+                                                </div>
+                                                <div>
+                                                    <label for="end-date" class="block text-sm font-medium text-gray-700">End Date</label>
+                                                    <input type="date" name="end-date" id="endDate" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="end-date">
+                                                </div>
+                                            </div>
+                                            <div class="mt-4">
+                                                <button id="applyDates" class="bg-indigo-500 text-white py-2 px-4 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Apply Dates</button>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
             
 
 
@@ -595,31 +605,23 @@
 
   
         
-{{!-- <div class="container">
-    
-        <canvas id="myChart"></canvas>
 
-</div> --}}
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const ctx = document.getElementById('myChart').getContext('2d');
+        const orderChartLabels = [{{#each orderChart.labels}}'{{this}}'{{#unless @last}},{{/unless}}{{/each}}];
+        const orderChartData = [{{#each orderChart.data}}'{{this}}'{{#unless @last}},{{/unless}}{{/each}}];
 
         const data = {
-            labels: [
-    {{#each orderChart.labels}}
-        '{{this}}'{{#unless @last}},{{/unless}}
-    {{/each}}
-],
-
+            labels: orderChartLabels,
             datasets: [{
                 label: 'Ordered Category',
-                data: [{{#each orderChart.data}}
-                '{{this}}'{{#unless @last}},{{/unless}}
-                {{/each}}
-                ],
+                data: orderChartData,
                 backgroundColor: [
                     'rgb(255, 99, 132)',
                     'rgb(54, 162, 235)',
@@ -637,7 +639,7 @@
                 },
                 title: {
                     display: true,
-                    text: 'Product Selling '
+                    text: 'Product Selling'
                 }
             }
         };
@@ -647,80 +649,72 @@
             data: data,
             options: options
         });
-    });
 
+        // Bar Chart
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        const monthlyOrderLabels = [{{#each monthlyOrder.labels1}}'{{this}}'{{#unless @last}},{{/unless}}{{/each}}];
+        const monthlyOrderCounts = [{{#each monthlyOrder.counts1}}'{{this}}'{{#unless @last}},{{/unless}}{{/each}}];
 
+        const barData = {
+            labels: monthlyOrderLabels,
+            datasets: [{
+                label: 'This Month Order',
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)', // Blue color
+                borderWidth: 1,
+                data: monthlyOrderCounts
+            }]
+        };
 
-//bar chart
-    var ctx = document.getElementById('barChart').getContext('2d');
-    
-    var data = {
-        labels: [{{#each monthlyOrder.labels1}}
-        '{{this}}'{{#unless @last}},{{/unless}}
-        {{/each}}],
-        datasets: [{
-            label: 'This Month Order',
-            backgroundColor: 'rgba(54, 162, 235, 0.5)',
-            borderColor: 'rgba(54, 162, 235, 1)', // Blue color
-            borderWidth: 1,
-            data: [{{#each monthlyOrder.counts1}}
-             '{{this}}'{{#unless @last}},{{/unless}}
-            {{/each}}] 
-        }]
-    };
-    
-   var options = {
-    scales: {
-        yAxes: [{
-            ticks: {
-                beginAtZero: true,
-                
+        const barOptions = {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
             }
-        }]
-    }
-};
-    
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: data,
-        options: options
+        };
+
+        const myBarChart = new Chart(barCtx, {
+            type: 'bar',
+            data: barData,
+            options: barOptions
+        });
+
+        // Apply Dates
+        document.getElementById("applyDates").addEventListener("click", function () {
+            var startDate = document.getElementById("startDate").value;
+            var endDate = document.getElementById("endDate").value;
+
+            if (!startDate || !endDate) {
+                alert("Please select both start date and end date.");
+                return;
+            }
+
+            axios.post('/admin/index/salesReport', {
+                startDate: startDate,
+                endDate: endDate
+            }, {
+                responseType: 'blob'
+            })
+            .then(function (response) {
+                console.log('Response from server:', response);
+
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'sales_report.xlsx');
+                document.body.appendChild(link);
+                link.click();
+            })
+            .catch(function (error) {
+                console.error('Error:', error);
+            });
+        });
     });
-
-
-document.getElementById("applyDates").addEventListener("click", function() {
-    var startDate = document.getElementById("startDate").value;
-    var endDate = document.getElementById("endDate").value;
-
-    if (!startDate || !endDate) {
-        alert("Please select both start date and end date.");
-        return;
-    }
-
-    axios.post('/admin/index/salesReport', {
-        startDate: startDate,
-        endDate: endDate
-    },{
-        responseType:'blob'
-    })
-    .then(function(response) {
-        console.log('Response from server:', response);
-
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'sales_report.xlsx');
-        document.body.appendChild(link);
-        link.click();
-    })
-    .catch(function(error) {
-        console.error('Error:', error);
-    });
-});
-
 </script>
 
 
-        <!-- JAVASCRIPTS -->
+
         <!-- <div class="menu-overlay"></div> -->
 
 
@@ -729,20 +723,19 @@ document.getElementById("applyDates").addEventListener("click", function() {
 		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{{!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
 
         <script src="assets/libs/lucide/umd/lucide.min.js"></script>
         <script src="assets/libs/simplebar/simplebar.min.js"></script>
         <script src="assets/libs/flatpickr/flatpickr.min.js"></script>
         <script src="assets/libs/%40frostui/tailwindcss/frostui.js"></script>
 
-        <script src="assets/libs/apexcharts/apexcharts.min.js"></script>
+        {{!-- <script src="assets/libs/apexcharts/apexcharts.min.js"></script> --}}
         <script src="assets/js/pages/analytics-index.init.js"></script>
         <script src="assets/js/app.js"></script>
         <!-- JAVASCRIPTS -->
     </body>
 
-<!-- Mirrored from mannatthemes.com/robotech/default/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 16 Mar 2024 08:17:40 GMT -->
 </html>
 
 

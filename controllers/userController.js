@@ -197,6 +197,7 @@ let productGet = async (req, res) => {
 
 
 
+
 // single product get section
 
 let singleProduct=async(req,res)=>{
@@ -288,8 +289,30 @@ let cart = async (req, res) => {
         const data=user.cart.product
         const total=user.cart.total
         const totalmrp=user.cart.totalmrp
-        // const mrp=user.cart.
-        // console.log('datas',data);
+        const variants = data.map(item => item.productVariant);
+
+
+        const stockMessages = await Product.aggregate([
+            {
+                $match: {
+                    productVariant: { $in: variants }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    productName: 1,
+                    productVariant: 1,
+                    stock: 1 // Assuming stock is a field in your product document
+                }
+            }
+        ]);
+
+        console.log('Stock Messages:', stockMessages);
+      
+
+        console.log('select variant',variants)
+
         res.render('user/cart', { data,total ,totalmrp});
     } catch (error) {
         console.error('Error rendering cart:', error);
@@ -297,6 +320,39 @@ let cart = async (req, res) => {
     }
 };
 
+// let cart = async (req, res) => {
+//     try {
+//         const user = await User.findById(req.user.id).select('cart');
+        
+//         // Check if user.cart.products exists and is an array
+//         if (!user.cart || !user.cart.product || !Array.isArray(user.cart.product)) {
+//             throw new Error('Cart products not found or invalid format');
+//         }
+
+//         const cartProducts = user.cart.product;
+        
+//         // Fetch stock information for each product in the cart
+//         const productIds = cartProducts.map(product => product.productId);
+//         const productsWithStock = await Product.find({ _id: { $in: productIds } }, 'stock');
+
+//         // Combine product information with stock status
+//         const data = cartProducts.map(cartProduct => {
+//             const product = productsWithStock.find(p => p._id.equals(cartProduct.productId));
+//             return {
+//                 ...cartProduct,
+//                 stock: product ? product.stock : 0 // If product not found, assume stock is 0
+//             };
+//         });
+
+//         const total = user.cart.total;
+//         const totalmrp = user.cart.totalmrp;
+
+//         res.render('user/cart', { data, total, totalmrp });
+//     } catch (error) {
+//         console.error('Error rendering cart:', error);
+//         res.status(500).send({ error: 'Internal server error' });
+//     }
+// };
 
 
 let deleteCart = async (req, res) => {
@@ -373,7 +429,7 @@ let incrementQuantityServer = async (req, res) => {
                 }
             }
         ]);
-        
+        if(cartItem.quantity<5){
         cartItem.quantity++;
         cartItem.productPrice= cartItem.quantity*product[0].price
         cartItem.productmrp += product[0].mrp;
@@ -388,7 +444,10 @@ let incrementQuantityServer = async (req, res) => {
         // console.log(user.cart.total);
         
         res.status(200).json({ message: "Quantity incremented successfully", cartItem, subtotal, total });
-        // res.status(200).json({ message: "Quantity incremented successfully" ,cartItem});
+        }
+        else {
+            return res.status(400).json({ error: "Maximum quantity reached" });
+        }
     } catch (error) {
         console.error('Error incrementing quantity:', error);
         res.status(500).json({ error: "Internal server error" });
@@ -481,12 +540,28 @@ let sortAndFilterProducts = async (req, res) => {
             products = await Product.find(query).sort({ 'stock.0.price': 1 });
         } else if (sortBy === 'price-high-low') {
             products = await Product.find(query).sort({ 'stock.0.price': -1 });
+        } else if (sortBy === 'A-Z') {
+            products = await Product.find(query).sort({ productName: 1 });
+        } else if (sortBy === 'Z-A') {
+            products = await Product.find(query).sort({ productName: -1 });
         } else {
             products = await Product.find(query);
         }
 
-        console.log(products);
-        res.json({ products });
+        // console.log(products);
+        let wishlistItems = [];
+        if (req.user) {
+            const userId = req.user.id;
+            const user = await User.findOne({ _id: userId });
+            wishlistItems = user.wishlist.product.map(item => item.productId.toString());
+        }
+
+        // Passing wishlist status of each product to the frontend
+        const productsWithWishlistStatus = products.map(product => ({
+            ...product.toObject(),
+            inWishlist: wishlistItems.includes(product._id.toString())
+        }));
+        res.json({ products:productsWithWishlistStatus });
     } catch (error) {
         console.error('Error sorting and filtering products:', error);
         res.status(500).json({ error: 'Failed to sort and filter products.' });
@@ -658,7 +733,7 @@ const wishlisttoCart=async(req,res)=>{
             // Variant already exists, increase quantity
             user.cart.product[existingProductIndex].quantity += 1;
             user.cart.product[existingProductIndex].productPrice = selectedPrice * user.cart.product[existingProductIndex].quantity;
-            user.cart.product[existingProductIndex].productmrp += selectedmrp; // Add the MRP of one more quantity
+            user.cart.product[existingProductIndex].productmrp += selectedmrp; 
 
         } else {
             user.cart.product.push({
@@ -931,6 +1006,12 @@ let order = async (req, res) => {
         });
         // console.log(orderDetails);
 
+        // const orderAdd=await Order.aggregate([
+        //     {$match: { userId:new mongoose.Types.ObjectId(userId) }},
+        //     {}
+        // ])
+
+
         res.render('user/order', { orderDetails });
     } catch (error) {
         console.log('Error in getting order details:', error);
@@ -1159,10 +1240,7 @@ let singleOrderDetails = async (req, res) => {
         if (!singleorder || singleorder.length === 0) {
             return res.status(404).json({ error: 'Order not found' });
         }
-const selectedPincode = singleorder[0].selectedPincode;
-console.log('selected pincode', selectedPincode)
-const userAddress = await User.findOne({ 'userAddress.pincode': selectedPincode });
-console.log('selected pincode addess',userAddress);
+
 
 // Pass order details and user's address to the frontend
 res.json({ singleorder: singleorder, });

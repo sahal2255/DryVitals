@@ -4,7 +4,7 @@
 <!-- Mirrored from mannatthemes.com/robotech/default/admin-products.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 16 Mar 2024 08:17:40 GMT -->
 <head>
         <meta charset="utf-8" />
-        <title>Robotech - Admin & Dashboard Template</title>
+        <title>DryVitals - Admin & Dashboard Template</title>
         <meta  name="viewport"  content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
         <meta  content="Tailwind Multipurpose Admin & Dashboard Template"  name="description"/>
         <meta content="" name="Mannatthemes" />
@@ -526,11 +526,11 @@
     <h4>Order Status Update</h4>
     <select name="order-status" id="orderStatus" class="status-select">
         <option value="OrderPlaced" selected>{{orderDetails.[0].status}}</option>
-        <option value="OrderConfirmed">Order Confirmed</option>
+        <option value="OrderConfirmed" >Order Confirmed</option>
         <option value="Shipped">Shipped</option>
         <option value="OutForDelivery">Out for Delivery</option>
         <option value="Delivered">Delivered</option>
-        <option value="Cancel">Order Cancelled</option>
+        <option value="OrderCancelled">Order Cancelled</option>
     </select>
     <div class="text-right">
         <input type="hidden" id="orderId" value="{{orderDetails.[0]._id}}">

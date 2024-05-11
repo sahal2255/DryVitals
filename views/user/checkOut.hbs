@@ -15,7 +15,7 @@
 	{{!--
 	<link rel="shortcut icon" type="image/png" href="/assets/img/favicon.png"> --}}
 	<!-- google font -->
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
 
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
@@ -42,11 +42,6 @@
 			background-color: gainsboro;
 			/* Set background color for the body */
 		}
-
-
-
-
-
 		.cart-details {
 			margin-top: 20px;
 		}
@@ -61,7 +56,7 @@
 			font-weight: bold;
 		}
 
-		*
+		
 
 		/* Custom styling for list-group radio buttons */
 		.list-group-item {
@@ -75,11 +70,25 @@
 		.list-group-item .form-check-input {
 			margin-top: 5px;
 		}
-		.error{
+
+		.error {
 			color: red;
 		}
-		#alertMessage{
+
+		#alertMessage {
 			color: red;
+		}
+
+		.footer a:hover {
+			color: #ffcc00;
+		}
+
+		.footer a:hover i {
+			color: #ffcc00;
+		}
+
+		.list-inline-item:hover {
+			transform: scale(1.1);
 		}
 	</style>
 
@@ -87,13 +96,6 @@
 
 <body>
 
-	<!--PreLoader-->
-	{{!-- <div class="loader">
-		<div class="loader-inner">
-			<div class="circle"></div>
-		</div>
-	</div> --}}
-	<!--PreLoader Ends-->
 
 	<!-- header -->
 	<div class="top-header-area" id="sticker">
@@ -103,7 +105,7 @@
 					<div class="main-menu-wrap">
 						<!-- logo -->
 						<div class="site-logo">
-							{{!-- <a href="/"> --}}
+							<a href="/">
 								<img src="/assets/img/mainLogo.png" alt="fghf">
 							</a>
 						</div>
@@ -112,37 +114,14 @@
 						<!-- menu start -->
 						<nav class="main-menu">
 							<ul>
-								{{!-- <li class="current-list-item"><a href="#">Home</a>
-									<ul class="sub-menu">
-										<li><a href="index.html">Static Home</a></li>
-										<li><a href="index_2.html">Slider Home</a></li>
-									</ul>
-								</li> --}}
-								{{!-- <li><a href="about.html">About</a></li> --}}
-								<li><a href="#">Pages</a>
-									<ul class="sub-menu">
-										{{!-- <li><a href="404.html">404 page</a></li> --}}
-										{{!-- <li><a href="about.html">About</a></li> --}}
-										<li><a href="/cart">Cart</a></li>
-										<li><a href="/checkout">Check Out</a></li>
-										{{!-- <li><a href="contact.html">Contact</a></li> --}}
-										{{!-- <li><a href="news.html">News</a></li> --}}
-										<li><a href="/product">Product</a></li>
-									</ul>
-								</li>
 								
-								{{!-- <li><a href="contact.html">Contact</a></li> --}}
-								<li><a href="/product">Shop</a>
-									<ul class="sub-menu">
-										<li><a href="/product">Shop</a></li>
-										{{!-- <li><a href="checkout.html">Check Out</a></li> --}}
-										{{!-- <li><a href="single-product.html">Single Product</a></li> --}}
-										<li><a href="/cart">Cart</a></li>
-									</ul>
-								</li>
+								<li><a href="/">Home</a></li>
+								<li><a href="/product">Product</a></li>
+
+								
 								<li>
 									<div class="header-icons">
-										
+
 										<a class="shopping-cart" href="/cart"><i class="fas fa-shopping-cart"></i></a>
 										<a class="mobile-hide wishlist-bar-icon" href="/wishlist"><i
 												class="bi bi-heart-fill"></i></a>
@@ -152,7 +131,6 @@
 								</li>
 							</ul>
 						</nav>
-						{{!-- <a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a> --}}
 						<div class="mobile-menu"></div>
 						<!-- menu end -->
 					</div>
@@ -187,7 +165,7 @@
 			<div class="row">
 				<div class="col-lg-8 offset-lg-2 text-center">
 					<div class="breadcrumb-text">
-						<p>Fresh and Organic</p>
+						<p>Dry and Organic</p>
 						<h1>Check Out Product</h1>
 					</div>
 				</div>
@@ -197,12 +175,14 @@
 	<!-- end breadcrumb section -->
 
 	<!-- check out section -->
-{{#if cartItems}}
-	<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+	
+	{{#if cartItems}}
+	<div class="d-flex justify-content-center align-items-center" style="min-height: calc(100vh - 290px);">
 		<div class="container-fluid ">
-			<div class="row justify-content-evenly">
-				<div class="col-12 col-md-6 col-lg-6" style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); padding: 20px;">
-					<h1 class="text-center ">Cart Items</h1>
+			<div class="row justify-content-evenly ">
+				<div class="col-12 col-md-6 col-lg-6 mb-4 mb-lg-0"
+					style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); padding: 20px;border-radius:30px">
+					<h2 class="text-center mt-3">Check Out</h2>
 					<hr>
 
 					<div class="table-responsive">
@@ -253,18 +233,18 @@
 					</div>
 				</div>
 
-				<div class="col col-md-4 " style="background-color: rgb(255, 255, 255); padding: 20px;">
+				<div class="col col-md-4 col-lg-4" style="background-color: rgb(255, 255, 255); padding: 20px;border-radius:30px">
 					<div class="row gy-4 mx-5">
 						<div class="col-12" style="background-color: rgb(255, 255, 255); padding: 0;">
 							<h3 style="margin: 10px 0;" class="text-center">Address</h3>
-							<div >
+							<div>
 								<div class="mb-3">
 									<h5><label class="form-label">Select Address:</label></h5><br>
 									{{#each userAddress}}
 									<div class="form-check">
 										<input class="form-check-input" type="radio" name="addressOption"
-											id="addressOption{{@index}}" value="{{@index}}" >
-											<input type="hidden" value="{{this.pincode}}">
+											id="addressOption{{@index}}" value="{{@index}}">
+										<input type="hidden" value="{{this.pincode}}">
 										<label class="form-check-label ml-2"
 											for="addressOption{{@index}}">{{this.address}},{{this.place}},{{this.pincode}}</label>
 									</div>
@@ -272,7 +252,7 @@
 								</div>
 
 
-				
+
 							</div>
 							<hr style="width: 100%; height: 1px; background-color: #000; border: none;">
 							<p class="d-inline-flex gap-1 ">
@@ -285,48 +265,57 @@
 							<div class="collapse" id="collapseExample">
 								<div class="card card-body">
 									<!-- Address form -->
-									<form id="addressForm" action="/saveAddress" method="POST" onsubmit="return saveAddress(event)">
-    <div class="row mb-3">
-        <label for="inputAddress" class="col-sm-2 col-form-label">Address</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" id="address" placeholder="Address" name="address">
-        <p id="addressError" class="error"></p> <!-- Error message for address -->
-        </div>
-    </div>
-    <div class="row mb-3">
-        <label for="inputCity" class="col-sm-2 col-form-label">District</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" id="district" name="district" placeholder="District">
-        <p id="districtError" class="error"></p> <!-- Error message for district -->
-        </div>
-    </div>
-    <div class="row mb-3">
-        <label for="inputState" class="col-sm-2 col-form-label">Place</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" id="place" name="place" placeholder="Place">
-        <p id="placeError" class="error"></p> <!-- Error message for place -->
-        </div>
-    </div>
-    <div class="row mb-3">
-        <label for="inputZip" class="col-sm-2 col-form-label">Pincode</label>
-        <div class="col-sm-10">
-            <input type="number" class="form-control" id="pincode" name="pincode" placeholder="Pincode">
-        <p id="pincodeError" class="error"></p> <!-- Error message for pincode -->
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-sm-10 offset-sm-2">
-            <button type="button" class="btn btn-primary" id="submitAddress">Save Address</button>
-        </div>
-    </div>
-</form>
+									<form id="addressForm" action="/saveAddress" method="POST"
+										onsubmit="return saveAddress(event)">
+										<div class="row mb-3">
+											<label for="inputAddress" class="col-sm-2 col-form-label">Address</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control" id="address"
+													placeholder="Address" name="address">
+												<p id="addressError" class="error"></p>
+												<!-- Error message for address -->
+											</div>
+										</div>
+										<div class="row mb-3">
+											<label for="inputCity" class="col-sm-2 col-form-label">District</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control" id="district" name="district"
+													placeholder="District">
+												<p id="districtError" class="error"></p>
+												<!-- Error message for district -->
+											</div>
+										</div>
+										<div class="row mb-3">
+											<label for="inputState" class="col-sm-2 col-form-label">Place</label>
+											<div class="col-sm-10">
+												<input type="text" class="form-control" id="place" name="place"
+													placeholder="Place">
+												<p id="placeError" class="error"></p> <!-- Error message for place -->
+											</div>
+										</div>
+										<div class="row mb-3">
+											<label for="inputZip" class="col-sm-2 col-form-label">Pincode</label>
+											<div class="col-sm-10">
+												<input type="number" class="form-control" id="pincode" name="pincode"
+													placeholder="Pincode">
+												<p id="pincodeError" class="error"></p>
+												<!-- Error message for pincode -->
+											</div>
+										</div>
+										<div class="row mb-3">
+											<div class="col-sm-10 offset-sm-2">
+												<button type="button" class="btn btn-primary" id="submitAddress">Save
+													Address</button>
+											</div>
+										</div>
+									</form>
 
 								</div>
 							</div>
 
 
 						</div>
-					<hr style="width: 100%; height: 1px; background-color: #000; border: none;">
+						<hr style="width: 100%; height: 1px; background-color: #000; border: none;">
 					</div>
 					<div class="row gy-4 mt-5 mx-5 ">
 						<div class="col-12" style="background-color: rgb(255, 255, 255); padding: 0;">
@@ -345,7 +334,8 @@
 							</div>
 						</div>
 						<div class="d-flex justify-content-center ">
-					<button id="placeOrderBtn" class="btn btn-lg btn-success" onclick="placeOrder()">Place Order</button>
+							<button id="placeOrderBtn" class="btn btn-lg btn-success" onclick="placeOrder()">Place
+								Order</button>
 						</div>
 					</div>
 				</div>
@@ -354,222 +344,271 @@
 		</div>
 	</div>
 
-{{else}}
-    <div class="container" style="height: 250px; background-color: #ffcccc; display: flex; justify-content: center; align-items: center;">
-        <div class="not-product" style="text-align: center;">
-            <h1 style="font-size: 24px; color: #ff0000;">No Products in Cart</h1>
-            <p style="font-size: 16px; color: #333;">Your cart is empty. Please add products to your cart.</p>
-        </div>
-    </div>
-{{/if}}
+	{{else}}
+	<div class="container"
+		style="height: 250px; background-color: #ffcccc; display: flex; justify-content: center; align-items: center;">
+		<div class="not-product" style="text-align: center;">
+			<h1 style="font-size: 24px; color: #ff0000;">No Products in Cart</h1>
+			<p style="font-size: 16px; color: #333;">Your cart is empty. Please add products to your cart.</p>
+		</div>
+	</div>
+	{{/if}}
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("submitAddress").addEventListener("click", saveAddress);
-});
-
-async function saveAddress(event) {
-    event.preventDefault();
-
-    var district = document.getElementById("district").value;
-    var place = document.getElementById("place").value.trim();
-    var address = document.getElementById("address").value.trim();
-    var pincode = document.getElementById("pincode").value.trim();
-
-    // Reset error messages
-    document.getElementById("districtError").innerText = "";
-    document.getElementById("placeError").innerText = "";
-    document.getElementById("addressError").innerText = "";
-    document.getElementById("pincodeError").innerText = "";
-
-    // Validation
-    var isValid = true;
-
-    if (district === "") {
-        document.getElementById("districtError").innerText = "Please enter your district";
-        isValid = false;
-    }
-
-    if (place === "") {
-        document.getElementById("placeError").innerText = "Please enter your place";
-        isValid = false;
-    }
-
-    if (address === "") {
-        document.getElementById("addressError").innerText = "Please enter your address";
-        isValid = false;
-    }
-
-    if (pincode === "") {
-        document.getElementById("pincodeError").innerText = "Please enter your pincode";
-        isValid = false;
-    } else if (!isValidPincode(pincode)) {
-        document.getElementById("pincodeError").innerText = "Pincode should be exactly 6 digits";
-        isValid = false;
-    }
-
-    if (isValid) {
-        try {
-            // Construct the new address object
-            const newAddress = {
-                district: district,
-                place: place,
-                address: address,
-                pincode: pincode
-            };
-
-            // Send a request to your server to update the user's address
-            const response = await axios.post('/saveAddress', { newAddress });
-
-            // Handle the response from the server
-            console.log('Address saved successfully:', response.data);
-            // Show SweetAlert notification
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'Your address has been saved successfully!',
-                confirmButtonText: 'OK'
-            });
-        } catch (error) {
-            console.error('Error saving address:', error);
-            // Show SweetAlert for error
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Something went wrong! Please try again later.',
-                confirmButtonText: 'OK'
-            });
-        }
-    }
-}
-
-function isValidPincode(pincode) {
-    // Pincode validation (6 digits)
-    var pincodeRegex = /^\d{6}$/;
-    return pincodeRegex.test(pincode);
-}
+	<footer class="footer" style="background-color: #343a40; color: #ffffff; padding: 50px 0;">
+		<div class="container-lg"> <!-- Changed to container-lg for larger size -->
+			<div class="row">
+				<div class="col-md-4">
+					<h5 style="color: white;">About Us</h5>
+					<p style="color: rgb(174, 164, 164);">At Dry Vitals, we are passionate about providing you with the
+						finest selection of dry fruits, dates, and nuts sourced from the most trusted suppliers
+						worldwide. With a commitment to quality, freshness, and customer satisfaction, we aim to bring
+						nature's goodness to your doorstep.</p>
+				</div>
+				<div class="col-md-4">
+					<h5 style="color: white;">Customer Service</h5>
+					<ul class="list-unstyled" style="margin-left: 0;">
+						<li><a href="/profile" style="color: #ffffff;">Profile</a></li>
+						<li><a href="/product" style="color: #ffffff;">Product</a></li>
+						<li><a href="/cart" style="color: #ffffff;">Cart</a></li>
+						<li><a href="/wishlist" style="color: #ffffff;">Wishlist</a></li>
+						<li><a href="/order" style="color: #ffffff;">Orders</a></li>
+					</ul>
+				</div>
+				<div class="col-md-4">
+					<h5 style="color: white;">Connect with Us</h5>
+					<ul class="list-unstyled social-links" style="margin-left: 0;">
+						<li><a href="#" style="color: #ffffff;"><i class="fab fa-facebook-f"> Facebook</i> </a></li>
+						<li><a href="#" style="color: #ffffff;"><i class="fab fa-twitter"> Twitter</i> </a></li>
+						<li><a href="#" style="color: #ffffff;"><i class="fab fa-instagram"> Instagram</i> </a></li>
+						<li><a href="#" style="color: #ffffff;"><i class="fab fa-linkedin-in"> LinkedIn</i> </a></li>
+					</ul>
+				</div>
+			</div>
+			<hr style="background-color: #ffffff;">
+			<div class="row">
+				<div class="col-md-6">
+					<h5 style="color: white;">Payment Methods</h5>
+					<ul class="list-inline payment-icons" style="margin-left: 0;">
+						<li class="list-inline-item"><i class="fab fa-cc-visa fa-2x" style="color: #ffffff;"></i></li>
+						<li class="list-inline-item"><i class="fab fa-cc-mastercard fa-2x" style="color: #ffffff;"></i>
+						</li>
+						<li class="list-inline-item"><i class="fab fa-cc-paypal fa-2x" style="color: #ffffff;"></i></li>
+						<li class="list-inline-item"><i class="fab fa-cc-amazon-pay fa-2x" style="color: #ffffff;"></i>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</footer>
 
 
-window.placeOrder = function () {
-    var selectedPaymentMethod = document.querySelector('input[name="inlineRadioOptions"]:checked');
-    var selectedAddressOption = document.querySelector('input[name="addressOption"]:checked');
-var alertMessageElement=document.getElementById('alertMessage')
-    if ( !selectedAddressOption) {
-        alertMessageElement.innerHTML='Please Select an address option'
-        return;
-    }
-    if (!selectedPaymentMethod) {
-        alertMessageElement.innerHTML='Please Select a Payment method'
-        return;
-    }
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			document.getElementById("submitAddress").addEventListener("click", saveAddress);
+		});
 
-    if (selectedPaymentMethod.value === "COD") {
-	var selectedAddressOption = document.querySelector('input[name="addressOption"]:checked');
-        if (!selectedAddressOption) {
-            alert("Please select an address option.");
-            return;
-        }
+		async function saveAddress(event) {
+			event.preventDefault();
 
-        var selectedPincode = selectedAddressOption.parentElement.querySelector('.form-check-label').textContent.split(',')[5];
-		console.log('selected picode',selectedPincode)
-        axios.post('/placeOrder', {
-            selectedPaymentMethod: 'COD',
-			selectedPincode:selectedPincode
-        })
-        .then(function (response) {
-            console.log('Order placed successfully!',response);
-			const CurrentorderId= response.data.order._id;
-			console.log('orderId',CurrentorderId)
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: 'Order placed successfully!',
-            })
-            .then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = '/summary?orderId=' + CurrentorderId;
-                }
-            });
-        })
-        .catch(function (error) {
-            console.error('Error placing order:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Failed to place order. Please try again later.',
-            });
-        });
-    } else if (selectedPaymentMethod.value === 'ONLINE') {
-        // Handle Online payment method
-        const totalAmount = document.getElementById('total-amount').value;
-		var selectedPincode = selectedAddressOption.parentElement.querySelector('.form-check-label').textContent.split(',')[5];
-		console.log('selected picode',selectedPincode)
-        axios.post('/razorpay/placeOrder', { 
-            totalAmount: totalAmount,
-			selectedPincode: selectedPincode
-        })
-        .then(response => {
-            console.log("Response from server:", response);
-            const { orderId, amount } = response.data;
-			
-			
-            var options = {
-                key: '',
-                amount: amount, 
-                currency: "INR",
-                order_id: orderId,
-                name: "Your Company Name",
-                description: "Description of the payment",
-                handler: function (response) {
-                    console.log("Razorpay response:", response);
-                    axios.post('/placeOrder', {
-                        selectedPaymentMethod: 'Online',
-						selectedPincode: selectedPincode,
-                        razorpayOrderId: orderId,
-                        razorpayPaymentId: response.razorpay_payment_id
-                    })
-                    .then(orderResponse => {
-                        console.log('Order placed successfully!', orderResponse.data.order);
-						const CurrentorderId=orderResponse.data.order._id
-						console.log('orderId',CurrentorderId)
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success!',
-                            text: 'Order placed successfully!',
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href ='/summary?orderId=' + CurrentorderId;
-                            }
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Error placing order:', error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Failed to place order. Please try again later.',
-                        });
-                    });
-                }
-            };
+			var district = document.getElementById("district").value;
+			var place = document.getElementById("place").value.trim();
+			var address = document.getElementById("address").value.trim();
+			var pincode = document.getElementById("pincode").value.trim();
 
-            var rzp = new Razorpay(options);
-            rzp.open();
-        })
-        .catch(error => {
-            console.error("Error while placing order with Razorpay:", error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Failed to place order with Razorpay. Please try again later.',
-            });
-        });
-    } else {
-        alert("Please select a payment method.");
-    }
-}
+			// Reset error messages
+			document.getElementById("districtError").innerText = "";
+			document.getElementById("placeError").innerText = "";
+			document.getElementById("addressError").innerText = "";
+			document.getElementById("pincodeError").innerText = "";
 
-</script>
+			// Validation
+			var isValid = true;
+
+			if (district === "") {
+				document.getElementById("districtError").innerText = "Please enter your district";
+				isValid = false;
+			}
+
+			if (place === "") {
+				document.getElementById("placeError").innerText = "Please enter your place";
+				isValid = false;
+			}
+
+			if (address === "") {
+				document.getElementById("addressError").innerText = "Please enter your address";
+				isValid = false;
+			}
+
+			if (pincode === "") {
+				document.getElementById("pincodeError").innerText = "Please enter your pincode";
+				isValid = false;
+			} else if (!isValidPincode(pincode)) {
+				document.getElementById("pincodeError").innerText = "Pincode should be exactly 6 digits";
+				isValid = false;
+			}
+
+			if (isValid) {
+				try {
+					// Construct the new address object
+					const newAddress = {
+						district: district,
+						place: place,
+						address: address,
+						pincode: pincode
+					};
+
+					// Send a request to your server to update the user's address
+					const response = await axios.post('/saveAddress', { newAddress });
+
+					// Handle the response from the server
+					console.log('Address saved successfully:', response.data);
+					// Show SweetAlert notification
+					Swal.fire({
+						icon: 'success',
+						title: 'Success',
+						text: 'Your address has been saved successfully!',
+						confirmButtonText: 'OK'
+					});
+				} catch (error) {
+					console.error('Error saving address:', error);
+					// Show SweetAlert for error
+					Swal.fire({
+						icon: 'error',
+						title: 'Oops...',
+						text: 'Something went wrong! Please try again later.',
+						confirmButtonText: 'OK'
+					});
+				}
+			}
+		}
+
+		function isValidPincode(pincode) {
+			// Pincode validation (6 digits)
+			var pincodeRegex = /^\d{6}$/;
+			return pincodeRegex.test(pincode);
+		}
+
+
+		window.placeOrder = function () {
+			var selectedPaymentMethod = document.querySelector('input[name="inlineRadioOptions"]:checked');
+			var selectedAddressOption = document.querySelector('input[name="addressOption"]:checked');
+			var alertMessageElement = document.getElementById('alertMessage')
+			if (!selectedAddressOption) {
+				alertMessageElement.innerHTML = 'Please Select an address option'
+				return;
+			}
+			if (!selectedPaymentMethod) {
+				alertMessageElement.innerHTML = 'Please Select a Payment method'
+				return;
+			}
+
+			if (selectedPaymentMethod.value === "COD") {
+				var selectedAddressOption = document.querySelector('input[name="addressOption"]:checked');
+				if (!selectedAddressOption) {
+					alert("Please select an address option.");
+					return;
+				}
+
+				var selectedPincode = selectedAddressOption.parentElement.querySelector('.form-check-label').textContent.split(',')[5];
+				console.log('selected picode', selectedPincode)
+				axios.post('/placeOrder', {
+					selectedPaymentMethod: 'COD',
+					selectedPincode: selectedPincode
+				})
+					.then(function (response) {
+						console.log('Order placed successfully!', response);
+						const CurrentorderId = response.data.order._id;
+						console.log('orderId', CurrentorderId)
+						Swal.fire({
+							icon: 'success',
+							title: 'Success!',
+							text: 'Order placed successfully!',
+						})
+							.then((result) => {
+								if (result.isConfirmed) {
+									window.location.href = '/summary?orderId=' + CurrentorderId;
+								}
+							});
+					})
+					.catch(function (error) {
+						console.error('Error placing order:', error);
+						Swal.fire({
+							icon: 'error',
+							title: 'Oops...',
+							text: 'Failed to place order. Please try again later.',
+						});
+					});
+			} else if (selectedPaymentMethod.value === 'ONLINE') {
+				// Handle Online payment method
+				const totalAmount = document.getElementById('total-amount').value;
+				var selectedPincode = selectedAddressOption.parentElement.querySelector('.form-check-label').textContent.split(',')[5];
+				console.log('selected picode', selectedPincode)
+				axios.post('/razorpay/placeOrder', {
+					totalAmount: totalAmount,
+					selectedPincode: selectedPincode
+				})
+					.then(response => {
+						console.log("Response from server:", response);
+						const { orderId, amount } = response.data;
+
+
+						var options = {
+							key: '',
+							amount: amount,
+							currency: "INR",
+							order_id: orderId,
+							name: "Your Company Name",
+							description: "Description of the payment",
+							handler: function (response) {
+								console.log("Razorpay response:", response);
+								axios.post('/placeOrder', {
+									selectedPaymentMethod: 'Online',
+									selectedPincode: selectedPincode,
+									razorpayOrderId: orderId,
+									razorpayPaymentId: response.razorpay_payment_id
+								})
+									.then(orderResponse => {
+										console.log('Order placed successfully!', orderResponse.data.order);
+										const CurrentorderId = orderResponse.data.order._id
+										console.log('orderId', CurrentorderId)
+										Swal.fire({
+											icon: 'success',
+											title: 'Success!',
+											text: 'Order placed successfully!',
+										}).then((result) => {
+											if (result.isConfirmed) {
+												window.location.href = '/summary?orderId=' + CurrentorderId;
+											}
+										});
+									})
+									.catch(error => {
+										console.error('Error placing order:', error);
+										Swal.fire({
+											icon: 'error',
+											title: 'Oops...',
+											text: 'Failed to place order. Please try again later.',
+										});
+									});
+							}
+						};
+
+						var rzp = new Razorpay(options);
+						rzp.open();
+					})
+					.catch(error => {
+						console.error("Error while placing order with Razorpay:", error);
+						Swal.fire({
+							icon: 'error',
+							title: 'Oops...',
+							text: 'Failed to place order with Razorpay. Please try again later.',
+						});
+					});
+			} else {
+				alert("Please select a payment method.");
+			}
+		}
+
+	</script>
 
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
 		integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
@@ -579,7 +618,7 @@ var alertMessageElement=document.getElementById('alertMessage')
 		crossorigin="anonymous"></script>
 
 	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

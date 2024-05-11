@@ -32,7 +32,19 @@
 	<link rel="stylesheet" href="/assets/css/main.css">
 	<!-- responsive -->
 	<link rel="stylesheet" href="/assets/css/responsive.css">
+<style>
+	.footer a:hover {
+    color: #ffcc00; 
+}
 
+.footer a:hover i {
+    color: #ffcc00;
+}
+
+.list-inline-item:hover {
+    transform: scale(1.1);
+}
+</style>
 </head>
 <body>
 	
@@ -61,33 +73,11 @@
 						<!-- menu start -->
 						<nav class="main-menu">
 							<ul>
-								{{!-- <li class="current-list-item"><a href="/">Home</a>
-									<ul class="sub-menu">
-										<li><a href="index.html">Static Home</a></li>
-										<li><a href="index_2.html">Slider Home</a></li>
-									</ul>
-								</li> --}}
-								<li><a href="/product">Product</a></li>
-								<li><a href="#">Pages</a>
-									<ul class="sub-menu">
-										{{!-- <li><a href="404.html">404 page</a></li> --}}
-										{{!-- <li><a href="about.html">About</a></li> --}}
-										<li><a href="/cart">Cart</a></li>
-										<li><a href="/checkout">Check Out</a></li>
-										<li><a href="/product">Product</a></li>
-										<li><a href="/order">Order</a></li>
-									</ul>
-								</li>
 								
-								{{!-- <li><a href="contact.html">Contact</a></li> --}}
-								<li><a href="/product">Shop</a>
-									<ul class="sub-menu">
-										<li><a href="/product">Product</a></li>
-										<li><a href="/summary">summary</a></li>
-										{{!-- <li><a href="/singleProduct">Single Product</a></li> --}}
-										<li><a href="/cart">Cart</a></li>
-									</ul>
-								</li>
+								<li><a href="/">Home</a></li>
+								<li><a href="/product">Product</a></li>
+								
+								
 								<li>
 									<div class="header-icons">
 										{{!-- <a class="mobile-hide search-bar-icon" href="#" id="search-icon"><i class="fas fa-search"></i></a> --}}
@@ -100,7 +90,6 @@
 								
 							</ul>
 						</nav>
-						<a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
 						<div class="mobile-menu"></div>
 						<!-- menu end -->
 					</div>
@@ -135,7 +124,7 @@
 			<div class="row">
 				<div class="col-lg-8 offset-lg-2 text-center">
 					<div class="breadcrumb-text">
-						<p>Fresh and Organic</p>
+						<p>Dry and Organic</p>
 						<h1>Cart</h1>
 					</div>
 				</div>
@@ -179,11 +168,11 @@
 			<td class="product-mrp"><strike id="mrp_{{this.productId}}">₹{{productmrp}}</strike></td>
 			{{!-- <td class="selected-price">{{selected.productPrice}}</td> --}}
             <td class="product-total">
-                <button class="quantity-btn" onclick="decrementQuantity('{{this._id}}')">-</button>
+                <button class="quantity-btn" style="border: none;" onclick="decrementQuantity('{{this._id}}')">-</button>
                 <span class="quantity" id="quantity_{{this.productId}}">{{quantity}}</span>
-                <button class="quantity-btn" onclick="incrementQuantity('{{this._id}}')">+</button>
+                <button class="quantity-btn" style="border: none;" onclick="incrementQuantity('{{this._id}}')">+</button>
             </td>
-            <td class="product-price" id="totalPrice_{{this.productId}}">₹{{productPrice}}</td>
+            <td class="product-price"  id="totalPrice_{{this.productId}}">₹{{productPrice}}</td>
         </tr>
         {{/each}}
 		
@@ -246,53 +235,47 @@
 
 
 
-
-	<!-- footer -->
-	<div class="footer-area">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-3 col-md-6">
-					<div class="footer-box about-widget">
-						<h2 class="widget-title">About us</h2>
-						<p>Ut enim ad minim veniam perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae.</p>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6">
-					<div class="footer-box get-in-touch">
-						<h2 class="widget-title">Get in Touch</h2>
-						<ul>
-							<li>34/8, East Hukupara, Gifirtok, Sadan.</li>
-							<li>support@fruitkha.com</li>
-							<li>+00 111 222 3333</li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6">
-					<div class="footer-box pages">
-						<h2 class="widget-title">Pages</h2>
-						<ul>
-							<li><a href="index.html">Home</a></li>
-							<li><a href="about.html">About</a></li>
-							<li><a href="services.html">Shop</a></li>
-							<li><a href="news.html">News</a></li>
-							<li><a href="contact.html">Contact</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6">
-					<div class="footer-box subscribe">
-						<h2 class="widget-title">Subscribe</h2>
-						<p>Subscribe to our mailing list to get the latest updates.</p>
-						<form action="index.html">
-							<input type="email" placeholder="Email">
-							<button type="submit"><i class="fas fa-paper-plane"></i></button>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end footer -->
+<footer class="footer" style="background-color: #343a40; color: #ffffff; padding: 50px 0;">
+    <div class="container-lg"> <!-- Changed to container-lg for larger size -->
+        <div class="row">
+            <div class="col-md-4">
+                <h5 style="color: white;">About Us</h5>
+                <p style="color: rgb(174, 164, 164);">At Dry Vitals, we are passionate about providing you with the finest selection of dry fruits, dates, and nuts sourced from the most trusted suppliers worldwide. With a commitment to quality, freshness, and customer satisfaction, we aim to bring nature's goodness to your doorstep.</p>
+            </div>
+            <div class="col-md-4">
+                <h5 style="color: white;">Customer Service</h5>
+                <ul class="list-unstyled" style="margin-left: 0;">
+                    <li><a href="/profile" style="color: #ffffff;">Profile</a></li>
+                    <li><a href="/product" style="color: #ffffff;">Product</a></li>
+                    <li><a href="/cart" style="color: #ffffff;">Cart</a></li>
+                    <li><a href="/wishlist" style="color: #ffffff;">Wishlist</a></li>
+                    <li><a href="/order" style="color: #ffffff;">Orders</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5 style="color: white;">Connect with Us</h5>
+                <ul class="list-unstyled social-links" style="margin-left: 0;">
+                    <li><a href="#" style="color: #ffffff;"><i class="fab fa-facebook-f"> Facebook</i> </a></li>
+                    <li><a href="#" style="color: #ffffff;"><i class="fab fa-twitter"> Twitter</i> </a></li>
+                    <li><a href="#" style="color: #ffffff;"><i class="fab fa-instagram"> Instagram</i> </a></li>
+                    <li><a href="#" style="color: #ffffff;"><i class="fab fa-linkedin-in"> LinkedIn</i> </a></li>
+                </ul>
+            </div>
+        </div>
+        <hr style="background-color: #ffffff;">
+        <div class="row">
+            <div class="col-md-6">
+                <h5 style="color: white;">Payment Methods</h5>
+                <ul class="list-inline payment-icons" style="margin-left: 0;">
+                    <li class="list-inline-item"><i class="fab fa-cc-visa fa-2x" style="color: #ffffff;"></i></li>
+                    <li class="list-inline-item"><i class="fab fa-cc-mastercard fa-2x" style="color: #ffffff;"></i></li>
+                    <li class="list-inline-item"><i class="fab fa-cc-paypal fa-2x" style="color: #ffffff;"></i></li>
+                    <li class="list-inline-item"><i class="fab fa-cc-amazon-pay fa-2x" style="color: #ffffff;"></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
 	<script>
 	
 		function deleteProduct(productId) {
@@ -332,7 +315,7 @@ function incrementQuantity(productId) {
         .then(async function (response) {
             const { cartItem } = response.data;
             document.getElementById(`quantity_${cartItem.productId}`).innerText = cartItem.quantity;
-            document.getElementById(`mrp_${cartItem.productId}`).innerText =`₹${cartItem.productmrp}`;
+            {{!-- document.getElementById(`mrp_${cartItem.productId}`).innerText =`₹${cartItem.productmrp}`; --}}
             document.getElementById(`totalPrice_${cartItem.productId}`).innerText = `₹${cartItem.productPrice}`;
             document.getElementById(`totalmrp`).innerText = `₹${response.data.total}`;
             document.getElementById(`subtotal`).innerText = `₹${response.data.subtotal}`;

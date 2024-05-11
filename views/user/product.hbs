@@ -107,7 +107,28 @@
 			margin-top: 50px;
 		}
 		
-		
+			.footer a:hover {
+    color: #ffcc00; 
+}
+
+.footer a:hover i {
+    color: #ffcc00;
+}
+
+.list-inline-item:hover {
+    transform: scale(1.1);
+}
+.searchbutton{
+	background-color: #db7924;
+	color: white;
+	height: 45px;
+	width: 200px;
+	border-radius: 30px;
+	border: none;
+}
+.searchbutton:hover {
+    background-color: #45a049; /* Darker Green */
+}
 	</style>
 
 	<!-- favicon -->
@@ -142,11 +163,11 @@
 <body>
 
 	<!--PreLoader-->
-	{{!-- <div class="loader">
+	<div class="loader">
 		<div class="loader-inner">
 			<div class="circle"></div>
 		</div>
-	</div> --}}
+	</div>
 	<!--PreLoader Ends-->
 
 	<!-- header -->
@@ -166,38 +187,10 @@
 						<!-- menu start -->
 						<nav class="main-menu">
 							<ul>
-								{{!-- <li class="current-list-item"><a href="/">Home</a>
-									<ul class="sub-menu">
-										<li><a href="index.html">Static Home</a></li>
-										<li><a href="index_2.html">Slider Home</a></li>
-									</ul>
-								</li> --}}
+								
+								<li><a href="/">Home</a></li>
 								<li><a href="/product">Product</a></li>
-								<li><a href="#">Pages</a>
-									<ul class="sub-menu">
-										{{!-- <li><a href="404.html">404 page</a></li> --}}
-										{{!-- <li><a href="about.html">About</a></li> --}}
-										<li><a href="/cart">Cart</a></li>
-										{{!-- <li><a href="checkout.html">Check Out</a></li> --}}
-										{{!-- <li><a href="contact.html">Contact</a></li> --}}
-										<li><a href="/product">Product</a></li>
-									</ul>
-								</li>
-								{{!-- <li><a href="news.html">News</a>
-									<ul class="sub-menu">
-										<li><a href="news.html">News</a></li>
-										<li><a href="single-news.html">Single News</a></li>
-									</ul>
-								</li> --}}
-								{{!-- <li><a href="contact.html">Contact</a></li> --}}
-								<li><a href="/product">Shop</a>
-									<ul class="sub-menu">
-										<li><a href="/product">Product</a></li>
-										{{!-- <li><a href="checkout.html">Check Out</a></li> --}}
-										{{!-- <li><a href="/singleProduct">Single Product</a></li> --}}
-										<li><a href="/cart">Cart</a></li>
-									</ul>
-								</li>
+								
 								<li>
 									<div class="header-icons">
 										<a class="mobile-hide search-bar-icon" href="#" id="search-icon"><i
@@ -232,7 +225,7 @@
                 <div class="search-bar">
                     <div class="search-bar-tablecell">
                         <input type="text" id="search-input" placeholder="Search for products...">
-                        <button type="button" id="search-button">Search <i class="fas fa-search"></i></button>
+                        <button type="button" id="search-button" class="searchbutton">Search <i class="fas fa-search"></i></button>
                     </div>
                 </div>
             </div>
@@ -248,7 +241,7 @@
 			<div class="row">
 				<div class="col-lg-8 offset-lg-2 text-center">
 					<div class="breadcrumb-text">
-						<p>Fresh and Organic</p>
+						<p>Dry and Organic</p>
 						<h1>Shop</h1>
 					</div>
 				</div>
@@ -257,15 +250,11 @@
 	</div>
 	<!-- end breadcrumb section -->
 
-<div class="container">
-    <div class="row justify-content-end">
-        <div class="col-md-6">
-            <button id="toggleSortFilter" class="btn btn-primary mt-5" style="height: 40px; border-radius:30px;">Sorting and Filtering</button>
-        </div>
-    </div>
+<div class="container mt-5">
+    
     <div class="row justify-content-end">
         <div class="col-md-12">
-            <div class="sortdiv p-3 rounded mb-4" id="sortFilterSection" style="display: none; background-color: #f8f9fa; border: 1px solid #ced4da; border-radius: 5px;">
+            <div class="sortdiv p-3 rounded mb-4" id="sortFilterSection" style="background-color: #f8f9fa; border: 1px solid #ced4da; border-radius: 5px;">
                 <div class="row align-items-center justify-content-end" style="margin-bottom: 10px;">
                     <h4 class="mb-0 col-md-4">Sort By:</h4>
                     <div class="col-md-6">
@@ -273,6 +262,8 @@
                             <option value="default" selected>Price Select</option>
                             <option value="price-low-high">Low to High</option>
                             <option value="price-high-low">High to Low</option>
+							<option value="A-Z">Product Name A-Z</option>
+							<option value="Z-A">Product Name Z-A</option>
                         </select>
                     </div>
                 </div>
@@ -291,6 +282,7 @@
         </div>
     </div>
 </div>
+
 
 
 
@@ -336,13 +328,53 @@
 					{{/each}}
 
 				</div>
-
+				
 			</div>
 		</div>
 	</div>
 
 
-
+<footer class="footer" style="background-color: #343a40; color: #ffffff; padding: 50px 0;">
+    <div class="container-lg"> <!-- Changed to container-lg for larger size -->
+        <div class="row">
+            <div class="col-md-4">
+                <h5 style="color: white;">About Us</h5>
+                <p style="color: rgb(174, 164, 164);">At Dry Vitals, we are passionate about providing you with the finest selection of dry fruits, dates, and nuts sourced from the most trusted suppliers worldwide. With a commitment to quality, freshness, and customer satisfaction, we aim to bring nature's goodness to your doorstep.</p>
+            </div>
+            <div class="col-md-4">
+                <h5 style="color: white;">Customer Service</h5>
+                <ul class="list-unstyled" style="margin-left: 0;">
+                    <li><a href="/profile" style="color: #ffffff;">Profile</a></li>
+                    <li><a href="/product" style="color: #ffffff;">Product</a></li>
+                    <li><a href="/cart" style="color: #ffffff;">Cart</a></li>
+                    <li><a href="/wishlist" style="color: #ffffff;">Wishlist</a></li>
+                    <li><a href="/order" style="color: #ffffff;">Orders</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5 style="color: white;">Connect with Us</h5>
+                <ul class="list-unstyled social-links" style="margin-left: 0;">
+                    <li><a href="#" style="color: #ffffff;"><i class="fab fa-facebook-f">  Facebook</i></a></li>
+                    <li><a href="#" style="color: #ffffff;"><i class="fab fa-twitter"> Twitter</i> </a></li>
+                    <li><a href="#" style="color: #ffffff;"><i class="fab fa-instagram"> Instagram</i> </a></li>
+                    <li><a href="#" style="color: #ffffff;"><i class="fab fa-linkedin-in"> LinkedIn</i> </a></li>
+                </ul>
+            </div>
+        </div>
+        <hr style="background-color: #ffffff;">
+        <div class="row">
+            <div class="col-md-6">
+                <h5 style="color: white;">Payment Methods</h5>
+                <ul class="list-inline payment-icons" style="margin-left: 0;">
+                    <li class="list-inline-item"><i class="fab fa-cc-visa fa-2x" style="color: #ffffff;"></i></li>
+                    <li class="list-inline-item"><i class="fab fa-cc-mastercard fa-2x" style="color: #ffffff;"></i></li>
+                    <li class="list-inline-item"><i class="fab fa-cc-paypal fa-2x" style="color: #ffffff;"></i></li>
+                    <li class="list-inline-item"><i class="fab fa-cc-amazon-pay fa-2x" style="color: #ffffff;"></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
 
 
 	
@@ -379,6 +411,11 @@
 			variantElement.textContent = ' ' + selectedVariant;
 			//stockElement.textContent =' ' + selectedStock;		
 		}
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
     const categoryFilter = document.getElementById('categoryFilter');
 	
@@ -403,7 +440,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function filterAndSortProducts(category, sortBy) {
     const requestData = {
         category: category,
-        sortBy: sortBy
+        sortBy: sortBy,
     };
 
     axios.post('/product/sortAndFilterProducts', requestData)
@@ -422,43 +459,45 @@ function filterAndSortProducts(category, sortBy) {
 }
 
 
-		function renderProducts(products) {
-			const productsContainer = document.querySelector('.product-lists');
-			productsContainer.innerHTML = '';
-			products.forEach(product => {
-				const outOfStockMessage = product.isDisabled ? '<h5 style="color: red;">Out of stock</h5>' : '';
-const productHTML = `
-    <div class="col-lg-4 col-md-6 text-center">
-        <div class="single-product-item" data-filter="${product.category}">
-            <div class="product-image">
-                <a href="/singleProduct/${product._id}"><img src="${product.imageUrl}" alt="productimage" style="width: 200px; height: 200px;"></a>
+function renderProducts(products) {
+    const productsContainer = document.querySelector('.product-lists');
+    productsContainer.innerHTML = '';
+    products.forEach(product => {
+        const outOfStockMessage = product.isDisabled ? '<h5 style="color: red;">Out of stock</h5>' : '';
+        const wishlistIconColor = product.inWishlist ? 'color: red;' : ''; 
+
+        const productHTML = `
+            <div class="col-lg-4 col-md-6 text-center">
+                <div class="single-product-item" data-filter="${product.category}">
+                    <div class="product-image">
+                        <a href="/singleProduct/${product._id}"><img src="${product.imageUrl}" alt="productimage" style="width: 200px; height: 200px;"></a>
+                    </div>
+                    <h3>${product.productName}</h3>
+                    ${outOfStockMessage}
+                    <p class="product-price">₹${product.stock[0].price}</p>
+                    <del class="product-mrp">₹${product.stock[0].mrp}</del>
+                    <p class="product-variant">${product.stock[0].variant}</p>
+                    <p class="product-category">${product.category}</p>
+                    <div class="stock-details">
+                        <!-- Any additional details you want to display -->
+                    </div>
+                    <a href="#" class="wishlist-btn ${product.inWishlist ? 'added-to-wishlist' : ''}" style="${wishlistIconColor}" data-product-id="${product._id}">
+                        <i class="bi ${product.inWishlist ? 'bi-heart-fill' : 'bi-heart'}"></i>
+                    </a>
+                </div>
             </div>
-            <h3>${product.productName}</h3>
-            ${product.isDisabled ? '<h5 style="color: red;">Out of stock</h5>' : ''}
-            <p class="product-price">₹${product.stock[0].price}</p>
-            <del class="product-mrp">₹${product.stock[0].mrp}</del>
-            <p class="product-variant">${product.stock[0].variant}</p>
-            <p class="product-category">${product.category}</p>
-            <div class="stock-details">
-                <!-- Any additional details you want to display -->
-            </div>
-${product.inWishlist ? `<a href="#" class="wishlist-btn added-to-wishlist" style="color: red;" data-product-id="${product._id}"><i class="bi bi-heart-fill"></i></a>` : `<a class="wishlist-btn" id="addToWishlist" data-product-id="${product._id}"><i class="bi bi-heart"></i></a>`}
-        </div>
-    </div>
-`;
+        `;
 
+        productsContainer.insertAdjacentHTML('beforeend', productHTML);
+    })
+	 
+}
 
-				productsContainer.insertAdjacentHTML('beforeend', productHTML);
-				
-
-			});
-		}
 
 
 
 function attachWishlistEventListeners() {
 const wishlistButtons = document.querySelectorAll('.wishlist-btn');
-
 wishlistButtons.forEach(wishlistButton => {
     wishlistButton.addEventListener('click', async (event) => {
         event.preventDefault();
@@ -501,13 +540,6 @@ wishlistButtons.forEach(wishlistButton => {
 });
 }
 
-$(document).ready(function(){
-            $("#sortFilterSection").hide(); 
-
-            $("#toggleSortFilter").click(function(){
-                $("#sortFilterSection").toggle();
-            });
-        });
 
 
 
@@ -529,6 +561,7 @@ function searchProducts(keyword) {
         .then(response => {
             if (response.data && response.data.products) {
                 renderProducts(response.data.products);
+				attachWishlistEventListeners()
             } else {
                 console.log('No products found matching the search criteria.');
             }

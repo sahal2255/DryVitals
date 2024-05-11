@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Robotech - Admin & Dashboard Template</title>
+    <title>DryVitals - Admin & Dashboard Template</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta content="Tailwind Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="" name="Mannatthemes" />
@@ -19,7 +19,38 @@
     <link rel="stylesheet" href="assets/libs/icofont/icofont.min.css">
     <link href="assets/libs/flatpickr/flatpickr.min.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/tailwind.min.css">
+<style>
+    #pagination {
+        text-align: center; /* Center align buttons */
+        margin-top: 20px; /* Top margin */
+    }
 
+    /* Pagination button styles */
+    .previous, .next {
+        background-color: #4CAF50; /* Green background */
+        color: white; /* White text */
+        padding: 10px 20px; /* Padding */
+        border: none; /* Remove borders */
+        cursor: pointer; /* Cursor style */
+        border-radius: 5px; /* Rounded corners */
+        margin-right: 10px; /* Right margin */
+        font-size: 16px; /* Font size */
+        font-weight: bold; /* Bold text */
+        transition: background-color 0.3s; /* Smooth transition */
+    }
+
+    /* Hover effect */
+    .previous:hover, .next:hover {
+        background-color: #45a049; /* Darker green */
+    }
+
+    /* Disabled state */
+    .disabled {
+        background-color: #cccccc; /* Gray background */
+        color: #666666; /* Darker text */
+        cursor: not-allowed; /* Cursor style */
+    }
+</style>
 </head>
 
 <body data-layout-mode="light" data-sidebar-size="default" data-theme-layout="vertical"
@@ -386,7 +417,7 @@
                                         <div class="grid grid-cols-1 p-0 md:p-4">
                                             <div class="sm:-mx-6 lg:-mx-8">
                                                 <div class="relative overflow-x-auto block w-full sm:px-6 lg:px-8">
-                                                    <table class="w-full">
+                                                    <table class="w-full" id="userTable">
                                                         <thead class="bg-gray-50 dark:bg-slate-700/20">
                                                             <tr>
                                                                 <th scope="col"
@@ -457,41 +488,7 @@
                                                                     </div>
                                                                    
                                                                     {{/if}}
-                                                                {{!-- </td> --}}
-
-
-                                                                {{!-- {{#if isDisabled}}
-                                                                <span
-                                                                    class="bg-red-600/5 text-red-600 text-[11px] font-medium px-2.5 py-0.5 rounded h-5">Out
-                                                                    of stock</span>
-                                                                {{else}}
-                                                                <span
-                                                                    class="bg-green-600/5 text-green-600 text-[11px] font-medium px-2.5 py-0.5 rounded h-5">{{stock}}
-                                                                    in stock</span>
-                                                                {{/if}} --}}
-                                                                {{!-- </td> --}}
-                                                                {{!-- <td
-                                                                    class="p-3 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400">
-
-                                                                    <div>
-                                                                        {{#each stock}}
-                                                                        <span
-                                                                            class="block  font-medium text-slate-500">{{variant}}
-                                                                        </span>
-                                                                        {{/each}}
-                                                                    </div>
-                                                                </td> --}}
-                                                                {{!-- <td
-                                                                    class="p-3 font-semibold text-lg text-gray-800 whitespace-nowrap dark:text-gray-400"> --}}
-                                                                    {{!-- ₹{{price}} <del
-                                                                        class="text-slate-500 font-normal"></del> --}}
-                                                                    {{!-- {{#each stock}}
-                                                                    <span
-                                                                        class="block  font-medium text-slate-500">₹{{price}}
-                                                                    </span>
-                                                                    {{/each}} --}}
-
-                                                                {{!-- </td> --}}
+                                                                
                                                                 
                                                               
                                                                 <td
@@ -514,6 +511,10 @@
                                                             {{/each}}
                                                         </tbody>
                                                     </table>
+                                                    <div id="pagination">
+                                                        <button id="prevBtn" class="previous">Previous</button>
+                                                        <button id="nextBtn" class="next">Next</button>
+                                                    </div>
                                                 </div><!--end div-->
                                             </div><!--end div-->
                                         </div><!--end grid-->
@@ -530,6 +531,8 @@
             </div><!--end container-->
         </div><!--end page-wrapper-->
     </div><!--end /div-->
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script>
         // Select the search input element
         const searchInput = document.getElementById('productSearch');
@@ -552,6 +555,44 @@
                 document.getElementById('deleteProduct').submit();
             }
         }
+
+
+         $(document).ready(function() {
+            const rowsPerPage = 5;
+            let currentPage = 1;
+
+            // Function to show rows for the current page
+            function showPage(page) {
+                $('#userTable tbody tr').hide();
+                $('#userTable tbody tr').slice((page - 1) * rowsPerPage, page * rowsPerPage).show();
+            }
+
+            // Initial page load
+            showPage(currentPage);
+
+            // Function to update pagination buttons
+            function updatePaginationButtons() {
+                $('#prevBtn').prop('disabled', currentPage === 1);
+                $('#nextBtn').prop('disabled', currentPage === Math.ceil($('#userTable tbody tr').length / rowsPerPage));
+            }
+
+            // Pagination button click events
+            $('#prevBtn').click(function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    showPage(currentPage);
+                    updatePaginationButtons();
+                }
+            });
+
+            $('#nextBtn').click(function() {
+                if (currentPage < Math.ceil($('#userTable tbody tr').length / rowsPerPage)) {
+                    currentPage++;
+                    showPage(currentPage);
+                    updatePaginationButtons();
+                }
+            });
+        });
     </script>
 
     <!-- JAVASCRIPTS -->

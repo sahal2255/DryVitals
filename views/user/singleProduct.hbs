@@ -59,9 +59,21 @@
 	.bynow:hover{
 		background-color: rgb(215, 120, 31);
 	}
-	#stock-status {
-    color: green; /* Default color for in-stock message */
+.footer a:hover {
+    color: #ffcc00; 
 }
+
+.footer a:hover i {
+    color: #ffcc00;
+}
+
+.list-inline-item:hover {
+    transform: scale(1.1);
+}
+	#stock-status {
+    color: green; 
+}
+
 
 #stock-status.out-of-stock {
     color: red; /* Color for out-of-stock message */
@@ -98,49 +110,11 @@
 						<!-- menu start -->
 						<nav class="main-menu">
 							<ul>
-								<li class="current-list-item"><a href="#">Home</a>
-									<ul class="sub-menu">
-										<li><a href="index.html">Static Home</a></li>
-										<li><a href="index_2.html">Slider Home</a></li>
-									</ul>
-								</li>
-								<li><a href="/product">Product</a></li>
-								<li><a href="#">Pages</a>
-									<ul class="sub-menu">
-										<li><a href="404.html">404 page</a></li>
-										<li><a href="about.html">About</a></li>
-										<li><a href="cart.html">Cart</a></li>
-										<li><a href="checkout.html">Check Out</a></li>
-										<li><a href="contact.html">Contact</a></li>
-										<li><a href="/product">Product</a></li>
-										<li><a href="/login">Login</a></li>
-									</ul>
-								</li>
-								{{!-- <li><a href="news.html">News</a>
-									<ul class="sub-menu">
-										<li><a href="news.html">News</a></li>
-										<li><a href="single-news.html">Single News</a></li>
-									</ul>
-								</li> --}}
-								<li><a href="contact.html">Contact</a></li>
-								<li><a href="shop.html">Shop</a>
-									<ul class="sub-menu">
-										<li><a href="/product">Product</a></li>
-										<li><a href="checkout.html">Check Out</a></li>
-										<li><a href="single-product.html">Single Product</a></li>
-										<li><a href="/cart">Cart</a></li>
-									</ul>
-								</li>
-								<li><a href="#">Login</a>
-									<ul class="sub-menu">
-										<li><a href="/login">Login</a></li>
-										<li><a href="/logOut">LogOut</a></li>
-										{{!-- <li><a href="single-news.html">Single News</a></li> --}}
-									</ul>
-								</li>
+								<li ><a href="/">Home</a></li>
+								<li ><a href="/product">Product</a></li>
+
 								<li>
 									<div class="header-icons">
-										<a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
 										<a class="shopping-cart" href="/cart"><i class="fas fa-shopping-cart"></i></a>
 										<a class="mobile-hide wishlist-bar-icon" href=""><i class="bi bi-heart-fill"></i></a>
 										<a class="mobile-hide person-bar-icon" href="/profile"><i class="bi bi-person-circle"></i></a>
@@ -149,7 +123,6 @@
 								</li>
 							</ul>
 						</nav>
-						<a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
 						<div class="mobile-menu"></div>
 						<!-- menu end -->
 					</div>
@@ -159,24 +132,7 @@
 	</div>
 	<!-- end header -->
 
-	<!-- search area -->
-	<div class="search-area">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12">
-					<span class="close-btn"><i class="fas fa-window-close"></i></span>
-					<div class="search-bar">
-						<div class="search-bar-tablecell">
-							<h3>Search For:</h3>
-							<input type="text" placeholder="Keywords">
-							<button type="submit">Search <i class="fas fa-search"></i></button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end search arewa -->
+	
 
 	<!-- breadcrumb-section -->
 	<div class="breadcrumb-section breadcrumb-bg">
@@ -230,82 +186,63 @@
 	</div>
 	<!-- end single product -->
 
-	
+<footer class="footer" style="background-color: #343a40; color: #ffffff; padding: 50px 0;">
+    <div class="container-lg"> <!-- Changed to container-lg for larger size -->
+        <div class="row">
+            <div class="col-md-4">
+                <h5 style="color: white;">About Us</h5>
+                <p style="color: rgb(174, 164, 164);">At Dry Vitals, we are passionate about providing you with the finest selection of dry fruits, dates, and nuts sourced from the most trusted suppliers worldwide. With a commitment to quality, freshness, and customer satisfaction, we aim to bring nature's goodness to your doorstep.</p>
+            </div>
+            <div class="col-md-4">
+                <h5 style="color: white;">Customer Service</h5>
+                <ul class="list-unstyled" style="margin-left: 0;">
+                    <li><a href="/profile" style="color: #ffffff;">Profile</a></li>
+                    <li><a href="/product" style="color: #ffffff;">Product</a></li>
+                    <li><a href="/cart" style="color: #ffffff;">Cart</a></li>
+                    <li><a href="/wishlist" style="color: #ffffff;">Wishlist</a></li>
+                    <li><a href="/order" style="color: #ffffff;">Orders</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5 style="color: white;">Connect with Us</h5>
+                <ul class="list-unstyled social-links" style="margin-left: 0;">
+                    <li><a href="#" style="color: #ffffff;"><i class="fab fa-facebook-f"> Facebook</i> </a></li>
+                    <li><a href="#" style="color: #ffffff;"><i class="fab fa-twitter"> Twitter</i> </a></li>
+                    <li><a href="#" style="color: #ffffff;"><i class="fab fa-instagram"> Instagram</i> </a></li>
+                    <li><a href="#" style="color: #ffffff;"><i class="fab fa-linkedin-in"> LinkedIn</i> </a></li>
+                </ul>
+            </div>
+        </div>
+        <hr style="background-color: #ffffff;">
+        <div class="row">
+            <div class="col-md-6">
+                <h5 style="color: white;">Payment Methods</h5>
+                <ul class="list-inline payment-icons" style="margin-left: 0;">
+                    <li class="list-inline-item"><i class="fab fa-cc-visa fa-2x" style="color: #ffffff;"></i></li>
+                    <li class="list-inline-item"><i class="fab fa-cc-mastercard fa-2x" style="color: #ffffff;"></i></li>
+                    <li class="list-inline-item"><i class="fab fa-cc-paypal fa-2x" style="color: #ffffff;"></i></li>
+                    <li class="list-inline-item"><i class="fab fa-cc-amazon-pay fa-2x" style="color: #ffffff;"></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
 
-	<!-- footer -->
-	<div class="footer-area">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-3 col-md-6">
-					<div class="footer-box about-widget">
-						<h2 class="widget-title">About us</h2>
-						<p>Ut enim ad minim veniam perspiciatis unde omnis iste natus error sit voluptatem accusantium
-							doloremque laudantium, totam rem aperiam, eaque ipsa quae.</p>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6">
-					<div class="footer-box get-in-touch">
-						<h2 class="widget-title">Get in Touch</h2>
-						<ul>
-							<li>34/8, East Hukupara, Gifirtok, Sadan.</li>
-							<li>support@fruitkha.com</li>
-							<li>+00 111 222 3333</li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6">
-					<div class="footer-box pages">
-						<h2 class="widget-title">Pages</h2>
-						<ul>
-							<li><a href="index.html">Home</a></li>
-							<li><a href="about.html">About</a></li>
-							<li><a href="services.html">Shop</a></li>
-							<li><a href="news.html">News</a></li>
-							<li><a href="contact.html">Contact</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-lg-3 col-md-6">
-					<div class="footer-box subscribe">
-						<h2 class="widget-title">Subscribe</h2>
-						<p>Subscribe to our mailing list to get the latest updates.</p>
-						<form action="index.html">
-							<input type="email" placeholder="Email">
-							<button type="submit"><i class="fas fa-paper-plane"></i></button>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end footer -->
 
-	<!-- copyright -->
-	<div class="copyright">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-6 col-md-12">
-					<p>Copyrights &copy; 2019 - <a href="https://imransdesign.com/">Imran Hossain</a>, All Rights
-						Reserved.</p>
-				</div>
-				<div class="col-lg-6 text-right col-md-12">
-					<div class="social-icons">
-						<ul>
-							<li><a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
-							<li><a href="#" target="_blank"><i class="fab fa-twitter"></i></a></li>
-							<li><a href="#" target="_blank"><i class="fab fa-instagram"></i></a></li>
-							<li><a href="#" target="_blank"><i class="fab fa-linkedin"></i></a></li>
-							<li><a href="#" target="_blank"><i class="fab fa-dribbble"></i></a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- end copyright -->
+
+
+
+
+
+
 	
 <script>
-	
+	window.onload = function() {
+    var selectedVariantRadio = document.querySelector('input[name="variant"]:checked');
+    if (selectedVariantRadio) {
+        updatePrice(selectedVariantRadio);
+    }
+};
     function updatePrice(radio) {
         var price = radio.getAttribute('data-price');
 		var mrp=radio.getAttribute('data-mrp');
@@ -313,7 +250,7 @@
         document.getElementById('selected-variant-price').innerText = " ₹" +' '+ price;
 		document.getElementById('selected-variant-mrp').innerHTML="₹"+mrp;
 	var stockStatus = document.getElementById('stock-status');
-    if (stock === '0') {
+    if (stock <= '0') {
         stockStatus.innerText = "Out of Stock";
         stockStatus.classList.add('out-of-stock'); // Add the out-of-stock class
         document.getElementById('addToCartBtn').disabled = true; // Disable the "Add to Cart" button

@@ -469,6 +469,9 @@ const orderShow = async (req, res) => {
                         email:'$userDetails.email'
                     }
                 }
+            },
+            {
+                $sort: { "orderDetails.createdAt": -1 } // Sort by createdAt field in descending order
             }
         ]);
         
@@ -484,6 +487,72 @@ const orderShow = async (req, res) => {
         // Handle error
     }
 }
+
+
+
+// const orderShow = async (req, res) => {
+//     try {
+//         // Pagination parameters
+//         const page = parseInt(req.query.page) || 1; 
+//         const limit = 10; // Number of documents per page
+
+//         // Calculate skip value
+//         const skip = (page - 1) * limit;
+
+//         // Fetch orders for the current page
+//         const orders = await Order.aggregate([
+//             {
+//                 $lookup: {
+//                     from: "users",
+//                     localField: "userId",
+//                     foreignField: "_id",
+//                     as: "userDetails"
+//                 }
+//             },
+//             {
+//                 $unwind: "$userDetails"
+//             },
+//             {
+//                 $project: {
+//                     _id: 1,
+//                     userId: 1,
+//                     orderDetails: "$$ROOT", // Store the order details in a field
+//                     userDetails: {
+//                         _id: "$userDetails._id",
+//                         userName: "$userDetails.userName",
+//                         email: '$userDetails.email'
+//                     }
+//                 }
+//             },
+//             {
+//                 $sort: { "orderDetails.createdAt": -1 } // Sort by createdAt field in descending order
+//             },
+//             {
+//                 $skip: skip
+//             },
+//             {
+//                 $limit: limit
+//             }
+//         ]);
+
+//         const totalOrders = await Order.countDocuments(); // Total number of orders
+
+//         const totalPages = Math.ceil(totalOrders / limit); // Total number of pages
+//         const pages = Array.from({ length: totalPages }, (_, i) => i + 1); // Array of pages
+
+//         const updatedOrders = orders.map(order => ({
+//             ...order,
+//             newdate: new Date(order.orderDetails.createdAt).toLocaleString()
+//         }));
+
+//         console.log('admin order listing', updatedOrders);
+//         res.render('admin/orderList', { orders: updatedOrders, currentPage: page, totalPages, pages }); // Pass pagination data to the view
+//     } catch (error) {
+//         console.log('order show error', error);
+//         // Handle error
+//     }
+// }
+
 
 
 

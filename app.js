@@ -16,10 +16,10 @@ app.use((req, res, next) => {
   next();
 });
 
-// const razorpay = new Razorpay({
-//   key_id: 'rzp_test_1bD9cj9uL4sy4Y',
-//   key_secret: '7tMWK4GYRa7UuOOqSHmgsao3'
-// });
+// app.use((req,res,next)=>{
+//   res.status(404).render('user/forNotFound')
+
+// })
 
 
 

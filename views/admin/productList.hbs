@@ -4,7 +4,7 @@
 <!-- Mirrored from mannatthemes.com/robotech/default/admin-products.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 16 Mar 2024 08:17:40 GMT -->
 <head>
         <meta charset="utf-8" />
-        <title>Robotech - Admin & Dashboard Template</title>
+        <title>DryVitals - Admin & Dashboard Template</title>
         <meta  name="viewport"  content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
         <meta  content="Tailwind Multipurpose Admin & Dashboard Template"  name="description"/>
         <meta content="" name="Mannatthemes" />
@@ -17,7 +17,39 @@
         <link rel="stylesheet" href="assets/libs/icofont/icofont.min.css">
         <link href="assets/libs/flatpickr/flatpickr.min.css" type="text/css" rel="stylesheet">
         <link rel="stylesheet" href="assets/css/tailwind.min.css">
+<style>
+  #pagination {
+        text-align: center; /* Center align buttons */
+        margin-top: 20px; /* Top margin */
+    }
 
+    /* Pagination button styles */
+    .previous, .next {
+        background-color: #4CAF50; /* Green background */
+        color: white; /* White text */
+        padding: 10px 20px; /* Padding */
+        border: none; /* Remove borders */
+        cursor: pointer; /* Cursor style */
+        border-radius: 5px; /* Rounded corners */
+        margin-right: 10px; /* Right margin */
+        font-size: 16px; /* Font size */
+        font-weight: bold; /* Bold text */
+        transition: background-color 0.3s; /* Smooth transition */
+    }
+
+    /* Hover effect */
+    .previous:hover, .next:hover {
+        background-color: #45a049; /* Darker green */
+    }
+
+    /* Disabled state */
+    .disabled {
+        background-color: #cccccc; /* Gray background */
+        color: #666666; /* Darker text */
+        cursor: not-allowed; /* Cursor style */
+    }
+
+</style>
     </head>
     
     <body data-layout-mode="light"  data-sidebar-size="default" data-theme-layout="vertical" class="bg-[#EEF0FC] dark:bg-gray-900">
@@ -338,16 +370,7 @@
                             <div class="w-full">                    
                                 <div class="">
                                     <div class="flex flex-wrap justify-between">
-                                        <div class="items-center ">
-                                            <h1 class="font-medium text-3xl block dark:text-slate-100">Products</h1>
-                                            <ol class="list-reset flex text-sm">
-                                                <li><a href="#" class="text-gray-500 dark:text-slate-400">Robotech</a></li>
-                                                <li><span class="text-gray-500 dark:text-slate-400 mx-2">/</span></li>
-                                                <li class="text-gray-500 dark:text-slate-400">Admin</li>
-                                                <li><span class="text-gray-500 dark:text-slate-400 mx-2">/</span></li>
-                                                <li class="text-primary-500 hover:text-primary-600 dark:text-primary-400">Products</li>
-                                            </ol>
-                                        </div>
+                                        
                                         <div class="flex items-center">
                                             <div class="today-date leading-5 mt-2 lg:mt-0 form-input w-auto rounded-md border inline-block border-primary-500/60 dark:border-primary-500/60 text-primary-500 bg-transparent px-3 py-1 focus:outline-none focus:ring-0 placeholder:text-slate-400/70 placeholder:font-normal placeholder:text-sm hover:border-primary-400 focus:border-primary-500 dark:focus:border-primary-500  dark:hover:border-slate-700">
                                                 <input type="text" class="dash_date border-0 focus:border-0 focus:outline-none" readonly  required="">
@@ -415,7 +438,7 @@
                                             <div class="grid grid-cols-1 p-0 md:p-4">
                                                 <div class="sm:-mx-6 lg:-mx-8">
                                                     <div class="relative overflow-x-auto block w-full sm:px-6 lg:px-8">
-                                                        <table class="w-full">
+                                                        <table class="w-full" id="productTable">
                                                             <thead class="bg-gray-50 dark:bg-slate-700/20">
                                                                 <tr>
                                                                     <th scope="col" class="p-3 text-xs font-medium tracking-wider text-left text-gray-700 dark:text-gray-400 uppercase">
@@ -532,6 +555,10 @@
                                                                 {{/each}}
                                                             </tbody>
                                                         </table>
+                                                        <div id="pagination">
+                                                        <button id="prevBtn" class="previous">Previous</button>
+                                                        <button id="nextBtn" class="next">Next</button>
+                                                    </div>
                                                     </div><!--end div-->
                                                 </div><!--end div-->
                                             </div><!--end grid-->
@@ -548,6 +575,9 @@
                 </div><!--end container-->
             </div><!--end page-wrapper-->
         </div><!--end /div-->
+
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script>
     // Select the search input element
     const searchInput = document.getElementById('productSearch');
@@ -570,6 +600,37 @@
             document.getElementById('deleteProduct').submit();
             }
     }
+
+
+            $(document).ready(function() {
+            const rowsPerPage = 10;
+            let currentPage = 1;
+            function showPage(page) {
+                $('#productTable tbody tr').hide();
+                $('#productTable tbody tr').slice((page - 1) * rowsPerPage, page * rowsPerPage).show();
+            }
+            showPage(currentPage);
+            function updatePaginationButtons() {
+                $('#prevBtn').prop('disabled', currentPage === 1);
+                $('#nextBtn').prop('disabled', currentPage === Math.ceil($('#productTable tbody tr').length / rowsPerPage));
+            }
+
+            $('#prevBtn').click(function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    showPage(currentPage);
+                    updatePaginationButtons();
+                }
+            });
+
+            $('#nextBtn').click(function() {
+                if (currentPage < Math.ceil($('#productTable tbody tr').length / rowsPerPage)) {
+                    currentPage++;
+                    showPage(currentPage);
+                    updatePaginationButtons();
+                }
+            });
+        });
 </script>
 
         <!-- JAVASCRIPTS -->
