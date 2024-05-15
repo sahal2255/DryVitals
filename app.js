@@ -39,13 +39,14 @@ app.use('/',userRoute)
 app.use(adminRoute)
 
 
-mongoose.connect('mongodb://localhost:27017/DryVitals')
-.then(()=>{
-    console.log('connected mongodb');
+mongoose.connect('mongodb+srv://sahalvv9656:ecFhD8civtTRcYHU@cluster0.0ykv0m2.mongodb.net/DriveVitals')
+.then(() => {
+    console.log('Connected to MongoDB');
 })
-.catch(()=>{
-    console.log('error');
-})
+.catch((err) => {
+    console.error('Error connecting to MongoDB:', err);
+});
+
 
 
 const PORT = process.env.PORT || 3000 ;
