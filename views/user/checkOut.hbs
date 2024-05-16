@@ -91,6 +91,16 @@
 		.list-inline-item:hover {
 			transform: scale(1.1);
 		}
+		#pincode::-webkit-inner-spin-button,
+        #pincode::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Hide the spinner arrows in Firefox */
+        #pincode[type=number] {
+            -moz-appearance: textfield;
+        }
 	</style>
 
 </head>
