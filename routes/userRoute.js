@@ -73,7 +73,7 @@ router.post('/razorpay/placeOrder',userAuth,userController.razorpaypayment)
 router.get('/singleOrderDetails/:orderId',userAuth,userController.singleOrderDetails)
 router.put('/orders/:orderId',userAuth,userController.cancelOrder)
 
-router.post('/product/search',userAuth,userController.searchPro)
+router.post('/product/search',userController.searchPro)
 
 
 router.post('/profile/editaddress/:addressId',userAuth,userController.editUserAddress)

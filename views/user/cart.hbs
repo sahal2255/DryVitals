@@ -315,7 +315,7 @@ function incrementQuantity(productId) {
         .then(async function (response) {
             const { cartItem } = response.data;
             document.getElementById(`quantity_${cartItem.productId}`).innerText = cartItem.quantity;
-            {{!-- document.getElementById(`mrp_${cartItem.productId}`).innerText =`₹${cartItem.productmrp}`; --}}
+            document.getElementById(`mrp_${cartItem.productId}`).innerText =`₹${cartItem.productmrp}`;
             document.getElementById(`totalPrice_${cartItem.productId}`).innerText = `₹${cartItem.productPrice}`;
             document.getElementById(`totalmrp`).innerText = `₹${response.data.total}`;
             document.getElementById(`subtotal`).innerText = `₹${response.data.subtotal}`;
