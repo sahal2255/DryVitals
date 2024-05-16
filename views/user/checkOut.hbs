@@ -468,6 +468,9 @@
 						title: 'Success',
 						text: 'Your address has been saved successfully!',
 						confirmButtonText: 'OK'
+					}).then(() => {
+						// Refresh the checkout page
+						window.location.reload();
 					});
 				} catch (error) {
 					console.error('Error saving address:', error);
