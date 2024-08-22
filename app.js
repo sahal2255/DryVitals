@@ -9,6 +9,8 @@ const adminRoute=require('./routes/adminRoute')
 const app=express()
 const session = require('express-session');
 const Razorpay=require('razorpay')
+require('dotenv').config();
+
 
 
 app.use((req, res, next) => {
@@ -39,7 +41,7 @@ app.use('/',userRoute)
 app.use(adminRoute)
 
 
-mongoose.connect('mongodb+srv://sahalvv9656:ecFhD8civtTRcYHU@cluster0.0ykv0m2.mongodb.net/DriveVitals')
+mongoose.connect(process.env.MONGODB_URL)
 .then(() => {
     console.log('Connected to MongoDB');
 })
