@@ -2,7 +2,7 @@ const Admin = require('../models/admin');
 const Product=require('../models/products')
 
 const User=require('../models/user')
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { application } = require('express')
 const cloudinary=require('../config/cloudinary')
 const jwt = require('jsonwebtoken');
