@@ -41,7 +41,7 @@ app.use('/',userRoute)
 app.use(adminRoute)
 
 
-mongoose.connect(process.env.MONGODB_URL)
+mongoose.connect(process.env.MONGODB_URL,{ useNewUrlParser: true, useUnifiedTopology: true })
 .then(() => {
     console.log('Connected to MongoDB');
 })
